@@ -1,0 +1,27 @@
+[global_config]
+  title_inactive_bg_color = "#2d2d2d"
+  title_inactive_fg_color = "#afafaf"
+  title_transmit_bg_color = "#4c4c4c"
+[keybindings]
+  copy = <Primary>c
+  paste = <Primary>v
+[layouts]
+  [[default]]
+    [[[child1]]]
+      parent = window0
+      type = Terminal
+    [[[window0]]]
+      parent = ""
+      type = Window
+[plugins]
+[profiles]
+  [[default]]
+    allow_bold = False
+    background_color = "#3d3d3d"
+    cursor_color = "#ffffff"
+    font = DejaVu Sans Mono 10
+    foreground_color = "#ffffff"
+    palette = "#000000:#f92672:#6cc72c:#fe9720:#5f91ef:#9358fe:#36af90:#8c8c8c:#4c4c4c:#ff80f4:#a7e22e:#ffee99:#5fd9ef:#ae82fe:#66efd5:#c7cece"
+    scrollbar_position = hidden
+    show_titlebar = False
+    use_system_font = False
