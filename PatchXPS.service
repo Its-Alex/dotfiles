@@ -1,0 +1,10 @@
+[Unit]
+Description="Patch volume too high on Dell XPS"
+After=sound.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/amixer -c 0 cset 'numid=10' 1
+
+[Install]
+WantedBy=default.target
