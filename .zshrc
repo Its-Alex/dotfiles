@@ -10,12 +10,19 @@ ZSH_THEME="spaceship"
 SPACESHIP_BATTERY_SHOW='always'
 SPACESHIP_PROMPT_ADD_NEWLINE=false
 
-# Set Android variable
-export ANDROID_HOME=$HOME/Android/Sdk
-export PATH=$PATH:/usr/local/bin:$HOME/go/bin:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+# Set env variable
+PATH=/usr/local/bin:$PATH
+PATH=$HOME/go/bin:$PATH
 
-export __GL_SHADER_DISK_CACHE_PATH=$HOME/.config
+ANDROID_HOME=$HOME/Android/Sdk
+PATH=$ANDROID_HOME/platform-tools:$PATH
+PATH=$ANDROID_HOME/tools:$PATH
+PATH=$ANDROID_HOME/tools/bin:$PATH
+PATH=$ANDROID_HOME/emulator:$PATH
 
+__GL_SHADER_DISK_CACHE_PATH=$HOME/.config
+
+# Set oh_my_zsh plugins
 plugins=(
     git
     git-extra
