@@ -122,6 +122,6 @@ bindsym $mod+r mode "resize"
 ## polybar
 exec --no-startup-id $HOME/.config/polybar/launch.sh
 ## wallpaper
-exec --no-startup-id feh --bg-fill /home/alex/Pictures/wallpaper.jpg
+exec --no-startup-id feh --bg-fill $HOME/Pictures/wallpaper.jpg
 ## compton
-exec --no-startup-id compton --config ~/.config/compton/config -b
+exec --no-startup-id compton --config $HOME//.config/compton/config -b
