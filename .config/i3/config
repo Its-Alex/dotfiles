@@ -83,7 +83,7 @@ bindsym $mod+Shift+9 move container to workspace 9
 bindsym $mod+Shift+0 move container to workspace 10
 
 # bind rofi with theme
-bindsym $mod+space exec --no-startup-id rofi -theme sidetab -show comb
+bindsym $mod+space exec --no-startup-id rofi -theme sidetab -show combi
 
 # i3-gaps
 smart_gaps on
