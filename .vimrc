@@ -17,3 +17,6 @@ set backspace=indent,eol,start
 
 " Display line numbers on the left
 set number
+
+" Set colorscheme
+colorscheme molokai
