@@ -5,12 +5,21 @@
 *******************************************************************************/
 
 * {
-    background-color:            #080808;
+    /* Default theme */
+    /*background-color:            #080808;
     text-color:                  #d3d7cf;
     selbg:                       #215d9c;
     actbg:                       #262626;
     urgbg:                       #e53935;
-    winbg:                       #26c6da;
+    winbg:                       #26c6da;*/
+    
+    /* Dracula theme */
+    background-color:            rgba ( 40, 42, 54, 100 % );
+    text-color:                  rgba ( 248, 248, 242, 100 % );
+    selbg:                      rgba ( 68, 71, 90, 100 % );
+    actbg:                      rgba ( 139, 233, 253, 100 % );
+    urgbg:                      rgba ( 248, 248, 242, 100 % );
+    winbg:                      rgba ( 98, 114, 164, 100 % );
 
     selected-normal-foreground:  @winbg;
     normal-foreground:           @text-color;
