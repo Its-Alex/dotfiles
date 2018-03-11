@@ -9,14 +9,15 @@ set mouse=a
 " Enable syntax
 syntax on
 
-" Enable autoindent when no extensions (use indent of current line when create new line)
+" Enable autoindent
 set autoindent
 
+" Use case insensitive search, except when using capital letters
+set ignorecase
+set smartcase
+ 
 " Allow backspacing over autoindent, line breaks and start of insert action
 set backspace=indent,eol,start
 
 " Display line numbers on the left
 set number
-
-" Set colorscheme
-colorscheme molokai
