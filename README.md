@@ -11,5 +11,22 @@ This is my dotfile configuration for my personal use.
 - [rofi](https://github.com/DaveDavenport/rofi)
 - [compton](https://github.com/chjj/compton)
 
+## How to use
+
+**You need to have `$HOME` defined before use this script!**
+
+You can install it like this
+
+```
+$ ./setup sync [config]
+```
+
+You can use the script to backup your current config
+
+```
+$ ./setup backup [config]
+```
+
 ## Todo
-- Install script
+- Setup script improvement
+  - Create new directory for backup
