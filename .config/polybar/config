@@ -16,6 +16,10 @@ font-0 = NotoSans-Regular:size=8;0
 font-1 = MaterialIcons:size=10;0
 font-2 = Termsynu:size=8:antialias=false;0
 font-3 = FontAwesome:size=10;0
+font-4 = Font Awesome 5 Free:pixelsize=10;0
+font-5 = Font Awesome 5 Free Solid:pixelsize=10;0
+font-6 = Font Awesome 5 Brands:pixelsize=10;0
+
 
 modules-left = powermenu
 modules-right = volume backlight wireless-network wired-network battery date
@@ -40,7 +44,7 @@ module-margin-right = 6
 font-0 = NotoSans-Regular:size=8;0
 font-1 = unifont:size=6;0
 font-2 = FontAwesome:size=8;0
-font-3 = Font Awesome 5 Free:pixelsize=10;3
+font-3 = Font Awesome 5 Free:pixelsize=10;0
 font-4 = Font Awesome 5 Free Solid:pixelsize=10;0
 font-5 = Font Awesome 5 Brands:pixelsize=10;0
 font-6 = NotoSans-Regular:size=8;0
@@ -244,7 +248,7 @@ type = internal/network
 interface = enp0s31f6
 interval = 3.0
 
-label-connected =    %{T3}%local_ip%%{T-}
+label-connected =    %{T3}%local_ip%%{T-} |   %upspeed% |   %downspeed%
 label-disconnected-foreground = #66
 
 [module/volume]
