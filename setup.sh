@@ -13,11 +13,11 @@ use () {
 sync () {
     cp -R $2/.config/* $HOME/.config
     cp -R $2/.local/share/rofi/* $HOME/.local/share/rofi
-    cp -R .vim $HOME
+    cp -R $2/.vim $HOME
     cp $2/.Xresources $HOME/.Xresources
-    cp .xinitrc $HOME/.xinitrc
-    cp .zshrc $HOME/.zshrc
-    cp .vimrc $HOME/.vimrc
+    cp $2/.xinitrc $HOME/.xinitrc
+    cp $2/.zshrc $HOME/.zshrc
+    cp $2/.vimrc $HOME/.vimrc
 }
 
 backup () {
@@ -26,11 +26,11 @@ backup () {
     cp -R $HOME/.config/compton $2/.config/
     cp -R $HOME/.config/terminator $2/.config/
     cp -R $HOME/.local/share/rofi/themes $2/.local/share/rofi/
-    cp -R $HOME/.vim .
+    cp -R $HOME/.vim $2/
     cp $HOME/.Xresources $2/.Xresources
-    cp $HOME/.xinitrc .xinitrc
-    cp $HOME/.zshrc .zshrc
-    cp $HOME/.vimrc .vimrc
+    cp $HOME/.xinitrc $2/.xinitrc
+    cp $HOME/.zshrc $2/.zshrc
+    cp $HOME/.vimrc $2/.vimrc
 }
 
 use $#
