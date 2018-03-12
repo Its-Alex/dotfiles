@@ -112,6 +112,7 @@ ws-icon-0 = Terminal;
 ws-icon-1 = Web;
 ws-icon-2 = Code;
 ws-icon-3 = Music;
+ws-icon-4 = Chat;
 ws-icon-default = 
 
 ; Use fuzzy (partial) matching on labels when assigning

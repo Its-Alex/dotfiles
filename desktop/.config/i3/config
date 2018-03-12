@@ -31,11 +31,11 @@ bindsym $mod+Shift+Return kill
 set $ws1    "1:Terminal"
 set $ws2    "2:Code"
 set $ws3    "3:Web"
-set $ws4    "4:Music"
-set $ws5    "5:Files"
-set $ws6    "6:Documents"
+set $ws4    "4:Chat"
+set $ws5    "5:Music"
+set $ws6    "6:Document"
 set $ws7    "7:Design"
-set $ws8    "8:Chat"
+set $ws8    "8:Files"
 set $ws9    "9:General"
 set $ws10   "10:Settings"
 
@@ -124,7 +124,10 @@ for_window [class="Software-properties-gtk"]        floating enable
 assign [class="Code"]               → $ws2
 assign [class="Code-insiders"]      → $ws2
 assign [class="Google-chrome"]      → $ws3
-assign [class="Spotify"]            → $ws4
+assign [class="Spotify"]            → $ws5
+assign [class="Discord"]            → $ws4
+assign [class="Slack"]              → $ws4 
+
 
 # volume
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5%
