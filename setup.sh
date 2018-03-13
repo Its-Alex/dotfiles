@@ -25,8 +25,9 @@ backup () {
     cp -R $HOME/.config/polybar $2/.config/
     cp -R $HOME/.config/compton $2/.config/
     cp -R $HOME/.config/terminator $2/.config/
+    cp -R $HOME/.config/kitty $2/.config/
     cp -R $HOME/.local/share/rofi/themes $2/.local/share/rofi/
-    cp -R $HOME/.vim $2/
+    cp -R $HOME/.vim/colors $2/.vim/
     cp $HOME/.Xresources $2/.Xresources
     cp $HOME/.xinitrc $2/.xinitrc
     cp $HOME/.zshrc $2/.zshrc
