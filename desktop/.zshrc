@@ -11,18 +11,18 @@ SPACESHIP_BATTERY_SHOW='always'
 SPACESHIP_PROMPT_ADD_NEWLINE=false
 
 # Set env variable
-PATH=/usr/local/bin:$PATH
-PATH=$HOME/go/bin:$PATH
+export PATH=/usr/local/bin:$PATH
+export PATH=$HOME/go/bin:$PATH
 
-GOPATH=$HOME/go
+export GOPATH=$HOME/go
 
-ANDROID_HOME=$HOME/Android/Sdk
-PATH=$ANDROID_HOME/platform-tools:$PATH
-PATH=$ANDROID_HOME/tools:$PATH
-PATH=$ANDROID_HOME/tools/bin:$PATH
-PATH=$ANDROID_HOME/emulator:$PATH
+export ANDROID_HOME=$HOME/Android/Sdk
+export PATH=$ANDROID_HOME/platform-tools:$PATH
+export PATH=$ANDROID_HOME/tools:$PATH
+export PATH=$ANDROID_HOME/tools/bin:$PATH
+export PATH=$ANDROID_HOME/emulator:$PATH
 
-__GL_SHADER_DISK_CACHE_PATH=$HOME/.config
+export __GL_SHADER_DISK_CACHE_PATH=$HOME/.config
 
 # Set oh_my_zsh plugins
 plugins=(
