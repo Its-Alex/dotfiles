@@ -30,6 +30,8 @@ plugins=(
     git-extra
     go
     golang
+    vagrant
+    virtualbox
     docker
     docker-compose
     dotenv
