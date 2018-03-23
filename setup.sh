@@ -18,6 +18,7 @@ sync () {
     cp $2/.xinitrc $HOME/.xinitrc
     cp $2/.zshrc $HOME/.zshrc
     cp $2/.vimrc $HOME/.vimrc
+    cp $2/.tmux.conf $HOME/.tmux.conf
 }
 
 backup () {
@@ -31,6 +32,7 @@ backup () {
     cp $HOME/.xinitrc $2/.xinitrc
     cp $HOME/.zshrc $2/.zshrc
     cp $HOME/.vimrc $2/.vimrc
+    cp $HOME/.tmux.conf $2/.tmux.conf
 }
 
 use $#

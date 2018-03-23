@@ -2,11 +2,7 @@
 export ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load
-ZSH_THEME="spaceship"
-
-# Theme configuration
-SPACESHIP_BATTERY_SHOW='always'
-SPACESHIP_PROMPT_ADD_NEWLINE=false
+ZSH_THEME="robbyrussell"
 
 # Set env variable
 export PATH=/usr/local/bin:$PATH
@@ -21,6 +17,8 @@ export PATH=$ANDROID_HOME/emulator:$PATH
 export GOPATH=$HOME/go
 
 export __GL_SHADER_DISK_CACHE_PATH=$HOME/.config
+
+export TERM="xterm-256color"
 
 # Set oh_my_zsh plugins
 plugins=(
@@ -42,16 +40,6 @@ export UPDATE_ZSH_DAYS=15
 source $ZSH/oh-my-zsh.sh
 
 eval "$(direnv hook zsh)"
-
-if [[ -z "$SPACESHIP_VERSION" ]]; then
-    git clone https://github.com/denysdovhan/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt"
-    ln -s "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme"
-    exec zsh
-fi
-
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
 export LANG=en_US.UTF-8
