@@ -19,6 +19,7 @@ sync () {
     cp $2/.zshrc $HOME/.zshrc
     cp $2/.vimrc $HOME/.vimrc
     cp $2/.tmux.conf $HOME/.tmux.conf
+    cp $2/.gitconfig $HOME/.gitconfig
 }
 
 backup () {
@@ -33,6 +34,7 @@ backup () {
     cp $HOME/.zshrc $2/.zshrc
     cp $HOME/.vimrc $2/.vimrc
     cp $HOME/.tmux.conf $2/.tmux.conf
+    cp $HOME/.gitconfig $2/.gitconfig
 }
 
 use $#
