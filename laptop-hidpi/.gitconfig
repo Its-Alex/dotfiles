@@ -1,0 +1,5 @@
+[user]
+	email = me@itsalex.fr
+	name = ItsAlex
+[commit]
+	gpgsign = false
