@@ -18,6 +18,8 @@ export GOPATH=$HOME/go
 
 export __GL_SHADER_DISK_CACHE_PATH=$HOME/.config
 
+export TERM="xterm-256color"
+
 # Set oh_my_zsh plugins
 plugins=(
     git
