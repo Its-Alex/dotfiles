@@ -131,7 +131,7 @@ label-mode-background = #e60053
 label-focused = %icon%
 label-focused-foreground = #ffffff
 label-focused-background = #3f3f3f
-label-focused-underline = #fba922
+label-focused-underline = #ff5555
 label-focused-padding = 4
 
 ; Available tokens:
@@ -161,7 +161,7 @@ label-urgent-padding = 4
 ; Separator in between workspaces
 label-separator = |
 label-separator-padding = 2
-label-separator-foreground = #ffb52a
+label-separator-foreground = #ff5555
 
 [module/cpu]
 type = internal/cpu

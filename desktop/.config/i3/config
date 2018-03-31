@@ -183,5 +183,3 @@ exec --no-startup-id $HOME/.config/polybar/launch.sh
 exec --no-startup-id feh --bg-fill $HOME/Pictures/wallpaper.jpg
 ## compton
 exec --no-startup-id compton --config $HOME/.config/compton/config -b
-## Polkit auth
-exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 & eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg)
