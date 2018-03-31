@@ -1,4 +1,6 @@
 [global_config]
+  enabled_plugins = LaunchpadCodeURLHandler, APTURLHandler, Logger, LaunchpadBugURLHandler
+  title_font = Lato 9
   title_inactive_bg_color = "#2d2d2d"
   title_inactive_fg_color = "#afafaf"
   title_transmit_bg_color = "#4c4c4c"
@@ -18,10 +20,12 @@
   [[default]]
     allow_bold = False
     background_color = "#3d3d3d"
-    cursor_color = "#ffffff"
+    background_darkness = 0.85
+    background_type = transparent
+    cursor_color = "#aaaaaa"
     font = Monaco for Powerline 10
     foreground_color = "#ffffff"
-    palette = "#000000:#f92672:#6cc72c:#fe9720:#5f91ef:#9358fe:#36af90:#8c8c8c:#4c4c4c:#ff80f4:#a7e22e:#ffee99:#5fd9ef:#ae82fe:#66efd5:#c7cece"
+    palette = "#44475a:#ff5555:#50fa7b:#f1fa8c:#8be9fd:#bd93f9:#ff79c6:#94a3a5:#000000:#ff5555:#50fa7b:#f1fa8c:#8be9fd:#bd93f9:#ff79c6:#ffffff"
     scrollbar_position = hidden
     show_titlebar = False
     use_system_font = False
