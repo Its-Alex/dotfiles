@@ -20,9 +20,18 @@ sync () {
     cp $2/.vimrc $HOME/.vimrc
     cp $2/.tmux.conf $HOME/.tmux.conf
     cp $2/.gitconfig $HOME/.gitconfig
+
+    sudo cp $2/etc/X11/xinit/xinitrc.d/* /etc/X11/xinit/xinitrc.d
+    sudo chmod 0755 /etc/X11/xinit/xinitrc.d/*
 }
 
 backup () {
+    # Create folders if not exist
+    mkdir -p /etc
+    mkdir -p /etc/X11
+    mkdir -p /etc/X11/xinit
+    mkdir -p /etc/X11/xinit/xinitrc.d
+
     cp -R $HOME/.config/i3 $2/.config/
     cp -R $HOME/.config/polybar $2/.config/
     cp -R $HOME/.config/compton $2/.config/
@@ -35,6 +44,8 @@ backup () {
     cp $HOME/.vimrc $2/.vimrc
     cp $HOME/.tmux.conf $2/.tmux.conf
     cp $HOME/.gitconfig $2/.gitconfig
+
+    sudo cp /etc/X11/xinit/xinitrc.d/* $2/etc/X11/xinit/xinitrc.d
 }
 
 use $#
