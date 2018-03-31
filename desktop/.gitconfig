@@ -3,4 +3,4 @@
 	name = ItsAlex
 	signingkey = D13067073B9A98A9
 [commit]
-	gpgsign = true
+	gpgsign = false
