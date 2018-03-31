@@ -24,3 +24,5 @@ yaourt -S visual-studio-code-insiders x11-ssh-askpass --noconfirm --needed
 code --install-extension Shan.code-settings-sync
 echo "Terminator..."
 yaourt -S terminator --noconfirm --needed
+echo "Keyrings..."
+yaourt -S gnome-keyring --noconfirm --needed

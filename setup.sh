@@ -18,10 +18,10 @@ sync () {
     cp $2/.xinitrc $HOME/.xinitrc
     cp $2/.zshrc $HOME/.zshrc
     cp $2/.vimrc $HOME/.vimrc
-    cp $2/.tmux.conf $HOME/.tmux.conf
     cp $2/.gitconfig $HOME/.gitconfig
 
     sudo cp $2/etc/X11/xinit/xinitrc.d/* /etc/X11/xinit/xinitrc.d
+    sudo cp $2/etc/pam.d/login /etc/pam.d/login
     sudo chmod 0755 /etc/X11/xinit/xinitrc.d/*
 }
 
@@ -42,10 +42,10 @@ backup () {
     cp $HOME/.xinitrc $2/.xinitrc
     cp $HOME/.zshrc $2/.zshrc
     cp $HOME/.vimrc $2/.vimrc
-    cp $HOME/.tmux.conf $2/.tmux.conf
     cp $HOME/.gitconfig $2/.gitconfig
 
     sudo cp /etc/X11/xinit/xinitrc.d/* $2/etc/X11/xinit/xinitrc.d
+    sudo cp /etc/pam.d/login $2/etc/pam.d/login
 }
 
 use $#
