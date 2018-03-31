@@ -20,9 +20,17 @@ yaourt -S monaco-powerline-font-git otf-font-awesome noto-fonts noto-fonts-emoji
 echo "Chrome..."
 yaourt -S ttf-croscore google-chrome --noconfirm --needed
 echo "Visual studio code..."
-yaourt -S visual-studio-code-insiders x11-ssh-askpass --noconfirm --needed
+yaourt -S visual-studio-code --noconfirm --needed
 code --install-extension Shan.code-settings-sync
 echo "Terminator..."
 yaourt -S terminator --noconfirm --needed
 echo "Keyrings..."
 yaourt -S gnome-keyring --noconfirm --needed
+echo "Docker..."
+yaourt -S docker docker-compose --noconfirm --needed
+sudo usermod -aG docker $USER
+systemctl enable docker
+echo "Virtualbox..."
+yaourt -S virtualbox virtualbox-host-dkms --noconfirm --needed
+echo "Vagrant..."
+yaourt -S vagrant --noconfirm --needed
