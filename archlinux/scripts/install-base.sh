@@ -18,7 +18,9 @@ yaourt -S i3-gaps compton polybar-git rofi feh --noconfirm --needed
 echo "Fonts..."
 yaourt -S monaco-powerline-font-git otf-font-awesome noto-fonts noto-fonts-emoji noto-fonts-extra ttf-material-design-icons ttf-unifont --noconfirm --needed
 echo "Chrome..."
-yaourt -S ttf-croscore google-chrome
+yaourt -S ttf-croscore google-chrome --noconfirm --needed
 echo "Visual studio code..."
-yaourt -S visual-studio-code-insiders x11-ssh-askpass
+yaourt -S visual-studio-code-insiders x11-ssh-askpass --noconfirm --needed
 code --install-extension Shan.code-settings-sync
+echo "Terminator..."
+yaourt -S terminator --noconfirm --needed
