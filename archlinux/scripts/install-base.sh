@@ -6,8 +6,10 @@ echo "Locale..."
 sudo cp ../locale/locale.conf /etc/locale.conf
 sudo locale-gen
 localctl set-locale LANG=en_US.UTF8
+echo "Sound (pulseaudio)..."
+yaourt -S pulseaudio pulseaudio-alsa pulseaudio-alsa 
 
-echo "Install features"
+echo "Install features..."
 
 echo "Vim..."
 sudo pacman -S vim --noconfirm --needed
