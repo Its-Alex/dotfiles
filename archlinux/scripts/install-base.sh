@@ -33,6 +33,6 @@ yaourt -S docker docker-compose --noconfirm --needed
 sudo usermod -aG docker $USER
 systemctl enable docker
 echo "Virtualbox..."
-yaourt -S virtualbox virtualbox-host-dkms --noconfirm --needed
+yaourt -S virtualbox virtualbox-host-dkms linux-headers --noconfirm --needed
 echo "Vagrant..."
 yaourt -S vagrant --noconfirm --needed
