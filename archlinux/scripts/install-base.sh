@@ -7,7 +7,7 @@ sudo cp ../locale/locale.conf /etc/locale.conf
 sudo locale-gen
 localctl set-locale LANG=en_US.UTF8
 echo "==> Sound (pulseaudio)..."
-yaourt -S pulseaudio pulseaudio-alsa pulseaudio-alsa 
+yaourt -S pulseaudio pulseaudio-alsa
 
 echo "===> Install features..."
 
@@ -36,6 +36,3 @@ echo "==> Virtualbox..."
 yaourt -S virtualbox virtualbox-host-dkms linux-headers --noconfirm --needed
 echo "==> Vagrant..."
 yaourt -S vagrant --noconfirm --needed
-
-echo "==> Install theme..."
-yaourt -S lxappearance adapta-gtk-theme
