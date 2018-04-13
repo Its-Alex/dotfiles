@@ -39,3 +39,8 @@ yaourt -S vagrant --noconfirm --needed
 
 echo "==> Grub update..."
 sudo grub-mkconfig -o /boot/grub/grub.cfg
+
+echo "==> Construct home..."
+mkdir -p ~/Documents
+mkdir -p ~/Downloads
+cp -R ../Pictures ~/
