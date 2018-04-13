@@ -36,6 +36,8 @@ echo "==> Virtualbox..."
 yaourt -S virtualbox virtualbox-host-dkms linux-headers --noconfirm --needed
 echo "==> Vagrant..."
 yaourt -S vagrant --noconfirm --needed
+echo "==> Spotify..."
+yaourt -S spotify --noconfirm --needed
 
 echo "==> Grub update..."
 sudo grub-mkconfig -o /boot/grub/grub.cfg
