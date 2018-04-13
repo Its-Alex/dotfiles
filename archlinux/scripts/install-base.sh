@@ -3,11 +3,11 @@
 echo "====> Configure os..."
 
 echo "==> Locale..."
-sudo cp ../locale/locale.conf /etc/locale.conf
+sudo cp ../locale/locale.gen /etc/locale.gen
 sudo locale-gen
-localctl set-locale LANG=en_US.UTF8
+localectl set-locale LANG=en_US.UTF8
 echo "==> Sound (pulseaudio)..."
-yaourt -S pulseaudio pulseaudio-alsa
+yaourt -S pulseaudio pulseaudio-alsa --noconfirm --needed
 
 echo "===> Install features..."
 
@@ -22,8 +22,8 @@ yaourt -S monaco-powerline-font-git otf-font-awesome noto-fonts noto-fonts-emoji
 echo "==> Chrome..."
 yaourt -S ttf-croscore google-chrome --noconfirm --needed
 echo "==> Visual studio code..."
-yaourt -S visual-studio-code --noconfirm --needed
-code --install-extension Shan.code-settings-sync
+yaourt -S visual-studio-code-insiders --noconfirm --needed
+code-insiders --user-data-dir $HOME --install-extension Shan.code-settings-sync
 echo "==> Terminator..."
 yaourt -S terminator --noconfirm --needed
 echo "==> Keyrings..."
