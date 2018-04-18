@@ -1,11 +1,12 @@
 # Dotfile
-This is my dotfile configuration for my personal use.
+
+This is my dotfile configuration for my personal use
 
 ## Currently added
+
 - [Terminator](https://launchpad.net/terminator/)
 - [Vim](https://github.com/vim)
 - [Zsh](https://github.com/vim/vim)
-    - Use [spaceship](https://github.com/denysdovhan/spaceship-prompt)
 - [i3-gaps](https://github.com/Airblader/i3)
 - [polybar](https://github.com/jaagr/polybar)
 - [rofi](https://github.com/DaveDavenport/rofi)
@@ -23,10 +24,11 @@ $ ./setup sync [config]
 
 You can use the script to backup your current config
 
+It will backup all package currently supported above
+
 ```
 $ ./setup backup [config]
 ```
 
-## Todo
-- Setup script improvement
-  - Create new directory for backup
+## License
+[MIT](https://fr.wikipedia.org/wiki/Licence_MIT)
