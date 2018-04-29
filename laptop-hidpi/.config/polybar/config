@@ -70,10 +70,10 @@ bar-width = 10
 bar-indicator = |
 bar-indicator-font = 3
 bar-indicator-foreground = #ff
-bar-fill = ─
+bar-fill = -
 bar-fill-font = 3
 bar-fill-foreground = #c9665e
-bar-empty = ─
+bar-empty = -
 bar-empty-font = 3
 bar-empty-foreground = #44
 

@@ -22,7 +22,7 @@ font pango:monaco 8
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec st -e tmux
+bindsym $mod+Return exec terminator
 
 # kill focused window
 bindsym $mod+Shift+Return kill
