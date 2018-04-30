@@ -55,11 +55,14 @@ fi
 # export ARCHFLAGS="-arch x86_64"
 
 # ssh
+eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
+export SSH_AUTH_SOCK
 export SSH_KEY_PATH="~/.ssh/rsa_id"
 
 alias emacs="vim"
 alias vi="vim"
 alias open="xdg-open"
+alias gc="git commit --signoff"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
