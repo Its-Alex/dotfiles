@@ -57,6 +57,12 @@ fi
 # ssh
 export SSH_KEY_PATH="~/.ssh/rsa_id"
 
+loop() {
+    nb=$1
+    shift
+    for ((i = 0; i < $nb; i++)); do $@; done
+}
+
 alias emacs="vim"
 alias vi="vim"
 alias open="xdg-open"
