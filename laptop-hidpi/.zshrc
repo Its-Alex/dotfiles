@@ -59,6 +59,13 @@ eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
 export SSH_AUTH_SOCK
 export SSH_KEY_PATH="~/.ssh/rsa_id"
 
+loop() {
+    nb=$1
+    shift
+    for ((i = 0; i < $nb; i++)); do $@; done
+}
+
+
 alias emacs="vim"
 alias vi="vim"
 alias open="xdg-open"
