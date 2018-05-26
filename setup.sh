@@ -22,6 +22,8 @@ sync () {
 
     sudo cp $2/etc/X11/xinit/xinitrc.d/* /etc/X11/xinit/xinitrc.d
     sudo cp $2/etc/pam.d/login /etc/pam.d/login
+    sudo cp $2/etc/X11/xorg.conf.d/70-synaptics.conf /etc/X11/xorg.conf.d/70-synaptics.conf
+    sudo chmod 0755 /etc/etc/X11/xorg.conf.d/*
     sudo chmod 0755 /etc/X11/xinit/xinitrc.d/*
 }
 
@@ -46,6 +48,7 @@ backup () {
 
     sudo cp /etc/X11/xinit/xinitrc.d/* $2/etc/X11/xinit/xinitrc.d
     sudo cp /etc/pam.d/login $2/etc/pam.d/login
+    sudo cp /etc/X11/xorg.conf.d/70-synaptics.conf $2/etc/X11/xorg.conf.d/70-synaptics.conf
 }
 
 use $#

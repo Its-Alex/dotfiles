@@ -54,17 +54,18 @@ fi
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
-# ssh
-eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
-export SSH_AUTH_SOCK
-export SSH_KEY_PATH="~/.ssh/rsa_id"
-
+# Loop shortcut command
 loop() {
     nb=$1
     shift
     for ((i = 0; i < $nb; i++)); do $@; done
 }
 
+
+# ssh
+eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
+export SSH_AUTH_SOCK
+export SSH_KEY_PATH="~/.ssh/rsa_id"
 
 alias emacs="vim"
 alias vi="vim"
