@@ -14,17 +14,11 @@ sync () {
     cp -R $2/.config/* $HOME/.config
     cp -R $2/.local/share/rofi/* $HOME/.local/share/rofi
     cp -R $2/.vim $HOME
-    cp $2/.Xresources $HOME/.Xresources
-    cp $2/.xinitrc $HOME/.xinitrc
     cp $2/.zshrc $HOME/.zshrc
     cp $2/.vimrc $HOME/.vimrc
     cp $2/.gitconfig $HOME/.gitconfig
 
-    sudo cp $2/etc/X11/xinit/xinitrc.d/* /etc/X11/xinit/xinitrc.d
     sudo cp $2/etc/pam.d/login /etc/pam.d/login
-    sudo cp $2/etc/X11/xorg.conf.d/70-synaptics.conf /etc/X11/xorg.conf.d/70-synaptics.conf
-    sudo chmod 0755 /etc/etc/X11/xorg.conf.d/*
-    sudo chmod 0755 /etc/X11/xinit/xinitrc.d/*
 }
 
 backup () {
@@ -40,15 +34,11 @@ backup () {
     cp -R $HOME/.config/terminator $2/.config/
     cp -R $HOME/.local/share/rofi/themes $2/.local/share/rofi/
     cp -R $HOME/.vim/colors $2/.vim/
-    cp $HOME/.Xresources $2/.Xresources
-    cp $HOME/.xinitrc $2/.xinitrc
     cp $HOME/.zshrc $2/.zshrc
     cp $HOME/.vimrc $2/.vimrc
     cp $HOME/.gitconfig $2/.gitconfig
 
-    sudo cp /etc/X11/xinit/xinitrc.d/* $2/etc/X11/xinit/xinitrc.d
     sudo cp /etc/pam.d/login $2/etc/pam.d/login
-    sudo cp /etc/X11/xorg.conf.d/70-synaptics.conf $2/etc/X11/xorg.conf.d/70-synaptics.conf
 }
 
 use $#

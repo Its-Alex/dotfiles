@@ -2,6 +2,8 @@
 width = 100%
 height = 34
 
+monitor = ${env:MONITOR:DP-2}
+
 background = #ee333333
 foreground = #ccffffff
 
@@ -28,6 +30,8 @@ modules-right = volume backlight wireless-network wired-network battery date
 bottom = true
 width = 100%
 height = 27
+
+monitor = ${env:MONITOR:DP-2}
 
 background = ${bar/top.background}
 foreground = ${bar/top.foreground}
@@ -114,6 +118,8 @@ ws-icon-2 = Code;
 ws-icon-3 = Music;
 ws-icon-4 = Chat;
 ws-icon-default = 
+
+pin-workspaces = true
 
 ; Use fuzzy (partial) matching on labels when assigning
 ; icons to workspaces

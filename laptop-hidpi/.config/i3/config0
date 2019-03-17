@@ -1,8 +1,0 @@
-exec --no-startup-id dbus-send \
-    --session \
-    --print-reply=literal \
-    --dest=org.gnome.SessionManager \
-    "/org/gnome/SessionManager" \
-    org.gnome.SessionManager.RegisterClient \
-    "string:i3" \
-    "string:$DESKTOP_AUTOSTART_ID"
