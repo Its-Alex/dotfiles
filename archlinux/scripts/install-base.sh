@@ -15,7 +15,7 @@ echo "==> Vim..."
 sudo pacman -S vim --noconfirm --needed
 echo "==> I3 gaps..."
 yaourt -R i3blocks i3status i3-wm
-yaourt -S i3-gaps compton polybar-git rofi feh --noconfirm --needed
+yaourt -S i3-gaps compton polybar-git rofi feh unclutter --noconfirm --needed
 echo "==> Fonts..."
 yaourt -S monaco-powerline-font-git otf-font-awesome noto-fonts noto-fonts-emoji noto-fonts-extra ttf-material-design-icons ttf-unifont ttf-droid --noconfirm --needed
 echo "==> Chrome..."

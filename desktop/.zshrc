@@ -32,9 +32,8 @@ ZSH_THEME="robbyrussell"
 #  shellcheck disable=SC2034 # Set oh_my_zsh plugins
 plugins=(
     git
-    git-extra
+    git-extras
     vagrant
-    virtualbox
     docker
     docker-compose
     extract
@@ -47,9 +46,6 @@ source "${ZSH}/oh-my-zsh.sh"
 # Zgen
 #  shellcheck source=/dev/null # Load zgen
 source "${HOME}/.zgen/zgen.zsh"
-#  shellcheck disable=SC2034 # Api key used by code-stats-zsh
-CODESTATS_API_KEY="SFMyNTY.U1hSelFXeGxlQT09IyNNalV5TVE9PQ.wW4jDI_fAjTZ2wL6t6JFHYGO4VnHugxuWEvDd1UQGew"
-zgen load https://gitlab.com/code-stats/code-stats-zsh.git
 
 # Hooks
 #  Direnv
@@ -73,7 +69,18 @@ else
 fi
 
 # Ssh
-export SSH_KEY_PATH="$HOME/.ssh/rsa_id"
+export SSH_KEY_PATH="$HOME/.ssh/itsalex"
+if [[ $(uname) != "Darwin" ]]; then
+#  if [ ! -S ~/.ssh/ssh_auth_sock ]; then
+#    eval $(ssh-agent) &> /dev/null
+#    ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
+#  fi
+#  export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
+    if [ -n "$DESKTOP_SESSION" ];then
+        eval $(gnome-keyring-daemon --start)
+        export SSH_AUTH_SOCK
+    fi
+fi
 
 # Alias
 alias emacs="vim"
@@ -81,3 +88,7 @@ alias vi="vim"
 if [[ $(uname) == "Darwin" ]]; then
     alias code="open -a \"Visual Studio Code - Insiders\""
 fi
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

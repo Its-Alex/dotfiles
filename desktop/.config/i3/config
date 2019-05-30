@@ -83,6 +83,10 @@ bindsym $mod+q focus parent
 # focus the child container
 bindsym $mod+d focus child
 
+# move workspace to monitor
+bindsym $mod+Control+Left move workspace to output left
+bindsym $mod+Control+Right move workspace to output right
+
 # switch to workspace
 bindsym $mod+1 workspace $ws1
 bindsym $mod+2 workspace $ws2
@@ -174,6 +178,8 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # startup applications
+## unclutter
+exec --no-startup-id unclutter 
 ## polybar
 exec --no-startup-id $HOME/.config/polybar/launch.sh
 ## wallpaper
