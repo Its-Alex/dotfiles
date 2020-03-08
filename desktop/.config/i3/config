@@ -124,6 +124,7 @@ for_window [class="VirtualBox Machine"]             floating enable
 assign [class="Code"]               → $ws2
 assign [class="Code-insiders"]      → $ws2
 assign [class="Google-chrome"]      → $ws3
+assign [class="Mozilla Firefox"]    → $ws3
 assign [class="Spotify"]            → $ws5
 assign [class="spotify"]            → $ws5
 assign [class="Discord"]            → $ws4
