@@ -1,0 +1,52 @@
+trans_read:
+  _gpg: gpg2 -q --for-your-eyes-only --no-tty -d {0} > {1}
+config:
+  backup: true
+  create: true
+  dotpath: dotfiles
+dotfiles:
+  f_tool-versions:
+    src: tool-versions
+    dst: ~/.tool-versions
+  f_gitconfig:
+    src: gitconfig
+    dst: ~/.gitconfig
+  f_alacritty.yml:
+    src: config/alacritty/alacritty.yml
+    dst: ~/.config/alacritty/alacritty.yml
+  f_zshrc:
+    src: zshrc
+    dst: ~/.zshrc
+  f_tmux.conf:
+    src: tmux.conf
+    dst: ~/.tmux.conf
+  f_config:
+    src: config/pgcli/config
+    dst: ~/.config/pgcli/config
+  f_ssh_private:
+    dst: ~/.ssh/itsalex
+    src: ssh/itsalex
+    trans_read: _gpg
+    chmod: '600'
+  f_ssh_public:
+    dst: ~/.ssh/itsalex.pub
+    src: ssh/itsalex.pub
+  f_ssh_config:
+    src: ssh/config
+    dst: ~/.ssh/config
+  f_wallpaper.jpg:
+    src: Pictures/wallpaper.jpg
+    dst: ~/Pictures/wallpaper.jpg
+profiles:
+  linux-gnome:
+    dotfiles:
+    - f_tool-versions
+    - f_gitconfig
+    - f_alacritty.yml
+    - f_zshrc
+    - f_tmux.conf
+    - f_config
+    - f_ssh_private
+    - f_ssh_public
+    - f_ssh_config
+    - f_wallpaper.jpg
