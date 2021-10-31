@@ -1,0 +1,85 @@
+#!/bin/bash
+
+# Environment variable
+#  Path
+export PATH=/usr/local/bin:$PATH
+export PATH=/usr/local/sbin:$PATH
+# Rust
+export PATH=$PATH:$HOME/.cargo/bin
+#  Golang
+export GOPATH=$PATH:$HOME/go
+export PATH=$PATH:$HOME/go/bin
+# Python
+export PATH=$PATH:$HOME/.local/lib/python3.9/site-packages:$HOME/.local/bin
+#  Gpg
+GPG_TTY=$(tty)
+export GPG_TTY
+
+# Oh my zsh
+#  Path to your oh_my_zsh installation.
+export ZSH=$HOME/.oh-my-zsh
+#  shellcheck disable=SC2034 # Set name of the oh_my_zsh theme to load
+ZSH_THEME="robbyrussell"
+#  shellcheck disable=SC2034 # Set oh_my_zsh plugins
+plugins=(
+    git
+    git-extras
+    vagrant
+    docker
+    docker-compose
+    extract
+    z
+)
+#  Set update all 15 days
+export UPDATE_ZSH_DAYS=15
+#  shellcheck source=/dev/null # Load oh_my_zsh
+source "${ZSH}/oh-my-zsh.sh"
+
+# Hooks
+#  Direnv
+if [ -x "$(command -v direnv)" ]; then
+    eval "$(direnv hook zsh)"
+fi
+#  Pipenv
+if [ -x "$(command -v pipenv)" ]; then
+    eval "$(pipenv --completion)"
+fi
+
+# You may need to manually set your language environment
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+# Preferred editor for local and remote sessions
+export EDITOR='vim'
+
+# Alias
+alias emacs="vim"
+alias vi="vim"
+
+{%@@ if profile == "macos" @@%}
+export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+export ANDROID_SDK_ROOT="/usr/local/share/android-sdk"
+export PATH=$ANDROID_SDK_ROOT:$PATH
+export HOMEBREW_INSTALL_CLEANUP=1
+
+aws-spacefill-docker-registry-s3() {
+    aws --profile spacefill-docker-registry-s3 s3 ls "s3://spacefill-docker-registry-s3/$1"
+}
+aws-spacefill-gitlab-backup-s3() {
+    aws --profile spacefill-gitlab-backup-s3 s3 ls "s3://spacefill-gitlab-backup-s3/$1"
+}
+
+alias ls="ls --color=auto"
+
+. "$(brew --prefix asdf)/libexec/asdf.sh"
+{%@@ elif profile == "linux-gnome" @@%}
+# Python environment
+export PATH=$PATH:/home/alex/.local/bin
+
+# Android SDK
+export ANDROID_SDK_ROOT=/opt/android-sdk
+export PATH="${ANDROID_SDK_ROOT}/platform-tools:$PATH"
+export PATH="${ANDROID_SDK_ROOT}/tools:$PATH"
+
+. "$HOME/.asdf/asdf.sh"
+{%@@ endif @@%}

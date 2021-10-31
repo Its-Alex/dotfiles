@@ -3,6 +3,6 @@
 	name = ItsAlex
 	signingkey = D13067073B9A98A9
 [pull]
-    rebase = true
+	rebase = true
 [commit]
 	gpgsign = true

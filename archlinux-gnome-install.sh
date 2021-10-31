@@ -13,10 +13,6 @@ git clone https://aur.archlinux.org/yay.git /tmp/yay
 )
 rm -rf /tmp/yay
 
-echo "==> Locale..."
-sudo cp ../locale/locale.gen /etc/locale.gen
-sudo locale-gen
-localectl set-locale LANG=en_US.UTF8
 echo "==> Sound (pulseaudio)..."
 yay -S pulseaudio pulseaudio-alsa --noconfirm --needed
 echo "==> Keyboard..."
@@ -57,12 +53,9 @@ sudo grub-mkconfig -o /boot/grub/grub.cfg
 echo "==> Construct home..."
 mkdir -p ~/Documents
 mkdir -p ~/Downloads
-cp -R ../Pictures ~/
 
 yay -S zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
-curl https://gist.githubusercontent.com/Its-Alex/cf80dca9855e9a7fbf64b9fc67c2ad05/raw/ > ~/.zshrc
 
 echo "===> Install customs programs..."
 
@@ -89,4 +82,3 @@ yay -S --noconfirm --needed \
 #     nvidia-dkms \
 #     nvidia-settings \
 #     nvidia-utils
-

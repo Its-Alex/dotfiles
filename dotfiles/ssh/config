@@ -1,0 +1,12 @@
+Include /home/itsalex/Documents/spacefill/deployments/ssh_config
+
+Host itsalex
+    ForwardAgent yes
+    Hostname itsalex.fr
+    User itsalex
+
+Host *
+    User root
+    StrictHostKeyChecking no
+    forwardagent yes
+    IdentityFile ~/.ssh/itsalex

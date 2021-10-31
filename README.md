@@ -1,25 +1,20 @@
-# Dotfile
+# Dotfiles
 
-This is my dotfile configuration for my personal use. 
+This repo contains all my configuration.
 
-## Base archlinux
+## Linux
 
-Use install script:
+### Scripts
 
-```
-$ ./archlinux/scripts/install.sh
-```
+There are scripts to install some packages on Linux:
 
-## i3
+- [`archlinux-gnome-install.sh`](archlinux-gnome-install.sh) for Archlinux with gnome
 
-### Currently added
+### Gnome
 
-- [Alacritty](https://github.com/alacritty/alacritty)
-- [Vim](https://github.com/vim)
-- [Zsh](https://github.com/vim/vim)
-### How to use
+#### Extensions
 
-Copy files.
-
-## License
-[MIT](https://fr.wikipedia.org/wiki/Licence_MIT)
+- [`Sound Input & Output Device Chooser`](https://github.com/kgshank/gse-sound-output-device-chooser)
+- [`System monitor`](https://github.com/paradoxxxzero/gnome-shell-system-monitor-applet)
+- [`Window Is Ready - Notification Remover`](https://github.com/nunofarruca/WindowIsReady_Remover)
+- [`Dash to dock`](https://micheleg.github.io/dash-to-dock/)
