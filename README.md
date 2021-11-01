@@ -18,3 +18,7 @@ There are scripts to install some packages on Linux:
 - [`System monitor`](https://github.com/paradoxxxzero/gnome-shell-system-monitor-applet)
 - [`Window Is Ready - Notification Remover`](https://github.com/nunofarruca/WindowIsReady_Remover)
 - [`Dash to dock`](https://micheleg.github.io/dash-to-dock/)
+
+#### Themes
+
+- [`flat-remix-gnome`](https://www.gnome-look.org/p/1013030/)
