@@ -2,6 +2,26 @@
 
 This repo contains all my configuration.
 
+## Requirements
+
+- [`python-pip`](https://pypi.org/project/pip/)
+
+## Install
+
+First you must setup a `venv` environment:
+
+```
+$ python -m venv .pyenv
+$ source .pyenv/bin/activate
+```
+
+Then install dependencies:
+
+```
+$ pip install --upgrade pip
+$ pip install -r requirements.txt
+```
+
 ## Linux
 
 ### Scripts
