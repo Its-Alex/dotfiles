@@ -50,3 +50,14 @@ profiles:
     - f_ssh_public
     - f_ssh_config
     - f_wallpaper.jpg
+  macos:
+    dotfiles:
+    - f_tool-versions
+    - f_gitconfig
+    - f_alacritty.yml
+    - f_zshrc
+    - f_tmux.conf
+    - f_config
+    - f_ssh_private
+    - f_ssh_public
+    - f_ssh_config

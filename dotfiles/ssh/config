@@ -1,4 +1,8 @@
+{%@@ if profile == "macos" @@%}
+Include /Users/alex/Documents/spacefill/deployments/ssh_config
+{%@@ elif profile == "linux-gnome" @@%}
 Include /home/itsalex/Documents/spacefill/deployments/ssh_config
+{%@@ endif @@%}
 
 Host itsalex
     ForwardAgent yes

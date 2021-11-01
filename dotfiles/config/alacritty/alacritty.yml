@@ -10,7 +10,11 @@ font:
   bold_italic:
     family: "Fira Code"
     style: Bold Italic
+{%@@ if profile == "macos" @@%}
+  size: 11.5
+{%@@ elif profile == "linux-gnome" @@%}
   size: 9.0
+{%@@ endif @@%}
 
 # Colors (Dracula)
 colors:
