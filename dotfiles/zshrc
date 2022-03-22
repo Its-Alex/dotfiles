@@ -57,6 +57,7 @@ alias emacs="vim"
 alias vi="vim"
 
 {%@@ if profile == "macos" @@%}
+eval "$(/opt/homebrew/bin/brew shellenv)"
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export ANDROID_SDK_ROOT="/usr/local/share/android-sdk"
 export PATH=$ANDROID_SDK_ROOT:$PATH
