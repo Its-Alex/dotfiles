@@ -37,6 +37,9 @@ dotfiles:
   f_wallpaper.jpg:
     src: Pictures/wallpaper.jpg
     dst: ~/Pictures/wallpaper.jpg
+  f_space_bg.jpg:
+    src: Pictures/space_bg.jpg
+    dst: ~/Pictures/space_bg.jpg
 profiles:
   linux-gnome:
     dotfiles:
@@ -50,6 +53,7 @@ profiles:
     - f_ssh_public
     - f_ssh_config
     - f_wallpaper.jpg
+    - f_space_bg.jpg
   macos:
     dotfiles:
     - f_tool-versions
@@ -61,3 +65,4 @@ profiles:
     - f_ssh_private
     - f_ssh_public
     - f_ssh_config
+    - f_space_bg.jpg
