@@ -1,5 +1,5 @@
 {%@@ if profile == "macos" @@%}
-Include /Users/alex/Documents/spacefill/deployments/ssh_config
+Include /Users/itsalex/Documents/spacefill/deployments/ssh_config
 {%@@ elif profile == "linux-gnome" @@%}
 Include /home/itsalex/Documents/spacefill/deployments/ssh_config
 {%@@ endif @@%}
@@ -12,5 +12,5 @@ Host itsalex
 Host *
     User root
     StrictHostKeyChecking no
-    forwardagent yes
+    ForwardAgent yes
     IdentityFile ~/.ssh/itsalex

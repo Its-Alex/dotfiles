@@ -1,6 +1,10 @@
-nodejs system
-python system
-yarn system
+nodejs 18.15.0
+pnpm 7.30.0-0
+python 3.11.2
+yarn 1.22.19
 terraform system
-vagrant system
 direnv system
+helm system
+minikube system
+kubectl system
+golang system

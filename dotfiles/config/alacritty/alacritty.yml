@@ -107,8 +107,16 @@ colors:
   indexed_colors: []
 
 shell:
+{%@@ if profile == "macos" @@%}
+  program: /opt/homebrew/bin/zsh
+  args:
+    - -l
+    - -c
+    - "source ~/.zshrc; tmux attach 2> /dev/null || tmux"
+{%@@ elif profile == "linux-gnome" @@%}
   program: /bin/bash
   args:
     - -l
     - -c
     - "tmux attach || tmux"
+{%@@ endif @@%}

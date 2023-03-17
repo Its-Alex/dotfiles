@@ -1,4 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+{%@@ if profile == "macos" @@%}
+eval "$(/opt/homebrew/bin/brew shellenv)"
+{%@@ endif @@%}
 
 # Environment variable
 #  Path
@@ -6,11 +10,9 @@ export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
 # Rust
 export PATH=$PATH:$HOME/.cargo/bin
-#  Golang
-export GOPATH=$PATH:$HOME/go
+# Golang
+export GOPATH=$HOME/go
 export PATH=$PATH:$HOME/go/bin
-# Python
-export PATH=$PATH:$HOME/.local/lib/python3.9/site-packages:$HOME/.local/bin
 #  Gpg
 GPG_TTY=$(tty)
 export GPG_TTY
@@ -46,7 +48,6 @@ if [ -x "$(command -v pipenv)" ]; then
 fi
 
 # You may need to manually set your language environment
-export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
@@ -57,7 +58,6 @@ alias emacs="vim"
 alias vi="vim"
 
 {%@@ if profile == "macos" @@%}
-eval "$(/opt/homebrew/bin/brew shellenv)"
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export ANDROID_SDK_ROOT="/usr/local/share/android-sdk"
 export PATH=$ANDROID_SDK_ROOT:$PATH
@@ -72,7 +72,7 @@ aws-spacefill-gitlab-backup-s3() {
 
 alias ls="ls --color=auto"
 
-. "$(brew --prefix asdf)/libexec/asdf.sh"
+eval "$(rtx activate zsh)"
 {%@@ elif profile == "linux-gnome" @@%}
 # Python environment
 export PATH=$PATH:/home/alex/.local/bin
@@ -82,5 +82,5 @@ export ANDROID_SDK_ROOT=/opt/android-sdk
 export PATH="${ANDROID_SDK_ROOT}/platform-tools:$PATH"
 export PATH="${ANDROID_SDK_ROOT}/tools:$PATH"
 
-. "$HOME/.asdf/asdf.sh"
+eval "$(rtx activate zsh)"
 {%@@ endif @@%}
