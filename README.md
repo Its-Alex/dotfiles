@@ -4,22 +4,21 @@ This repo contains all my configuration.
 
 ## Requirements
 
-- [`python-pip`](https://pypi.org/project/pip/)
+- [`direnv`](https://direnv.net/)
 
 ## Install
 
-First you must setup a `venv` environment:
+First you must allow direnv environment:
 
-```
-$ python -m venv .pyenv
-$ source .pyenv/bin/activate
+```sh
+$ direnv allow
 ```
 
 Then install dependencies:
 
-```
+```sh
 $ pip install --upgrade pip
-$ pip install -r requirements.txt
+$ pip install -r dotdrop/requirements.txt
 ```
 
 ## Linux
