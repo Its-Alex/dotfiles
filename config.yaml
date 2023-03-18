@@ -40,6 +40,9 @@ dotfiles:
   f_space_bg.jpg:
     src: Pictures/space_bg.jpg
     dst: ~/Pictures/space_bg.jpg
+  f_npmrc:
+    src: npmrc
+    dst: ~/.npmrc
 profiles:
   linux-gnome:
     dotfiles:
@@ -54,6 +57,7 @@ profiles:
     - f_ssh_config
     - f_wallpaper.jpg
     - f_space_bg.jpg
+    - f_npmrc
   macos:
     dotfiles:
     - f_tool-versions
@@ -66,3 +70,4 @@ profiles:
     - f_ssh_public
     - f_ssh_config
     - f_space_bg.jpg
+    - f_npmrc
