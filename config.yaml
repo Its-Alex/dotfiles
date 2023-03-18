@@ -43,6 +43,9 @@ dotfiles:
   f_npmrc:
     src: npmrc
     dst: ~/.npmrc
+  f_use_rtx.sh:
+    src: config/direnv/lib/use_rtx.sh
+    dst: ~/.config/direnv/lib/use_rtx.sh
 profiles:
   linux-gnome:
     dotfiles:
@@ -58,6 +61,7 @@ profiles:
     - f_wallpaper.jpg
     - f_space_bg.jpg
     - f_npmrc
+    - f_use_rtx.sh
   macos:
     dotfiles:
     - f_tool-versions
@@ -71,3 +75,4 @@ profiles:
     - f_ssh_config
     - f_space_bg.jpg
     - f_npmrc
+    - f_use_rtx.sh
