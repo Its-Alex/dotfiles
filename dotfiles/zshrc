@@ -37,6 +37,9 @@ export UPDATE_ZSH_DAYS=15
 #  shellcheck source=/dev/null # Load oh_my_zsh
 source "${ZSH}/oh-my-zsh.sh"
 
+# Enable rtx
+eval "$(rtx activate zsh)"
+
 # Hooks
 #  Direnv
 if [ -x "$(command -v direnv)" ]; then
@@ -71,8 +74,6 @@ aws-spacefill-gitlab-backup-s3() {
 }
 
 alias ls="ls --color=auto"
-
-eval "$(rtx activate zsh)"
 {%@@ elif profile == "linux-gnome" @@%}
 # Python environment
 export PATH=$PATH:/home/alex/.local/bin
@@ -81,6 +82,4 @@ export PATH=$PATH:/home/alex/.local/bin
 export ANDROID_SDK_ROOT=/opt/android-sdk
 export PATH="${ANDROID_SDK_ROOT}/platform-tools:$PATH"
 export PATH="${ANDROID_SDK_ROOT}/tools:$PATH"
-
-eval "$(rtx activate zsh)"
 {%@@ endif @@%}
