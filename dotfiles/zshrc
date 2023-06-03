@@ -38,16 +38,13 @@ export UPDATE_ZSH_DAYS=15
 source "${ZSH}/oh-my-zsh.sh"
 
 # Enable rtx
-eval "$(rtx activate zsh)"
+if [ -x "$(command -v rtx)" ]; then
+    eval "$(rtx activate zsh)"
 
-# Hooks
-#  Direnv
-if [ -x "$(command -v direnv)" ]; then
-    eval "$(direnv hook zsh)"
-fi
-#  Pipenv
-if [ -x "$(command -v pipenv)" ]; then
-    eval "$(pipenv --completion)"
+    #  Direnv hook
+    if [ -x "$(rtx which direnv)" ]; then
+        eval "$($(rtx which direnv) hook zsh)"
+    fi
 fi
 
 # You may need to manually set your language environment
