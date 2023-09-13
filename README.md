@@ -33,10 +33,10 @@ There are scripts to install some packages on Linux:
 
 #### Extensions
 
-- [`Sound Input & Output Device Chooser`](https://github.com/kgshank/gse-sound-output-device-chooser)
-- [`System monitor`](https://github.com/paradoxxxzero/gnome-shell-system-monitor-applet)
-- [`Window Is Ready - Notification Remover`](https://github.com/nunofarruca/WindowIsReady_Remover)
 - [`Dash to dock`](https://micheleg.github.io/dash-to-dock/)
+- [`GNOME Fuzzy App Search`](https://extensions.gnome.org/extension/3956/gnome-fuzzy-app-search/)
+- [`Grand Theft Focus`](https://extensions.gnome.org/extension/5410/grand-theft-focus/)
+- [`System monitor next`](https://extensions.gnome.org/extension/3010/system-monitor-next/)
 
 #### Themes
 
