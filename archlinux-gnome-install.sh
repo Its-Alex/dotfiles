@@ -52,17 +52,15 @@ yay -S --noconfirm --needed \
     numix-cursor-theme \
     numix-frost-themes \
     numix-square-icon-theme \
-    htop \
     unzip \
     tar \
-    tfenv \
-    pgcli \
-    direnv \
+    rtx \
     vlc \
     authy \
     spotify \
     slack-desktop \
-    simplenote-electron-bin
+    joplin-desktop \
+    element-desktop
 
 # Nvidia
 
