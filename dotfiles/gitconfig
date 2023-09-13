@@ -8,3 +8,5 @@
 	gpgsign = true
 [merge]
     conflictstyle = zdiff3
+[init]
+    defaultBranch = main
