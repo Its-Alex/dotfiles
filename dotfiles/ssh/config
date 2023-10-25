@@ -1,7 +1,7 @@
 {%@@ if profile == "macos" @@%}
-Include /Users/itsalex/Documents/spacefill/deployments/ssh_config
+Include /Users/itsalex/Documents/realtime-helm-package/deployment/ssh-config
 {%@@ elif profile == "linux-gnome" @@%}
-Include /home/itsalex/Documents/spacefill/deployments/ssh_config
+Include /home/itsalex/Documents/realtime-helm-package/deployment/ssh-config
 {%@@ endif @@%}
 
 Host itsalex

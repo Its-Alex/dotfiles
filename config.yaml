@@ -1,9 +1,8 @@
-trans_read:
-  _gpg: gpg2 -q --for-your-eyes-only --no-tty -d {0} > {1}
 config:
   backup: true
   create: true
   dotpath: dotfiles
+  minversion: 1.13.2
 dotfiles:
   f_tool-versions:
     src: tool-versions
@@ -26,8 +25,8 @@ dotfiles:
   f_ssh_private:
     dst: ~/.ssh/itsalex
     src: ssh/itsalex
-    trans_read: _gpg
     chmod: '600'
+    trans_install: _gpg
   f_ssh_public:
     dst: ~/.ssh/itsalex.pub
     src: ssh/itsalex.pub
@@ -76,3 +75,5 @@ profiles:
     - f_space_bg.jpg
     - f_npmrc
     - f_use_rtx.sh
+trans_install:
+  _gpg: gpg2 -q --for-your-eyes-only --no-tty -d {0} > {1}
