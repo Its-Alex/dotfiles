@@ -55,6 +55,7 @@ yay -S --noconfirm --needed \
     unzip \
     tar \
     rtx \
+    fzf \
     vlc \
     authy \
     spotify \
