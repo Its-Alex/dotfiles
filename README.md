@@ -4,14 +4,14 @@ This repo contains all my configuration.
 
 ## Requirements
 
-- [`direnv`](https://direnv.net/)
+- [`rtx`](https://github.com/jdx/rtx)
 
 ## Install
 
 First you must allow direnv environment:
 
 ```sh
-$ direnv allow
+$ rtx install
 ```
 
 Then install dependencies:
