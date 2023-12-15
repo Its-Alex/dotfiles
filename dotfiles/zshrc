@@ -13,6 +13,8 @@ export PATH=$PATH:$HOME/.cargo/bin
 # Golang
 export GOPATH=$HOME/go
 export PATH=$PATH:$HOME/go/bin
+# rtx IDE Integration https://github.com/jdx/rtx?tab=readme-ov-file#ide-integration
+export PATH=$PATH:$HOME/.local/share/rtx/shims
 #  Gpg
 GPG_TTY=$(tty)
 export GPG_TTY
