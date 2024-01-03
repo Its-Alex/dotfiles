@@ -32,7 +32,7 @@ git clone https://github.com/tmux-plugins/tpm "${HOME}/.tmux/plugins/tpm"
 echo "==> Keyrings..."
 yay -S gnome-keyring --noconfirm --needed
 echo "==> Docker..."
-yay -S docker docker-compose --noconfirm --needed
+yay -S docker --noconfirm --needed
 sudo usermod -aG docker "${USER}"
 systemctl enable docker
 echo "==> Virtualbox..."
