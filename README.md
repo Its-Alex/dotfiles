@@ -4,14 +4,14 @@ This repo contains all my configuration.
 
 ## Requirements
 
-- [`rtx`](https://github.com/jdx/rtx)
+- [`mise`](https://github.com/jdx/mise)
 
 ## Install
 
 First you must allow direnv environment:
 
 ```sh
-$ rtx install
+$ mise install
 ```
 
 Then install dependencies:

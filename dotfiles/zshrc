@@ -13,8 +13,8 @@ export PATH=$PATH:$HOME/.cargo/bin
 # Golang
 export GOPATH=$HOME/go
 export PATH=$PATH:$HOME/go/bin
-# rtx IDE Integration https://github.com/jdx/rtx?tab=readme-ov-file#ide-integration
-export PATH=$PATH:$HOME/.local/share/rtx/shims
+# mise IDE Integration https://mise.jdx.dev/ide-integration.html#ide-integration
+export PATH="$HOME/.local/share/mise/shims:$PATH"
 #  Gpg
 GPG_TTY=$(tty)
 export GPG_TTY
@@ -28,9 +28,7 @@ ZSH_THEME="robbyrussell"
 plugins=(
     git
     git-extras
-    vagrant
     docker
-    docker-compose
     extract
     z
 )
@@ -39,13 +37,13 @@ export UPDATE_ZSH_DAYS=15
 #  shellcheck source=/dev/null # Load oh_my_zsh
 source "${ZSH}/oh-my-zsh.sh"
 
-# Enable rtx
-if [ -x "$(command -v rtx)" ]; then
-    eval "$(rtx activate zsh)"
+# Enable mise
+if [ -x "$(command -v mise)" ]; then
+    eval "$(mise activate zsh)"
 
     #  Direnv hook
-    if [ -x "$(rtx which direnv)" ]; then
-        eval "$($(rtx which direnv) hook zsh)"
+    if [ -x "$(mise which direnv)" ]; then
+        eval "$($(mise which direnv) hook zsh)"
     fi
 fi
 

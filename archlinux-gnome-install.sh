@@ -54,7 +54,6 @@ yay -S --noconfirm --needed \
     numix-square-icon-theme \
     unzip \
     tar \
-    rtx \
     fzf \
     vlc \
     authy \
@@ -62,6 +61,9 @@ yay -S --noconfirm --needed \
     slack-desktop \
     joplin-desktop \
     element-desktop
+
+curl https://mise.jdx.dev/mise-latest-linux-x64 > /tmp/mise
+sudo mv /tmp/mise /usr/local/bin
 
 # Nvidia
 
