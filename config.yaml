@@ -45,6 +45,9 @@ dotfiles:
   f_use_mise.sh:
     src: config/direnv/lib/use_mise.sh
     dst: ~/.config/direnv/lib/use_mise.sh
+  f_settings.toml:
+    src: config/mise/settings.toml
+    dst: ~/.config/mise/settings.toml
 profiles:
   linux-gnome:
     dotfiles:
@@ -61,6 +64,7 @@ profiles:
     - f_space_bg.jpg
     - f_npmrc
     - f_use_mise.sh
+    - f_settings.toml
   macos:
     dotfiles:
     - f_tool-versions
@@ -75,5 +79,6 @@ profiles:
     - f_space_bg.jpg
     - f_npmrc
     - f_use_mise.sh
+    - f_settings.toml
 trans_install:
   _gpg: gpg2 -q --for-your-eyes-only --no-tty -d {0} > {1}
