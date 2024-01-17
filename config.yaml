@@ -4,9 +4,9 @@ config:
   dotpath: dotfiles
   minversion: 1.13.2
 dotfiles:
-  f_tool-versions:
-    src: tool-versions
-    dst: ~/.tool-versions
+  f_mise.toml:
+    src: mise.toml
+    dst: ~/.mise.toml
   f_gitconfig:
     src: gitconfig
     dst: ~/.gitconfig
@@ -51,7 +51,7 @@ dotfiles:
 profiles:
   linux-gnome:
     dotfiles:
-    - f_tool-versions
+    - f_mise.toml
     - f_gitconfig
     - f_alacritty.toml
     - f_zshrc
@@ -67,7 +67,7 @@ profiles:
     - f_settings.toml
   macos:
     dotfiles:
-    - f_tool-versions
+    - f_mise.toml
     - f_gitconfig
     - f_alacritty.toml
     - f_zshrc
