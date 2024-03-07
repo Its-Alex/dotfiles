@@ -51,6 +51,9 @@ dotfiles:
   f_dracula.toml:
     src: config/alacritty/dracula.toml
     dst: ~/.config/alacritty/dracula.toml
+  d_nvim:
+    src: config/nvim
+    dst: ~/.config/nvim
 profiles:
   linux-gnome:
     dotfiles:
@@ -69,6 +72,7 @@ profiles:
     - f_use_mise.sh
     - f_settings.toml
     - f_dracula.toml
+    - d_nvim
   macos:
     dotfiles:
     - f_mise.toml
