@@ -48,6 +48,9 @@ dotfiles:
   f_settings.toml:
     src: config/mise/settings.toml
     dst: ~/.config/mise/settings.toml
+  f_dracula.toml:
+    src: config/alacritty/dracula.toml
+    dst: ~/.config/alacritty/dracula.toml
 profiles:
   linux-gnome:
     dotfiles:
@@ -65,6 +68,7 @@ profiles:
     - f_npmrc
     - f_use_mise.sh
     - f_settings.toml
+    - f_dracula.toml
   macos:
     dotfiles:
     - f_mise.toml
