@@ -2,8 +2,8 @@
 
 {%@@ if profile == "macos" @@%}
 eval "$(/opt/homebrew/bin/brew shellenv)"
-{%@@ endif @@%}
 
+{%@@ endif @@%}
 # Environment variable
 #  Path
 export PATH=/usr/local/bin:$PATH
@@ -15,7 +15,7 @@ export GOPATH=$HOME/go
 export PATH=$PATH:$HOME/go/bin
 # mise IDE Integration https://mise.jdx.dev/ide-integration.html#ide-integration
 export PATH="$HOME/.local/share/mise/shims:$PATH"
-#  Gpg
+# Gpg
 GPG_TTY=$(tty)
 export GPG_TTY
 
@@ -58,13 +58,6 @@ export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export ANDROID_SDK_ROOT="/usr/local/share/android-sdk"
 export PATH=$ANDROID_SDK_ROOT:$PATH
 export HOMEBREW_INSTALL_CLEANUP=1
-
-aws-spacefill-docker-registry-s3() {
-    aws --profile spacefill-docker-registry-s3 s3 ls "s3://spacefill-docker-registry-s3/$1"
-}
-aws-spacefill-gitlab-backup-s3() {
-    aws --profile spacefill-gitlab-backup-s3 s3 ls "s3://spacefill-gitlab-backup-s3/$1"
-}
 
 alias ls="ls --color=auto"
 {%@@ elif profile == "linux-gnome" @@%}
