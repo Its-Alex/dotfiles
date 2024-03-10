@@ -45,6 +45,7 @@ return {
                     'flake8',
                     'isort',
                     'prettierd',
+                    'eslint_d',
                     'sql-formatter',
                     'svelte-language-server',
                     'typescript-language-server'
