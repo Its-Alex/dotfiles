@@ -19,6 +19,32 @@ $ direnv allow
 You will be asked to prompt your bitwarden email and password, this is for
 files that can contain secrets.
 
+## Configurations
+
+Today I mainly use two computer:
+
+- Home computer, a dualboot Windows/Linux, running ArchLinux
+- Work computer
+    ```sh
+    $ neofetch --stdout
+    OS: Ubuntu 22.04.4 LTS x86_64
+    Host: Latitude 3420
+    Kernel: 6.5.0-25-generic
+    Uptime: 7 hours, 47 mins
+    Packages: 3770 (dpkg), 27 (snap)
+    Shell: zsh 5.8.1
+    Resolution: 1920x1080
+    DE: GNOME 42.9
+    WM: Mutter
+    WM Theme: Flat-Remix-Blue-Dark-fullPanel
+    Theme: Yaru-blue-dark [GTK2/3]
+    Icons: Numix-Square [GTK2/3]
+    Terminal: tmux
+    CPU: 11th Gen Intel i7-1165G7 (8) @ 4.700GHz
+    GPU: Intel TigerLake-LP GT2 [Iris Xe Graphics]
+    Memory: 9229MiB / 15728MiB
+    ```
+
 ## Linux
 
 ### Scripts
