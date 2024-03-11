@@ -1,7 +1,7 @@
 # Colors (Dracula)
 import = ["~/.config/alacritty/dracula.toml"]
 
-{%@@ if profile == "macos" @@%}
+{{ if eq .chezmoi.os "darwin" -}}
 [font]
 size = 12.0
 
@@ -19,31 +19,30 @@ style = "Italic"
 
 [font.normal]
 family = "Monaco"
-{%@@ elif profile == "linux-gnome" @@%}
+
+[shell]
+args = ["-l", "-c", "source ~/.zshrc; tmux attach 2> /dev/null || tmux"]
+program = "/opt/homebrew/bin/zsh"
+{{ else if eq .chezmoi.os "linux" -}} 
 [font]
 size = 9.0
 
 [font.bold]
-family = "Fira Code"
+family = "FiraCode"
 style = "Bold"
 
 [font.bold_italic]
-family = "Fira Code"
+family = "FiraCode"
 style = "Bold Italic"
 
 [font.italic]
-family = "Fira Code"
+family = "FiraCode"
 style = "Italic"
 
 [font.normal]
-family = "Fira Code"
-{%@@ endif @@%}
+family = "FiraCode"
 
 [shell]
-{%@@ if profile == "macos" @@%}
-args = ["-l", "-c", "source ~/.zshrc; tmux attach 2> /dev/null || tmux"]
-program = "/opt/homebrew/bin/zsh"
-{%@@ elif profile == "linux-gnome" @@%}
 args = ["-l", "-c", "tmux attach || tmux"]
 program = "/bin/bash"
-{%@@ endif @@%}
+{{ end -}}

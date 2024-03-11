@@ -1,8 +1,4 @@
-{%@@ if profile == "macos" @@%}
-set-option -g default-shell /opt/homebrew/bin/zsh
-{%@@ elif profile == "linux-gnome" @@%}
 set-option -g default-shell /usr/bin/zsh
-{%@@ endif @@%}
 
 # Define terminal option
 set -as terminal-overrides ",alacritty*:Tc,xterm-256color:Tc"
@@ -52,7 +48,11 @@ set-option -g focus-events on
 set -ga terminal-features "*:hyperlinks"
 
 # URL Launcher
+{{ if eq .chezmoi.osRelease.id "ubuntu" -}}
 bind-key u run-shell -b "tmux capture-pane -J -p | grep -oE '(https?):\/\/.*[^>]' | fzf-tmux -d20 --multi --bind alt-a:select-all,alt-d:deselect-all | xargs open"
+{{ else if eq .chezmoi.osRelease.id "arch" -}}
+bind-key u run-shell -b "flatpak run org.mozilla.firefox \"$(tmux capture-pane -J -p | grep -oE '(https?):\/\/.*[^>]' | fzf-tmux -d20 --multi --bind alt-a:select-all,alt-d:deselect-all)\""
+{{ end -}}
 
 # List of plugins
 set -g @plugin 'tmux-plugins/tpm'

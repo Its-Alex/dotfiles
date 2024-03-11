@@ -4,6 +4,7 @@ This repo contains all my configuration.
 
 ## Requirements
 
+- [`chezmoi`](https://github.com/twpayne/chezmoi)
 - [`mise`](https://github.com/jdx/mise)
 
 ## Install
@@ -12,14 +13,11 @@ First you must allow direnv environment:
 
 ```sh
 $ mise install
+$ direnv allow
 ```
 
-Then install dependencies:
-
-```sh
-$ pip install --upgrade pip
-$ pip install -r dotdrop/requirements.txt
-```
+You will be asked to prompt your bitwarden email and password, this is for
+files that can contain secrets.
 
 ## Linux
 

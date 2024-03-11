@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-{%@@ if profile == "macos" @@%}
+{{ if eq .chezmoi.os "darwin" -}}
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-{%@@ endif @@%}
+{{ end -}}
 # Environment variable
 #  Path
 export PATH=/usr/local/bin:$PATH
@@ -15,7 +15,7 @@ export GOPATH=$HOME/go
 export PATH=$PATH:$HOME/go/bin
 # mise IDE Integration https://mise.jdx.dev/ide-integration.html#ide-integration
 export PATH="$HOME/.local/share/mise/shims:$PATH"
-# Gpg
+#  Gpg
 GPG_TTY=$(tty)
 export GPG_TTY
 
@@ -51,16 +51,16 @@ fi
 export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-export EDITOR='vim'
+export EDITOR='nvim'
 
-{%@@ if profile == "macos" @@%}
+{{ if eq .chezmoi.os "darwin" -}}
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export ANDROID_SDK_ROOT="/usr/local/share/android-sdk"
 export PATH=$ANDROID_SDK_ROOT:$PATH
 export HOMEBREW_INSTALL_CLEANUP=1
 
 alias ls="ls --color=auto"
-{%@@ elif profile == "linux-gnome" @@%}
+{{ else if eq .chezmoi.os "linux" -}} 
 # Python environment
 export PATH=$PATH:/home/alex/.local/bin
 
@@ -68,4 +68,8 @@ export PATH=$PATH:/home/alex/.local/bin
 export ANDROID_SDK_ROOT=/opt/android-sdk
 export PATH="${ANDROID_SDK_ROOT}/platform-tools:$PATH"
 export PATH="${ANDROID_SDK_ROOT}/tools:$PATH"
-{%@@ endif @@%}
+
+{{   if eq .chezmoi.osRelease.id "arch" -}}
+export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/gcr/ssh
+{{   end -}}
+{{ end -}}
