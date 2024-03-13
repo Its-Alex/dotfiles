@@ -7,8 +7,6 @@ This repo contains all my configuration.
 - [`chezmoi`](https://github.com/twpayne/chezmoi)
 - [`mise`](https://github.com/jdx/mise)
 
-## Install
-
 First you must allow direnv environment:
 
 ```sh
@@ -18,6 +16,25 @@ $ direnv allow
 
 You will be asked to prompt your bitwarden email and password, this is for
 files that can contain secrets.
+
+## Install
+
+```sh
+chezmoi apply
+```
+
+### Tmux config
+
+You must install [`tpm`](https://github.com/tmux-plugins/tpm) manually for now:
+
+- MacOS:
+    ```sh
+    $ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+    ```
+- Linux:
+    ```sh
+    $ git clone https://github.com/tmux-plugins/tpm "${XDG_DATA_HOME}/tmux/plugins/tpm"
+    ```
 
 ## Configurations
 

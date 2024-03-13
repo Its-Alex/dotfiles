@@ -54,7 +54,11 @@ bind-key u run-shell -b "tmux capture-pane -J -p | grep -oE '(https?):\/\/.*[^>]
 bind-key u run-shell -b "flatpak run org.mozilla.firefox \"$(tmux capture-pane -J -p | grep -oE '(https?):\/\/.*[^>]' | fzf-tmux -d20 --multi --bind alt-a:select-all,alt-d:deselect-all)\""
 {{ end -}}
 
-# List of plugins
+{{ if eq .chezmoi.os "linux" -}}
+# Define plugins install directory https://github.com/tmux-plugins/tpm/blob/master/docs/changing_plugins_install_dir.md
+set-environment -g -F TMUX_PLUGIN_MANAGER_PATH "${XDG_DATA_HOME}/tmux/plugins"
+{{ end -}}
+# Define plugins
 set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-sensible'
 
@@ -65,5 +69,8 @@ set -g @dracula-show-flags true
 set -g @dracula-show-powerline false
 set -g @dracula-border-contrast true
 
+{{ if eq .chezmoi.os "darwin" -}}
 run '~/.tmux/plugins/tpm/tpm'
-
+{{ else }}
+run '${XDG_DATA_HOME}/tmux/plugins/tpm/tpm'
+{{ end -}}
