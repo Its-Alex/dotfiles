@@ -24,6 +24,25 @@ files that can contain secrets.
 Today I mainly use two computer:
 
 - Home computer, a dualboot Windows/Linux, running ArchLinux
+    ```sh
+    $ neofetch --stdout
+    OS: Arch Linux x86_64
+    Host: MS-7C91 2.0
+    Kernel: 6.7.9-arch1-1
+    Uptime: 2 hours, 29 mins
+    Packages: 1498 (pacman), 22 (flatpak)
+    Shell: zsh 5.9
+    Resolution: 2560x1440
+    DE: GNOME 45.4
+    WM: Mutter
+    WM Theme: Flat-Remix-Blue-Dark-fullPanel
+    Theme: Numix-Frost [GTK2/3]
+    Icons: Numix-Square [GTK2/3]
+    Terminal: tmux
+    CPU: AMD Ryzen 9 5900X (24) @ 3.700GHz
+    GPU: NVIDIA GeForce RTX 4080 SUPER
+    Memory: 7726MiB / 32018MiB
+    ```
 - Work computer
     ```sh
     $ neofetch --stdout
@@ -64,4 +83,5 @@ There are scripts to install some packages on Linux:
 
 #### Themes
 
-- [`flat-remix-gnome`](https://www.gnome-look.org/p/1013030/)
+- [`flat-remix-gnome`](https://github.com/daniruiz/flat-remix-gnome)
+- [`Twilight cursors`](https://github.com/yeyushengfan258/Twilight-Cursors)
