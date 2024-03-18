@@ -56,7 +56,7 @@ bind-key u run-shell -b "flatpak run org.mozilla.firefox \"$(tmux capture-pane -
 
 {{ if eq .chezmoi.os "linux" -}}
 # Define plugins install directory https://github.com/tmux-plugins/tpm/blob/master/docs/changing_plugins_install_dir.md
-set-environment -g -F TMUX_PLUGIN_MANAGER_PATH "${XDG_DATA_HOME}/tmux/plugins"
+set-environment -g -F TMUX_PLUGIN_MANAGER_PATH "${HOME}/.config/tmux/plugins"
 {{ end -}}
 # Define plugins
 set -g @plugin 'tmux-plugins/tpm'
@@ -72,5 +72,5 @@ set -g @dracula-border-contrast true
 {{ if eq .chezmoi.os "darwin" -}}
 run '~/.tmux/plugins/tpm/tpm'
 {{ else }}
-run '${XDG_DATA_HOME}/tmux/plugins/tpm/tpm'
+run '${HOME}/.config/tmux/plugins/tpm/tpm'
 {{ end -}}

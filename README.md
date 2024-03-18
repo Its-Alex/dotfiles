@@ -33,7 +33,7 @@ You must install [`tpm`](https://github.com/tmux-plugins/tpm) manually for now:
     ```
 - Linux:
     ```sh
-    $ git clone https://github.com/tmux-plugins/tpm "${XDG_DATA_HOME}/tmux/plugins/tpm"
+    $ git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
     ```
 
 ## Configurations
