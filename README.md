@@ -27,14 +27,9 @@ chezmoi apply
 
 You must install [`tpm`](https://github.com/tmux-plugins/tpm) manually for now:
 
-- MacOS:
-    ```sh
-    $ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-    ```
-- Linux:
-    ```sh
-    $ git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
-    ```
+```sh
+$ git clone https://github.com/tmux-plugins/tpm "${HOME}/.config/tmux/plugins/tpm"
+```
 
 ## Configurations
 

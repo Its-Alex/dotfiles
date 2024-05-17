@@ -69,8 +69,4 @@ set -g @dracula-show-flags true
 set -g @dracula-show-powerline false
 set -g @dracula-border-contrast true
 
-{{ if eq .chezmoi.os "darwin" -}}
-run '~/.tmux/plugins/tpm/tpm'
-{{ else }}
 run '${HOME}/.config/tmux/plugins/tpm/tpm'
-{{ end -}}

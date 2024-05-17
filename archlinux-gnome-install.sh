@@ -47,8 +47,8 @@ flatpak -y install flathub org.mozilla.firefox \
 
 printf "\e[1;34m%s\e[1;0m\n" "Setup programs.."
 # Setup tmux
-mkdir -p "${HOME}/.tmux/plugins"
-git clone https://github.com/tmux-plugins/tpm "${HOME}/.tmux/plugins/tpm"
+mkdir -p "${HOME}/.config/tmux/plugins/"
+git clone https://github.com/tmux-plugins/tpm "${HOME}/.config/tmux/plugins/tpm/"
 # Setup docker
 sudo usermod -aG docker "${USER}"
 sudo systemctl enable docker
