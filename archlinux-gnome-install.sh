@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/usr/bin/env bash
+set -e
 
 printf "\e[1;34m%s\e[1;0m\n" "Configure os..."
 
