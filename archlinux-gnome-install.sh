@@ -43,7 +43,6 @@ flatpak -y install flathub org.mozilla.firefox \
     net.cozic.joplin_desktop \
     im.riot.Riot \
     com.visualstudio.code \
-    com.authy.Authy \
     org.videolan.VLC \
     com.mattjakeman.ExtensionManager
 
