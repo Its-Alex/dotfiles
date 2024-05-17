@@ -30,8 +30,7 @@ yay -S --noconfirm --needed \
     numix-cursor-theme numix-frost-themes numix-square-icon-theme flat-remix-gnome \
     unzip \
     tar \
-    fzf \
-    vlc
+    fzf
 
 flatpak -y install flathub org.mozilla.firefox \
     com.google.Chrome \
