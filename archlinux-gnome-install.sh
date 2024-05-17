@@ -23,6 +23,7 @@ yay -S --noconfirm --needed xkb-qwerty-fr \
     virtualbox virtualbox-host-dkms linux-headers \
     vagrant \
     zsh \
+    jq \
     flatpak
 
 printf "\e[1;34m%s\e[1;0m\n" "Install custom programs.."
