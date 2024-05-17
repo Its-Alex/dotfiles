@@ -86,6 +86,14 @@ There are scripts to install some packages on Linux:
 
 ### Gnome
 
+#### Tips
+
+If the ssh agent is not started, execute:
+
+```sh
+$ systemctl --user enable gcr-ssh-agent.socket
+```
+
 #### Extensions
 
 - [`Dash to dock`](https://micheleg.github.io/dash-to-dock/)
