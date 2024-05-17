@@ -43,7 +43,8 @@ flatpak -y install flathub org.mozilla.firefox \
     im.riot.Riot \
     com.visualstudio.code \
     com.authy.Authy \
-    org.videolan.VLC
+    org.videolan.VLC \
+    com.mattjakeman.ExtensionManager
 
 printf "\e[1;34m%s\e[1;0m\n" "Setup programs.."
 # Setup tmux

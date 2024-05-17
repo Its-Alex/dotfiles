@@ -92,6 +92,7 @@ There are scripts to install some packages on Linux:
 - [`GNOME Fuzzy App Search`](https://extensions.gnome.org/extension/3956/gnome-fuzzy-app-search/)
 - [`Grand Theft Focus`](https://extensions.gnome.org/extension/5410/grand-theft-focus/)
 - [`System monitor next`](https://extensions.gnome.org/extension/3010/system-monitor-next/)
+- [`Extension manager`](https://github.com/mjakeman/extension-manager)
 
 #### Themes
 
