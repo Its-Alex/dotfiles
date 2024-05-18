@@ -1,5 +1,5 @@
 {{ if eq .chezmoi.os "linux" -}}
-#!/usr/bin/bash
+#!/usr/bin/env bash
 set -euxo pipefail
 
 if [[ ! -d ${HOME}/.config/tmux/plugins/tpm/ ]]; then
@@ -14,14 +14,17 @@ if ! command -v yay; then
     sudo systemctl enable docker
 fi
 
-printf "\e[1;34m%s\e[1;0m\n" "Grub update to detect others systems"
-sudo sed -i '/^#\?GRUB_DISABLE_OS_PROBER=/c\GRUB_DISABLE_OS_PROBER=false' /etc/default/grub
-sudo grub-mkconfig -o /boot/grub/grub.cfg
+if [[ -a /etc/default/grub ]]; then
+    printf "\e[1;34m%s\e[1;0m\n" "Grub update to detect others systems"
+    sudo sed -i '/^#\?GRUB_DISABLE_OS_PROBER=/c\GRUB_DISABLE_OS_PROBER=false' /etc/default/grub
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+fi
 
-if [[ "$ZSH" != "${HOME}/.oh-my-zsh" ]]; then
+if [[ ! -d "${HOME}/.oh-my-zsh" ]]; then
     printf "\e[1;34m%s\e[1;0m\n" "Setup ohmyzsh"
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended
-    current_user="$USER"
+    current_user="$USER-"
+    echo $current_user
     sudo -k chsh -s "$zsh" "$current_user" # Change default shell to zsh
 fi
 {{ end -}}
