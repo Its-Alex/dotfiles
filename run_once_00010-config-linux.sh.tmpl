@@ -24,8 +24,4 @@ if [[ "$ZSH" != "${HOME}/.oh-my-zsh" ]]; then
     current_user="$USER"
     sudo -k chsh -s "$zsh" "$current_user" # Change default shell to zsh
 fi
-
-# Install https://github.com/jdx/mise
-sudo curl -Lo /usr/local/bin/mise https://mise.jdx.dev/mise-latest-linux-x64
-sudo chmod +x /usr/local/bin/mise
 {{ end -}}
