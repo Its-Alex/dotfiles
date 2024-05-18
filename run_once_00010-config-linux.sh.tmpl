@@ -8,7 +8,7 @@ if [[ ! -d ${HOME}/.config/tmux/plugins/tpm/ ]]; then
     git clone https://github.com/tmux-plugins/tpm "${HOME}/.config/tmux/plugins/tpm/"
 fi
 
-if ! command -v yay; then
+if ! command -v docker; then
     printf "\e[1;34m%s\e[1;0m\n" "Setup docker"
     sudo usermod -aG docker "${USER}"
     sudo systemctl enable docker
