@@ -1,0 +1,70 @@
+{{ if eq .chezmoi.osRelease.id "arch" -}}
+#!/usr/bin/env bash
+set -euxo pipefail
+
+printf "\e[1;34m%s\e[1;0m\n" "Install Git..."
+sudo pacman -S --noconfirm --needed git base-devel
+
+if ! command -v yay; then
+    printf "\e[1;34m%s\e[1;0m\n" "Install Yay..."
+    git clone https://aur.archlinux.org/yay.git /tmp/yay
+    (
+        cd /tmp/yay || exit 1
+        makepkg -si
+    )
+    rm -rf /tmp/yay
+fi
+
+printf "\e[1;34m%s\e[1;0m\n" "Install system programs.."
+packages_list=(
+    # System
+    flatpak
+    unzip
+    tar
+    fzf
+    jq
+    ## Keyboard
+    xkb-qwerty-fr
+    ## Fonts
+    otf-font-awesome
+    noto-fonts
+    noto-fonts-emoji
+    noto-fonts-extra
+    ttf-material-design-icons
+    ttf-unifont
+    ttf-droid ttf-fira-code
+    ## Theme
+    numix-cursor-theme
+    numix-frost-themes
+    numix-square-icon-theme
+    flat-remix-gnome
+    # IDE
+    vim
+    # Terminal
+    alacritty
+    tmux
+    tmuxinator
+    zsh
+    # Dev
+    docker
+    docker-compose
+    virtualbox
+    virtualbox-host-dkms
+    vagrant
+)
+yay -S --noconfirm --needed "${packages_list[@]}"
+
+flatpak_flathub_apps_list=(
+    org.mozilla.firefox
+    org.signal.Signal
+    com.slack.Slack
+    com.discordapp.Discord
+    com.spotify.Client
+    net.cozic.joplin_desktop
+    im.riot.Riot # Element
+    org.videolan.VLC
+    com.mattjakeman.ExtensionManager # Gnome extension manager
+)
+printf "\e[1;34m%s\e[1;0m\n" "Install flatpak programs.."
+flatpak -y install flathub "${flatpak_flathub_apps_list[@]}"
+{{ end -}}
