@@ -5,11 +5,12 @@ This repo contains all my configuration.
 ## Requirements
 
 - [`chezmoi`](https://github.com/twpayne/chezmoi)
-- [`mise`](https://github.com/jdx/mise)
+- [`mise`](https://github.com/jdx/mise) (used for simplicity of use, can be
+  automatically installed diring init)
 
 First you must allow direnv environment:
 
-```sh
+```sh-session
 $ mise install
 $ direnv allow
 ```
@@ -17,18 +18,18 @@ $ direnv allow
 You will be asked to prompt your bitwarden email and password, this is for
 files that can contain secrets.
 
-## Install
+## Getting started
 
-```sh
-chezmoi apply
+To execute a first install, use:
+
+```sh-session
+$ chezmoi init git@github.com:Its-Alex/dotfiles.git
 ```
 
-### Tmux config
+To update your current configuration:
 
-You must install [`tpm`](https://github.com/tmux-plugins/tpm) manually for now:
-
-```sh
-$ git clone https://github.com/tmux-plugins/tpm "${HOME}/.config/tmux/plugins/tpm"
+```sh-session
+$ chezmoi apply
 ```
 
 ## Configurations
@@ -77,12 +78,6 @@ Today I mainly use two computer:
     ```
 
 ## Linux
-
-### Scripts
-
-There are scripts to install some packages on Linux:
-
-- [`archlinux-gnome-install.sh`](archlinux-gnome-install.sh) for Archlinux with gnome
 
 ### Gnome
 
