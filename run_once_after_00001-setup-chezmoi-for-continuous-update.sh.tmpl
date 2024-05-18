@@ -1,0 +1,14 @@
+{{ if eq .chezmoi.osRelease.id "arch" -}}
+#!/usr/bin/env bash
+set -euxo pipefail
+
+# Uninstall global bitwarden
+sudo pacman -Rncs --noconfirm bitwarden-cli
+rm -rf "${HOME}/.config/Bitwarden CLI"
+
+# Setup chezmoi remote url to ssh
+(
+    cd "${HOME}/.local/share/chezmoi"
+    git remote set-url origin git@github.com:Its-Alex/dotfiles.git
+)
+{{ end -}}

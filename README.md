@@ -23,7 +23,8 @@ files that can contain secrets.
 To execute a first install, use:
 
 ```sh-session
-$ chezmoi init git@github.com:Its-Alex/dotfiles.git
+$ chezmoi init https://github.com/Its-Alex/dotfiles.git
+$ chezmoi apply
 ```
 
 To update your current configuration:
