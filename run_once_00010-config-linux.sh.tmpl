@@ -24,7 +24,6 @@ if [[ ! -d "${HOME}/.oh-my-zsh" ]]; then
     printf "\e[1;34m%s\e[1;0m\n" "Setup ohmyzsh"
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended
     current_user="$USER-"
-    echo $current_user
     sudo -k chsh -s "$zsh" "$current_user" # Change default shell to zsh
 fi
 {{ end -}}
