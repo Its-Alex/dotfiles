@@ -1,4 +1,7 @@
+[tools]
+direnv = 'latest'
+nodejs = 'latest'
+
 [settings]
 experimental = true
 python_venv_auto_create = true
-
