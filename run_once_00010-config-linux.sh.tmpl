@@ -8,10 +8,11 @@ if [[ ! -d ${HOME}/.config/tmux/plugins/tpm/ ]]; then
     git clone https://github.com/tmux-plugins/tpm "${HOME}/.config/tmux/plugins/tpm/"
 fi
 
-if ! command -v docker; then
-    printf "\e[1;34m%s\e[1;0m\n" "Setup docker"
-    sudo usermod -aG docker "${USER}"
-    sudo systemctl enable docker
+if ! command -v mise; then
+    # Install https://github.com/jdx/mise
+    printf "\e[1;34m%s\e[1;0m\n" "Install mise"
+    sudo curl -Lo /usr/local/bin/mise https://mise.jdx.dev/mise-latest-linux-x64
+    sudo chmod +x /usr/local/bin/mise
 fi
 
 if [[ -a /etc/default/grub ]]; then

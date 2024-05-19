@@ -1,10 +1,6 @@
-{{ if eq .chezmoi.osRelease.id "arch" -}}
+{{ if eq .chezmoi.os "linux" -}}
 #!/usr/bin/env bash
 set -euxo pipefail
-
-# Uninstall global bitwarden
-sudo pacman -Rncs --noconfirm bitwarden-cli
-rm -rf "${HOME}/.config/Bitwarden CLI"
 
 # Setup chezmoi remote url to ssh
 (
