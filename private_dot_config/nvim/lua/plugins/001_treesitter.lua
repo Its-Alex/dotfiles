@@ -34,6 +34,8 @@ return {
                 "markdown",
                 -- Ninja
                 "ninja",
+                -- SQL
+                "sql",
                 -- Data exchange format
                 "json",
                 "toml",
