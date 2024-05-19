@@ -48,22 +48,22 @@ Today I mainly use two computer:
 - Work computer
     ```sh
     $ neofetch --stdout
-    OS: Ubuntu 22.04.4 LTS x86_64
+    OS: Arch Linux x86_64
     Host: Latitude 3420
-    Kernel: 6.5.0-25-generic
-    Uptime: 7 hours, 47 mins
-    Packages: 3770 (dpkg), 27 (snap)
-    Shell: zsh 5.8.1
+    Kernel: 6.9.1-arch1-1
+    Uptime: 13 hours, 33 mins
+    Packages: 869 (pacman), 23 (flatpak)
+    Shell: zsh 5.9
     Resolution: 1920x1080
-    DE: GNOME 42.9
+    DE: GNOME 46.1
     WM: Mutter
     WM Theme: Flat-Remix-Blue-Dark-fullPanel
-    Theme: Yaru-blue-dark [GTK2/3]
+    Theme: Numix-Frost [GTK2/3]
     Icons: Numix-Square [GTK2/3]
     Terminal: tmux
     CPU: 11th Gen Intel i7-1165G7 (8) @ 4.700GHz
     GPU: Intel TigerLake-LP GT2 [Iris Xe Graphics]
-    Memory: 9229MiB / 15728MiB
+    Memory: 6613MiB / 15738MiB
     ```
 
 ## Linux

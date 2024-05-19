@@ -1,7 +1,5 @@
 {{ if eq .chezmoi.os "darwin" -}}
 Include /Users/itsalex/Documents/realtime-helm-package/deployment/ssh-config
-{{ else if eq .chezmoi.osRelease.id "ubuntu"  -}}
-Include /home/alexandre.marre/Documents/realtime-helm-package/deployment/ssh-config
 {{ else -}}
 Include /home/itsalex/Documents/realtime-helm-package/deployment/ssh-config
 {{ end -}}
