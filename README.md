@@ -11,8 +11,7 @@ This repo contains all my configuration.
 To execute a first install, use:
 
 ```sh-session
-$ chezmoi init https://github.com/Its-Alex/dotfiles.git
-$ chezmoi apply
+$ chezmoi init --apply https://github.com/Its-Alex/dotfiles.git
 ```
 
 To update your current configuration:
