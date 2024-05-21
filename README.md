@@ -11,7 +11,7 @@ This repo contains all my configuration.
 To execute a first install, use:
 
 ```sh-session
-$ chezmoi init --apply https://github.com/Its-Alex/dotfiles.git
+$ sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply https://github.com/Its-Alex/dotfiles.git
 ```
 
 To update your current configuration:
