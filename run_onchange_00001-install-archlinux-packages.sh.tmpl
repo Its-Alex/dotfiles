@@ -41,10 +41,13 @@ packages_list=(
     tmuxinator
     zsh
     # Dev
+    ## Docker
     docker
     docker-compose
+    ## Virtualbox
     virtualbox
-    virtualbox-host-dkms
+    virtualbox-host-modules-arch
+    linux-headers
     vagrant
 )
 yay -S --noconfirm --needed "${packages_list[@]}"
