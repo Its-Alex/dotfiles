@@ -2,6 +2,9 @@
 #!/usr/bin/env bash
 set -euxo pipefail
 
+# Enable pacman color
+sudo sed -i '/^#Color/c\Color' /etc/pacman.conf
+
 printf "\e[1;34m%s\e[1;0m\n" "Install Git..."
 sudo pacman -S --noconfirm --needed git base-devel
 
