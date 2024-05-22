@@ -23,8 +23,7 @@ fi
 
 if [[ ! -d "${HOME}/.oh-my-zsh" ]]; then
     printf "\e[1;34m%s\e[1;0m\n" "Setup ohmyzsh"
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended
-    current_user="$USER-"
-    sudo -k chsh -s "$zsh" "$current_user" # Change default shell to zsh
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+    sudo -k chsh -s "$(which zsh)" "$USER" # Change default shell to zsh
 fi
 {{ end -}}
