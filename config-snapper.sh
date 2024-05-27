@@ -6,7 +6,7 @@ if [[ "$EUID" -ne 0 ]]; then
     exit 1
 fi
 
-yay -S --noconfirm --needed snapper grub-btrfs
+yay -S --noconfirm --needed snapper grub-btrfs inotify-tools
 
 if [[ "$(snapper list-configs | grep -c root)" == "0" ]]; then
     # Umount default subvolume /.snapshots to let snapper create subvolume
