@@ -39,8 +39,17 @@ systemctl enable --now snapper-cleanup.timer
 # Enable grub-btrfs
 systemctl enable --now grub-btrfsd
 
+# Make backup each day at 10 and 20
+mkdir -p /etc/systemd/system/snapper-timeline.timer.d/
+cat <<EOT > /etc/systemd/system/snapper-timeline.timer.d/override.conf
+[Timer]
+OnCalendar=
+OnCalendar=*-*-* 10:00:00 Europe/Paris
+OnCalendar=*-*-* 20:00:00 Europe/Paris
+EOT
+
 # Enable booting into read-only snapshots https://wiki.archlinux.org/title/Snapper#Booting_into_read-only_snapshots
-if ! cat /etc/mkinitcpio.conf | grep -q "HOOKS=.*grub-btrfs-overlayfs"; then
+if ! grep -q "HOOKS=.*grub-btrfs-overlayfs" /etc/mkinitcpio.conf; then
     sed -i -e "s/^\(HOOKS=(.*\))/\1 grub-btrfs-overlayfs)/" /etc/mkinitcpio.conf
     mkinitcpio -P
 fi
