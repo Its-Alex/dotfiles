@@ -4,23 +4,6 @@
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 {{ end -}}
-# Environment variable
-#  Path
-export PATH=/usr/local/bin:$PATH
-export PATH=/usr/local/sbin:$PATH
-# Rust
-export PATH=$PATH:$HOME/.cargo/bin
-# Golang
-export GOPATH=$HOME/go
-export PATH=$PATH:$HOME/go/bin
-# mise IDE Integration https://mise.jdx.dev/ide-integration.html#ide-integration
-export PATH="$HOME/.local/share/mise/shims:$PATH"
-#  Gpg
-GPG_TTY=$(tty)
-export GPG_TTY
-# fzf
-export FZF_DEFAULT_OPTS="--tmux"
-
 # Oh my zsh
 #  Path to your oh_my_zsh installation.
 export ZSH=$HOME/.oh-my-zsh
@@ -50,29 +33,46 @@ if [ -x "$(command -v mise)" ]; then
     fi
 fi
 
-# You may need to manually set your language environment
+# Environment variable - System
+#  Path
+export PATH=/usr/local/bin:$PATH
+export PATH=/usr/local/sbin:$PATH
+#  You may need to manually set your language environment
 export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
+#  Preferred editor for local and remote sessions
 export EDITOR='nvim'
+#  fzf
+export FZF_DEFAULT_OPTS="--tmux"
+#  Gpg
+GPG_TTY=$(tty)
+export GPG_TTY
+{{ if (and (eq .chezmoi.osRelease.id "arch") (ne .chezmoi.os "darwin")) -}}
+#  SSH socket
+export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/gcr/ssh
+{{- end }}
 
+# Environment variable - Languages
+#  Rust
+export PATH=$PATH:$HOME/.cargo/bin
+#  Golang
+export GOPATH=$HOME/go
+export PATH=$PATH:$HOME/go/bin
+#  mise IDE Integration https://mise.jdx.dev/ide-integration.html#ide-integration
+export PATH="$HOME/.local/share/mise/shims:$PATH"
 {{ if eq .chezmoi.os "darwin" -}}
+#  Android SDK
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export ANDROID_SDK_ROOT="/usr/local/share/android-sdk"
 export PATH=$ANDROID_SDK_ROOT:$PATH
+#  Homebrew
 export HOMEBREW_INSTALL_CLEANUP=1
-
-alias ls="ls --color=auto"
 {{ else if eq .chezmoi.os "linux" -}} 
-# Python environment
+#  Python environment
 export PATH=$PATH:/home/alex/.local/bin
-
-# Android SDK
+#  Android SDK
 export ANDROID_SDK_ROOT=/opt/android-sdk
 export PATH="${ANDROID_SDK_ROOT}/platform-tools:$PATH"
 export PATH="${ANDROID_SDK_ROOT}/tools:$PATH"
+{{- end }}
 
-{{   if eq .chezmoi.osRelease.id "arch" -}}
-export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/gcr/ssh
-{{   end -}}
-{{ end -}}
+alias ls="ls --color=auto"
