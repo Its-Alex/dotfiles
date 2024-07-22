@@ -18,6 +18,8 @@ export PATH="$HOME/.local/share/mise/shims:$PATH"
 #  Gpg
 GPG_TTY=$(tty)
 export GPG_TTY
+# fzf
+export FZF_DEFAULT_OPTS="--tmux"
 
 # Oh my zsh
 #  Path to your oh_my_zsh installation.
@@ -30,6 +32,7 @@ plugins=(
     git-extras
     docker
     extract
+    fzf
     z
 )
 #  Set update all 15 days
