@@ -1,6 +1,7 @@
 [tools]
 direnv = 'latest'
 nodejs = 'latest'
+make = 'system'
 
 [settings]
 experimental = true
