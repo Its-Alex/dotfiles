@@ -80,4 +80,10 @@ flatpak_flathub_apps_list=(
 )
 printf "\e[1;34m%s\e[1;0m\n" "Install flatpak programs.."
 flatpak -y install flathub "${flatpak_flathub_apps_list[@]}"
+{{ if eq .chezmoi.hostname "xxii-arch-laptop" -}}
+# Install and configure thermald
+yay -S --noconfirm --needed thermald
+
+sudo systemctl enable --now thermald
+{{ end -}}
 {{ end -}}
