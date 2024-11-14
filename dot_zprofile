@@ -1,0 +1,6 @@
+# mise IDE Integration https://mise.jdx.dev/ide-integration.html
+if [[ "$TERM_PROGRAM" == "vscode" ]]; then
+    eval "$(mise activate zsh --shims)"
+elif; then
+    eval "$(mise activate zsh)"
+fi
