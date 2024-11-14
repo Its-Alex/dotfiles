@@ -1,3 +1,4 @@
+[general]
 # Colors (Dracula)
 import = ["~/.config/alacritty/dracula.toml"]
 
@@ -20,7 +21,9 @@ style = "Italic"
 [font.normal]
 family = "Monaco"
 
-[shell]
+[terminal]
+
+[terminal.shell]
 args = ["-l", "-c", "source ~/.zshrc; tmux attach 2> /dev/null || tmux"]
 program = "/opt/homebrew/bin/zsh"
 {{ else if eq .chezmoi.os "linux" -}} 
@@ -42,7 +45,9 @@ style = "Italic"
 [font.normal]
 family = "FiraCodeNerdFont"
 
-[shell]
+[terminal]
+
+[terminal.shell]
 args = ["-l", "-c", "tmux attach || tmux"]
 program = "/bin/bash"
 {{ end -}}
