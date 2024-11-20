@@ -1,6 +1,9 @@
 # mise IDE Integration https://mise.jdx.dev/ide-integration.html
 if [[ "$TERM_PROGRAM" == "vscode" ]]; then
     eval "$(mise activate zsh --shims)"
-elif; then
-    eval "$(mise activate zsh)"
+
+    #  Direnv hook
+    if [ -x "$(mise which direnv)" ]; then
+        eval "$($(mise which direnv) hook zsh)"
+    fi
 fi

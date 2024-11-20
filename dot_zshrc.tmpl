@@ -23,16 +23,6 @@ export UPDATE_ZSH_DAYS=15
 #  shellcheck source=/dev/null # Load oh_my_zsh
 source "${ZSH}/oh-my-zsh.sh"
 
-# Enable mise
-if [ -x "$(command -v mise)" ]; then
-    eval "$(mise activate zsh --shims)"
-
-    #  Direnv hook
-    if [ -x "$(mise which direnv)" ]; then
-        eval "$($(mise which direnv) hook zsh)"
-    fi
-fi
-
 # Environment variable - System
 #  Path
 export PATH=/usr/local/bin:$PATH
@@ -72,5 +62,15 @@ export ANDROID_SDK_ROOT=/opt/android-sdk
 export PATH="${ANDROID_SDK_ROOT}/platform-tools:$PATH"
 export PATH="${ANDROID_SDK_ROOT}/tools:$PATH"
 {{- end }}
+
+# Enable mise
+if [ -x "$(command -v mise)" ]; then
+    eval "$(mise activate zsh --shims)"
+
+    #  Direnv hook
+    if [ -x "$(mise which direnv)" ]; then
+        eval "$($(mise which direnv) hook zsh)"
+    fi
+fi
 
 alias ls="ls --color=auto"
