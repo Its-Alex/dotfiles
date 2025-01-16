@@ -15,45 +15,45 @@ return {
             require('mason-tool-installer').setup({
                 ensure_installed = {
                     -- Lua
-                    'lua_ls',
+                    { 'lua_ls', version = '3.13.5'},
                     -- Vim
-                    'vim-language-server',
+                    { 'vim-language-server', version = '2.3.1'},
                     -- Yaml
-                    'yamlls',
+                    { 'yamlls', version = '1.15.0'},
                     -- Json
-                    'json-lsp',
+                    { 'json-lsp', version = '4.10.0'},
                     -- SQL
-                    'sqlls',
-                    'sql-formatter',
+                    { 'sqlls', version = '1.7.1'},
+                    { 'sql-formatter', version = '15.4.9'},
                     -- Bash
-                    'shellcheck',
-                    'bash-language-server',
+                    { 'shellcheck', version = 'v0.10.0'},
+                    { 'bash-language-server', version = '5.3.4'},
                     -- Helm
-                    'helm-ls',
+                    { 'helm-ls', version = 'v0.1.1'},
                     -- Markdown
-                    'markdownlint-cli2',
+                    { 'markdownlint-cli2', version = '0.17.1'},
                     -- Ansible
-                    'ansible-language-server',
+                    { 'ansible-language-server', version = '1.2.3'},
                     -- Terraform
-                    'terraform-ls',
+                    { 'terraform-ls', version = 'v0.36.3'},
                     -- CSS
-                    'css-lsp',
+                    { 'css-lsp', version = '4.10.0'},
                     -- HTLM
-                    'html-lsp',
+                    { 'html-lsp', version = '4.10.0'},
                     -- Python
-                    'pyright',
-                    'autopep8',
-                    'flake8',
-                    'isort',
+                    { 'pyright', version = '1.1.392'},
+                    { 'autopep8', version = '2.3.2'},
+                    { 'flake8', version = '7.1.1'},
+                    { 'isort', version = '5.13.2'},
                     -- Javascript
-                    'prettierd',
-                    'eslint_d',
+                    { 'prettierd', version = '0.26.0'},
+                    { 'eslint_d', version = '14.3.0'},
                     -- Svelte
-                    'svelte-language-server',
+                    { 'svelte-language-server', version = '0.17.10'},
                     -- Typescript
-                    'typescript-language-server'
+                    { 'typescript-language-server', version = '4.3.3'}
                 },
-                auto_update = true,
+                auto_update = false,
                 run_on_start = true
             })
         end
