@@ -1,7 +1,6 @@
 [tools]
 direnv = 'latest'
 nodejs = 'latest'
-make = 'system'
 node = 'latest'
 
 [settings]
