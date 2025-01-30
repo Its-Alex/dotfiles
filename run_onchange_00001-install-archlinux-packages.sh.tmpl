@@ -52,11 +52,10 @@ packages_list=(
     ## Docker
     docker
     docker-compose
-    ## Virtualbox
-    virtualbox
-    virtualbox-host-dkms
-    virtualbox-ext-oracle # To add additional features https://www.virtualbox.org/manual/ch01.html#intro-installing
+    ## Qemu
+    qemu-full
     linux-headers
+    ## Vagrant
     vagrant
 )
 yay -S --noconfirm --needed "${packages_list[@]}"
