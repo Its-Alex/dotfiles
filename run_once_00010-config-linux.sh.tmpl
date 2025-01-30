@@ -26,4 +26,9 @@ if [[ ! -d "${HOME}/.oh-my-zsh" ]]; then
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
     sudo -k chsh -s "$(which zsh)" "$USER" # Change default shell to zsh
 fi
+
+# Setup gnome settings
+if command -v gsettings; then
+    gsettings set org.gnome.desktop.input-sources sources "[('xkb', 'us+qwerty-fr')]"
+fi
 {{ end -}}
