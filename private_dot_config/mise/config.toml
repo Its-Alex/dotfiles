@@ -2,7 +2,3 @@
 direnv = 'latest'
 nodejs = 'latest'
 node = 'latest'
-
-[settings]
-experimental = true
-python_venv_auto_create = true
