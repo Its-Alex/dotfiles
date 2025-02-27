@@ -2,3 +2,6 @@
 direnv = 'latest'
 nodejs = 'latest'
 node = 'latest'
+
+[settings]
+experimental = true
