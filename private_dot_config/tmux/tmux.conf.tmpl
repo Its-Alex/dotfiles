@@ -48,7 +48,7 @@ set-option -g focus-events on
 set -ga terminal-features "*:hyperlinks"
 
 # URL Launcher
-bind-key u run-shell -b "flatpak run org.mozilla.firefox \"$(tmux capture-pane -J -p | grep -oE '(https?):\/\/.*[^>]' | fzf-tmux -d20 --multi --bind alt-a:select-all,alt-d:deselect-all)\""
+bind-key u run-shell -b "flatpak run io.gitlab.librewolf-community \"$(tmux capture-pane -J -p | grep -oE '(https?):\/\/.*[^>]' | fzf-tmux -d20 --multi --bind alt-a:select-all,alt-d:deselect-all)\""
 
 {{ if eq .chezmoi.os "linux" -}}
 # Define plugins install directory https://github.com/tmux-plugins/tpm/blob/master/docs/changing_plugins_install_dir.md
