@@ -6,8 +6,6 @@
     rebase = true
 [color]
     ui = true
-[core]
-    pager = cat
 [commit]
     gpgsign = true
 [merge]
