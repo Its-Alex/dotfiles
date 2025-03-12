@@ -1,6 +1,6 @@
 {{ if eq .chezmoi.osRelease.id "arch" -}}
 #!/usr/bin/env bash
-set -euxo pipefail
+set -euo pipefail
 
 # Enable pacman color
 sudo sed -i '/^#Color/c\Color' /etc/pacman.conf
