@@ -76,7 +76,8 @@ flatpak_flathub_apps_list=(
     com.mattjakeman.ExtensionManager # Gnome extension manager
 )
 printf "\e[1;34m%s\e[1;0m\n" "Install flatpak programs.."
-flatpak -y install flathub "${flatpak_flathub_apps_list[@]}"
+flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+flatpak -y install --user flathub "${flatpak_flathub_apps_list[@]}"
 
 printf "\e[1;34m%s\e[1;0m\n" "Setup flatpak programs.."
 # Allow Librewolf to access all devices (e.g. webcam)
