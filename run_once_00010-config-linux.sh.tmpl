@@ -8,7 +8,7 @@ if [[ ! -d ${HOME}/.config/tmux/plugins/tpm/ ]]; then
     git clone https://github.com/tmux-plugins/tpm "${HOME}/.config/tmux/plugins/tpm/"
 fi
 
-if ! command -v mise; then
+if ! command -v mise > /dev/null; then
     # Install https://github.com/jdx/mise
     printf "\e[1;34m%s\e[1;0m\n" "Install mise"
     sudo curl -Lo /usr/local/bin/mise https://mise.jdx.dev/mise-latest-linux-x64
