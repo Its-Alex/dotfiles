@@ -8,7 +8,7 @@ sudo sed -i '/^#Color/c\Color' /etc/pacman.conf
 printf "\e[1;34m%s\e[1;0m\n" "Install Git..."
 sudo pacman -S --noconfirm --needed git base-devel
 
-if ! command -v yay; then
+if ! command -v yay > /dev/null; then
     printf "\e[1;34m%s\e[1;0m\n" "Install Yay..."
     git clone https://aur.archlinux.org/yay.git /tmp/yay
     (
@@ -33,10 +33,9 @@ packages_list=(
     ttf-fira-code
     ttf-firacode-nerd
     ## Theme
-    numix-cursor-theme
-    numix-frost-themes
-    numix-square-icon-theme
-    flat-remix-gnome
+    numix-square-icon-theme # Gnome icons
+    flat-remix-gnome # Gnome theme
+    numix-frost-themes # Legacy app
     # IDE
     vim
     # Terminal

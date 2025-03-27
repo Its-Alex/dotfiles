@@ -27,8 +27,27 @@ if [[ ! -d "${HOME}/.oh-my-zsh" ]]; then
     sudo -k chsh -s "$(which zsh)" "$USER" # Change default shell to zsh
 fi
 
+# Install Twilight-cursors
+if [[ ! -d "/usr/share/icons/Twilight-cursors" ]]; then
+    printf "\e[1;34m%s\e[1;0m\n" "Setup Twilight cursors"
+    rm -rf /tmp/Twilight-Cursors
+    git clone git@github.com:yeyushengfan258/Twilight-Cursors.git /tmp/Twilight-Cursors
+    (
+        cd  /tmp/Twilight-Cursors
+        sudo ./install.sh
+    )
+    rm -rf /tmp/Twilight-Cursors
+fi
+
 # Setup gnome settings
-if command -v gsettings; then
+if command -v gsettings > /dev/null; then
+    printf "\e[1;34m%s\e[1;0m\n" "Setup Gnome settings"
+
     gsettings set org.gnome.desktop.input-sources sources "[('xkb', 'us+qwerty-fr')]"
+
+    gsettings set org.gnome.shell.extensions.user-theme name "Flat-Remix-Blue-Dark-fullPanel"
+    gsettings set org.gnome.desktop.interface gtk-theme "Numix-Frost"
+    gsettings set org.gnome.desktop.interface icon-theme Numix-Square
+    gsettings set org.gnome.desktop.interface cursor-theme "Twilight-cursors"
 fi
 {{ end -}}
