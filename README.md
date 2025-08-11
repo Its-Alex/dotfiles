@@ -20,6 +20,29 @@ To update your current configuration:
 $ chezmoi apply
 ```
 
+## Install from scratch
+
+To install from scratch I use [QEMU Archlinx](https://github.com/Its-Alex/qemu-archlinux),
+when the VM is setup I enable `pinentry-curses` using:
+
+```shell
+$ echo 'pinentry-program /usr/bin/pinentry-curses' >> ~/.gnupg/gpg-agent.conf && \
+    echo 'allow-loopback-pinentry' >> ~/.gnupg/gpg-agent.conf && \
+    echo 'pinentry-mode loopback' >> ~/.gnupg/gpg.conf && \
+    export GPG_TTY=$(tty) && \
+    gpgconf --kill gpg-agent
+```
+
+This allow for GPG password to be entered in shell for development purpose.
+
+Finally I can launch:
+
+```shell
+$ sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply https://github.com/Its-Alex/dotfiles.git
+```
+
+To install dotfiles.
+
 ## Configurations
 
 Today I mainly use two computer:
