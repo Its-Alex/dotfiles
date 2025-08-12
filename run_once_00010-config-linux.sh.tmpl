@@ -2,6 +2,43 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# GNOME Shell version (major.minor) to fetch compatible builds
+SHELL_VER="$(gnome-shell --version | awk '{print $3}' | cut -d. -f1,2)"
+
+# Function to install extensions from extensions.gnome.org
+install_gnome_extension_from_uuid() {
+    local uuid="$1"
+    printf "\e[1;34m%s\e[1;0m\n" "Install $uuid..."
+    local info dl url tmp
+    if gnome-extensions info "$uuid" >/dev/null 2>&1; then
+        printf "\e[1;34m%s\e[1;0m\n" "$uuid already installed, skipping."
+        return 0
+    fi
+    info="$(curl -fsSL "https://extensions.gnome.org/extension-info/?uuid=${uuid}&shell_version=${SHELL_VER}" || true)"
+    if [[ -z "$info" || "$info" == "Not Found" ]]; then
+        printf "\e[1;31m%s\e[1;0m\n" "$uuid not available for GNOME $SHELL_VER, skipping."
+        return 0
+    fi
+    dl="$(printf "%s" "$info" | jq -r '.download_url // empty')"
+    if [[ -z "$dl" || "$dl" == "null" ]]; then
+        printf "\e[1;31m%s\e[1;0m\n" "$uuid no download_url found, skipping."
+        return 0
+    fi
+    url="https://extensions.gnome.org${dl}"
+    tmp="$(mktemp --suffix=.zip)"
+    if ! curl -fsSL "$url" -o "$tmp"; then
+        printf "\e[1;31m%s\e[1;0m\n" "$uuid download failed, skipping."
+        rm -f "$tmp"
+        return 0
+    fi
+    if gnome-extensions install --force "$tmp"; then
+        printf "\e[1;34m%s\e[1;0m\n" "$uuid installed."
+    else
+        printf "\e[1;31m%s\e[1;0m\n" "$uuid install failed."
+    fi
+    rm -f "$tmp"
+}
+
 if [[ ! -d ${HOME}/.config/tmux/plugins/tpm/ ]]; then
     printf "\e[1;34m%s\e[1;0m\n" "Clone tmux tpm"
     mkdir -p "${HOME}/.config/tmux/plugins/"
@@ -39,6 +76,23 @@ if [[ ! -d "/usr/share/icons/Twilight-cursors" ]]; then
     rm -rf /tmp/Twilight-Cursors
 fi
 
+printf "\e[1;34m%s\e[1;0m\n" "Installing extensions…"
+if [[ -f "{{ .chezmoi.sourceDir }}/gnome-extensions.txt" ]]; then
+    while IFS= read -r uuid; do
+        [[ -z "$uuid" ]] && continue
+        install_gnome_extension_from_uuid "$uuid"
+    done < "{{ .chezmoi.sourceDir }}/gnome-extensions.txt"
+else
+    printf "\e[1;31m%s\e[1;0m\n" "Missing file: {{ .chezmoi.sourceDir }}/gnome-extensions.txt"
+fi
+printf "\e[1;34m%s\e[1;0m\n" "Restoring settings…"
+if [[ -f "{{ .chezmoi.sourceDir }}/gnome-shell-extensions.dconf" ]]; then
+    dconf load /org/gnome/shell/extensions/ < "{{ .chezmoi.sourceDir }}/gnome-shell-extensions.dconf" || true
+else
+    printf "\e[1;31m%s\e[1;0m\n" "Missing file: {{ .chezmoi.sourceDir }}/gnome-shell-extensions.dconf (no settings restored)"
+fi
+printf "\e[1;34m%s\e[1;0m\n" "Reboot your computer to enable new gnome shell extensions!"
+
 
 # Setup gnome settings
 if command -v gsettings > /dev/null; then
@@ -51,7 +105,6 @@ if command -v gsettings > /dev/null; then
     gsettings set org.gnome.desktop.break-reminders selected-breaks "['eyesight']"
 
     # Set gnome shell theme
-    gsettings set org.gnome.shell.extensions.user-theme name "Flat-Remix-Dark-fullPanel"
     gsettings set org.gnome.desktop.interface gtk-theme "Numix-Frost"
     gsettings set org.gnome.desktop.interface icon-theme Numix-Square
     gsettings set org.gnome.desktop.interface cursor-theme "Twilight-cursors"

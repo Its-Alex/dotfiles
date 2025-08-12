@@ -108,6 +108,8 @@ $ systemctl --user enable gcr-ssh-agent.socket
 - [`System monitor next`](https://extensions.gnome.org/extension/3010/system-monitor-next/)
 - [`Extension manager`](https://github.com/mjakeman/extension-manager)
 
+You can find them in [gnome-extensions.txt](./gnome-extensions.txt).
+
 #### Themes
 
 - [`flat-remix-gnome`](https://github.com/daniruiz/flat-remix-gnome)
