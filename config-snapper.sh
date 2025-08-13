@@ -6,7 +6,12 @@ if [[ "$EUID" -ne 0 ]]; then
     exit 1
 fi
 
-yay -S --noconfirm --needed snapper grub-btrfs inotify-tools
+if [[ -d /boot/grub/ ]]; then
+    yay -S --noconfirm --needed snapper grub-btrfs inotify-tools
+else
+    yay -S --noconfirm --needed snapper inotify-tools
+fi
+
 
 if [[ "$(snapper list-configs | grep -c root)" == "0" ]]; then
     # Umount default subvolume /.snapshots to let snapper create subvolume
@@ -38,8 +43,6 @@ sed -i '/^TIMELINE_LIMIT_YEARLY/c\TIMELINE_LIMIT_YEARLY="0"' /etc/snapper/config
 # Enable snapper
 systemctl enable --now snapper-timeline.timer
 systemctl enable --now snapper-cleanup.timer
-# Enable grub-btrfs
-systemctl enable --now grub-btrfsd
 
 # Make backup each day at 10 and 20
 mkdir -p /etc/systemd/system/snapper-timeline.timer.d/
@@ -50,8 +53,12 @@ OnCalendar=*-*-* 10:00:00 Europe/Paris
 OnCalendar=*-*-* 20:00:00 Europe/Paris
 EOT
 
-# Enable booting into read-only snapshots https://wiki.archlinux.org/title/Snapper#Booting_into_read-only_snapshots
-if ! grep -q "HOOKS=.*grub-btrfs-overlayfs" /etc/mkinitcpio.conf; then
-    sed -i -e "s/^\(HOOKS=(.*\))/\1 grub-btrfs-overlayfs)/" /etc/mkinitcpio.conf
-    mkinitcpio -P
+if [[ -d /boot/grub/ ]]; then
+    # Enable grub-btrfs
+    systemctl enable --now grub-btrfsd
+    # Enable booting into read-only snapshots https://wiki.archlinux.org/title/Snapper#Booting_into_read-only_snapshots
+    if ! grep -q "HOOKS=.*grub-btrfs-overlayfs" /etc/mkinitcpio.conf; then
+        sed -i -e "s/^\(HOOKS=(.*\))/\1 grub-btrfs-overlayfs)/" /etc/mkinitcpio.conf
+        mkinitcpio -P
+    fi
 fi
