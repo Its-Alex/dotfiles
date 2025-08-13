@@ -11,8 +11,10 @@ yay -S --noconfirm --needed snapper grub-btrfs inotify-tools
 if [[ "$(snapper list-configs | grep -c root)" == "0" ]]; then
     # Umount default subvolume /.snapshots to let snapper create subvolume
     # https://wiki.archlinux.org/title/Snapper#Configuration_of_snapper_and_mount_point
-    umount /.snapshots
-    rm -r /.snapshots 
+    if [[ -d /.snapshots ]]; then
+        umount /.snapshots
+        rm -r /.snapshots
+    fi
 
     # Create snapper config
     snapper -c root create-config /
