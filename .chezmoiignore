@@ -2,7 +2,6 @@
 README.md
 archlinux-gnome-install.sh
 mise.toml
-config-snapper.sh
 /scripts/
 gnome-extensions.txt
 gnome-shell-extensions.dconf
