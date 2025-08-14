@@ -98,12 +98,18 @@ printf "\e[1;34m%s\e[1;0m\n" "Reboot your computer to enable new gnome shell ext
 if command -v gsettings > /dev/null; then
     printf "\e[1;34m%s\e[1;0m\n" "Setup Gnome settings"
 
+    # Set background image
+    gsettings set org.gnome.desktop.background picture-uri "file:///home/alex/.local/share/backgrounds/2025-08-14-10-38-53-space_bg.jpg"
     # Set keyboard
     gsettings set org.gnome.desktop.input-sources sources "[('xkb', 'us+qwerty-fr')]"
-
     # Set eyesight break reminder
-    gsettings set org.gnome.desktop.break-reminders selected-breaks "['eyesight']"
-
+    gsettings set org.gnome.desktop.break-reminders selected-breaks "[]"
+    # Define touchpad to traditional scrolling
+    gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
+    # Enable Nightlight
+    gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true
+    # Disable hot corners
+    gsettings set org.gnome.desktop.interface enable-hot-corners false
     # Set gnome shell theme
     gsettings set org.gnome.desktop.interface gtk-theme "Numix-Frost"
     gsettings set org.gnome.desktop.interface icon-theme Numix-Square
