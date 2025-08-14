@@ -114,3 +114,12 @@ You can find them in [gnome-extensions.txt](./gnome-extensions.txt).
 
 - [`flat-remix-gnome`](https://github.com/daniruiz/flat-remix-gnome)
 - [`Twilight cursors`](https://github.com/yeyushengfan258/Twilight-Cursors)
+
+### Snapper
+
+To configure [Snapper](https://wiki.archlinux.org/title/Snapper) on Archlinux you
+can use:
+
+```shell
+$ ./scripts/config-snapper.sh
+```
