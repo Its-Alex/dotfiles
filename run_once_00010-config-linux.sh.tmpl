@@ -8,10 +8,9 @@ SHELL_VER="$(gnome-shell --version | awk '{print $3}' | cut -d. -f1,2)"
 # Function to install extensions from extensions.gnome.org
 install_gnome_extension_from_uuid() {
     local uuid="$1"
-    printf "\e[1;34m%s\e[1;0m\n" "Install $uuid..."
     local info dl url tmp
     if gnome-extensions info "$uuid" >/dev/null 2>&1; then
-        printf "\e[1;34m%s\e[1;0m\n" "$uuid already installed, skipping."
+        printf "\e[1;0m%s\n" "$uuid already installed, skipping."
         return 0
     fi
     info="$(curl -fsSL "https://extensions.gnome.org/extension-info/?uuid=${uuid}&shell_version=${SHELL_VER}" || true)"
@@ -31,9 +30,7 @@ install_gnome_extension_from_uuid() {
         rm -f "$tmp"
         return 0
     fi
-    if gnome-extensions install --force "$tmp"; then
-        printf "\e[1;34m%s\e[1;0m\n" "$uuid installed."
-    else
+    if ! gnome-extensions install --force "$tmp"; then
         printf "\e[1;31m%s\e[1;0m\n" "$uuid install failed."
     fi
     rm -f "$tmp"
@@ -92,7 +89,6 @@ else
     printf "\e[1;31m%s\e[1;0m\n" "Missing file: {{ .chezmoi.sourceDir }}/gnome-shell-extensions.dconf (no settings restored)"
 fi
 printf "\e[1;34m%s\e[1;0m\n" "Reboot your computer to enable new gnome shell extensions!"
-
 
 # Setup gnome settings
 if command -v gsettings > /dev/null; then
