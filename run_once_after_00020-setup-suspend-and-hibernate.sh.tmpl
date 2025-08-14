@@ -1,0 +1,62 @@
+{{ if and (eq .chezmoi.osRelease.id "arch") (eq .chezmoi.hostname "xxii-arch-laptop") -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Relaunch script with root
+if [ "$(id -u)" -ne 0 ]; then
+  exec sudo bash "$0" "$@"
+fi
+
+ram=$(free -g | awk '/Mem:/{print $2}')
+swap_size=$(( (ram * 3 + 3) / 4 ))
+
+printf "\e[1;34m%s\e[1;0m\n" "Add swapfile (of ${swap_size}G) for hibernate..."
+if [[ ! -f /swap/swapfile ]]; then
+    mkdir -p /swap
+    btrfs filesystem mkswapfile -s "${swap_size}g" /swap/swapfile
+    chmod 600 /swap/swapfile
+    mkswap /swap/swapfile
+    swapon /swap/swapfile
+fi
+
+printf "\e[1;34m%s\e[1;0m\n" "Add swapfile to /etc/fstab..."
+fstab_line='/swap/swapfile none swap defaults,pri=50 0 0'
+if ! grep -Fxq "$fstab_line" /etc/fstab; then
+    echo "$fstab_line" >> /etc/fstab
+fi
+
+printf "\e[1;34m%s\e[1;0m\n" "Add resume hook to mkinitcpio..."
+if ! grep -qE '^HOOKS=.*resume' /etc/mkinitcpio.conf; then
+    sed -i 's/\(HOOKS=.*\)filesystems/\1filesystems resume/' /etc/mkinitcpio.conf
+    mkinitcpio -P
+fi
+
+printf "\e[1;34m%s\e[1;0m\n" "Setup systemd logind and sleepd configuration for suspend then hibernated..."
+# Create folders if no exist
+mkdir -p /etc/systemd/logind.conf.d /etc/systemd/sleep.conf.d
+# Add configuration for lid switch
+if ! cmp -s <(echo '[Login]
+HandleLidSwitch=suspend-then-hibernate
+HandleLidSwitchExternalPower=suspend-then-hibernate
+HandleLidSwitchDocked=ignore
+') /etc/systemd/logind.conf.d/10-lid.conf 2>/dev/null; then
+    cat > /etc/systemd/logind.conf.d/10-lid.conf <<EOF
+[Login]
+HandleLidSwitch=suspend-then-hibernate
+HandleLidSwitchExternalPower=suspend-then-hibernate
+HandleLidSwitchDocked=ignore
+EOF
+fi
+# Add configuration for sleep
+if ! cmp -s <(echo '[Sleep]
+HibernateDelaySec=600
+') /etc/systemd/sleep.conf.d/10-hibernate-delay.conf 2>/dev/null; then
+    cat > /etc/systemd/sleep.conf.d/10-hibernate-delay.conf <<EOF
+[Sleep]
+HibernateDelaySec=600
+EOF
+fi
+
+printf "\e[1;34m%s\e[1;0m\n" "Reload systemd to apply configuration at next boot..."
+systemctl daemon-reload
+{{ end -}}
