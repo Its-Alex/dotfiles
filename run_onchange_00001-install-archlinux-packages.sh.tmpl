@@ -28,6 +28,7 @@ packages_list=(
     jq
     os-prober
     fwupd
+    systemd-resolvconf
     ## Keyboard
     xkb-qwerty-fr
     ## Fonts
@@ -97,4 +98,8 @@ printf "\e[1;34m%s\e[1;0m\n" "Install thermald"
 yay -S --noconfirm --needed thermald
 sudo systemctl enable --now thermald
 {{ end -}}
+
+# Setup systemd-resolved with NetworkManager
+sudo systemctl enable --now systemd-resolved.service
+sudo ln -sf ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 {{ end -}}
