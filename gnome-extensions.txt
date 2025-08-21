@@ -2,4 +2,4 @@ dash-to-dock@micxgx.gmail.com
 gnome-fuzzy-app-search@gnome-shell-extensions.Czarlie.gitlab.com
 grand-theft-focus@zalckos.github.com
 user-theme@gnome-shell-extensions.gcampax.github.com
-system-monitor-next@paradoxxx.zero.gmail.com
+system-monitor@gnome-shell-extensions.gcampax.github.com
