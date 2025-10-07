@@ -92,7 +92,7 @@ echo 'ACTION=="add", ATTR{idVendor}=="045e", ATTR{idProduct}=="02fe", ATTR{autho
 sudo udevadm control --reload-rules
 sudo udevadm trigger
 
-{{ if eq .chezmoi.hostname "xxii-arch-laptop" -}}
+{{ if eq .chezmoi.hostname "laptop-alex-XXII230041" -}}
 # Install and configure thermald
 printf "\e[1;34m%s\e[1;0m\n" "Install thermald"
 yay -S --noconfirm --needed thermald
