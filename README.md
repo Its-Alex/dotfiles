@@ -26,7 +26,8 @@ To install from scratch I use [QEMU Archlinx](https://github.com/Its-Alex/qemu-a
 when the VM is setup I enable `pinentry-curses` using:
 
 ```shell
-$ echo 'pinentry-program /usr/bin/pinentry-curses' >> ~/.gnupg/gpg-agent.conf && \
+$ mkdir -p ~/.gnupg/ && \
+    echo 'pinentry-program /usr/bin/pinentry-curses' >> ~/.gnupg/gpg-agent.conf && \
     echo 'allow-loopback-pinentry' >> ~/.gnupg/gpg-agent.conf && \
     echo 'pinentry-mode loopback' >> ~/.gnupg/gpg.conf && \
     export GPG_TTY=$(tty) && \
