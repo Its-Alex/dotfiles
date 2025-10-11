@@ -34,15 +34,23 @@ $ mkdir -p ~/.gnupg/ && \
     gpgconf --kill gpg-agent
 ```
 
-This allow for GPG password to be entered in shell for development purpose.
+This allow for GPG password to be entered in shell for development purpose. I
+also enable rootless password to prevent putting password everytime:
+
+```shell
+$ echo 'archlinux ALL=(ALL) NOPASSWD: ALL' | sudo tee /etc/sudoers.d/90-archlinux-nopasswd >/dev/null && \
+    sudo chmod 0440 /etc/sudoers.d/90-archlinux-nopasswd
+```
 
 Finally I can launch:
 
 ```shell
-$ sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply https://github.com/Its-Alex/dotfiles.git
+$ CHEZMOI_PASSWORD_MANAGER_DISABLED=true sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply https://github.com/Its-Alex/dotfiles.git
 ```
 
-To install dotfiles.
+To install dotfiles. The variable `CHEZMOI_PASSWORD_MANAGER_DISABLED` allow me
+to perform a full installation without connecting myself because I don't want
+to automate this part.
 
 ## Configurations
 
