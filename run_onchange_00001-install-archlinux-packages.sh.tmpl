@@ -51,9 +51,10 @@ packages_list=(
     visual-studio-code-bin
     ## VPN
     networkmanager-openconnect
-    ## Docker
-    docker
-    docker-compose
+    ## Podman
+    podman
+    podman-compose
+    podman-docker
     ## Qemu
     qemu-full
     guestfs-tools
@@ -63,9 +64,11 @@ packages_list=(
 )
 yay -S --noconfirm --needed "${packages_list[@]}"
 
-printf "\e[1;34m%s\e[1;0m\n" "Setup docker"
-sudo usermod -aG docker "${USER}"
-sudo systemctl enable docker
+# Setup podman
+printf "\e[1;34m%s\e[1;0m\n" "Setup podman..."
+sudo tee /etc/containers/registries.conf.d/10-unqualified-search-registries.conf > /dev/null <<'EOF'
+unqualified-search-registries = ["docker.io"]
+EOF
 
 flatpak_flathub_apps_list=(
     io.gitlab.librewolf-community
