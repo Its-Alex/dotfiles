@@ -53,8 +53,8 @@ packages_list=(
     networkmanager-openconnect
     ## Podman
     podman
-    podman-compose
     podman-docker
+    docker-compose
     ## Qemu
     qemu-full
     guestfs-tools
@@ -69,6 +69,8 @@ printf "\e[1;34m%s\e[1;0m\n" "Setup podman..."
 sudo tee /etc/containers/registries.conf.d/10-unqualified-search-registries.conf > /dev/null <<'EOF'
 unqualified-search-registries = ["docker.io"]
 EOF
+# Enable podman socket for docker compose
+systemctl --user enable --now podman.socket
 
 flatpak_flathub_apps_list=(
     io.gitlab.librewolf-community

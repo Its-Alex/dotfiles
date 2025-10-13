@@ -41,6 +41,8 @@ export GPG_TTY
 #  SSH socket
 export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/gcr/ssh
 {{- end }}
+# Use podman with docker compose
+export DOCKER_HOST=unix:///run/user/1000/podman/podman.sock
 
 # Environment variable - Languages
 #  Rust
