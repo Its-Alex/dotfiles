@@ -22,7 +22,7 @@ $ chezmoi apply
 
 ## Install from scratch
 
-To install from scratch I use [QEMU Archlinx](https://github.com/Its-Alex/qemu-archlinux),
+To install from scratch I use [QEMU Archlinux](https://github.com/Its-Alex/qemu-archlinux),
 when the VM is setup I enable `pinentry-curses` using:
 
 ```shell
