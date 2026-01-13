@@ -1,0 +1,13 @@
+#:schema https://docs.jj-vcs.dev/latest/config-schema.json
+
+[user]
+name = "ItsAlex"
+email = "me@itsalex.fr"
+
+[signing]
+behavior = "own"
+backend = "gpg"
+key = "D13067073B9A98A9"
+
+[git]
+sign-on-push = true
