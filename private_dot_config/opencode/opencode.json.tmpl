@@ -1,61 +1,61 @@
 {
-  "$schema": "https://opencode.ai/config.json",
-  "plugin": [
-    "opencode-cursor-auth@1.0.16"
-  ],
-  "provider": {
-    "cursor": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "Cursor Agent (local)",
-      "options": {
-        "baseURL": "http://127.0.0.1:32123/v1"
-      },
-      "models": {
-        "auto": { "name": "Cursor Agent Auto" },
-        "gpt-5": { "name": "Cursor Agent GPT-5 (alias → gpt-5.2)" },
-        "gpt-5.2": { "name": "Cursor Agent GPT-5.2" },
-        "gpt-5.1": { "name": "Cursor Agent GPT-5.1" },
-        "gpt-5.1-codex": { "name": "Cursor Agent GPT-5.1 Codex" },
-        "sonnet-4.5": { "name": "Cursor Agent Sonnet 4.5" },
-        "sonnet-4.5-thinking": { "name": "Cursor Agent Sonnet 4.5 Thinking" },
-        "opus-4.5": { "name": "Cursor Agent Opus 4.5" },
-        "opus-4.5-thinking": { "name": "Cursor Agent Opus 4.5 Thinking" }
-      }
-    }
-  },
+    "$schema": "https://opencode.ai/config.json",
+    "plugin": [
+        "opencode-cursor-auth@1.0.16"
+    ],
+    "provider": {
+        "cursor": {
+        "npm": "@ai-sdk/openai-compatible",
+        "name": "Cursor Agent (local)",
+        "options": {
+            "baseURL": "http://127.0.0.1:32123/v1"
+        },
+        "models": {
+            "auto": { "name": "Cursor Agent Auto" },
+            "gpt-5": { "name": "Cursor Agent GPT-5 (alias → gpt-5.2)" },
+            "gpt-5.2": { "name": "Cursor Agent GPT-5.2" },
+            "gpt-5.1": { "name": "Cursor Agent GPT-5.1" },
+            "gpt-5.1-codex": { "name": "Cursor Agent GPT-5.1 Codex" },
+            "sonnet-4.5": { "name": "Cursor Agent Sonnet 4.5" },
+            "sonnet-4.5-thinking": { "name": "Cursor Agent Sonnet 4.5 Thinking" },
+            "opus-4.5": { "name": "Cursor Agent Opus 4.5" },
+            "opus-4.5-thinking": { "name": "Cursor Agent Opus 4.5 Thinking" }
+        }
+        }
+    },
 {{- if and (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "true") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "1") }}
-  "mcp": {
-    "mcp-atlassian": {
-        "type": "local",
-        "enabled": true,
-        "command": [
-            "podman",
-            "run",
-            "-i",
-            "--rm",
-            "-e",
-            "CONFLUENCE_URL",
-            "-e",
-            "CONFLUENCE_USERNAME",
-            "-e",
-            "CONFLUENCE_API_TOKEN",
-            "-e",
-            "JIRA_URL",
-            "-e",
-            "JIRA_USERNAME",
-            "-e",
-            "JIRA_API_TOKEN",
-            "ghcr.io/sooperset/mcp-atlassian:latest"
-        ],
-        "environment": {
-            "CONFLUENCE_URL": "{{ (bitwardenFields "item" "Confluence - API Token").space_url.value }}",
-            "CONFLUENCE_USERNAME": "{{ (bitwarden "item" "Confluence - API Token").login.username }}",
-            "CONFLUENCE_API_TOKEN": "{{ (bitwarden "item" "Confluence - API Token").login.password }}",
-            "JIRA_URL": "{{ (bitwardenFields "item" "Jira - API Token ").space_url.value }}",
-            "JIRA_USERNAME": "{{ (bitwarden "item" "Jira - API Token ").login.username }}",
-            "JIRA_API_TOKEN": "{{ (bitwarden "item" "Jira - API Token ").login.password }}"
+    "mcp": {
+        "mcp-atlassian": {
+            "type": "local",
+            "enabled": true,
+            "command": [
+                "podman",
+                "run",
+                "-i",
+                "--rm",
+                "-e",
+                "CONFLUENCE_URL",
+                "-e",
+                "CONFLUENCE_USERNAME",
+                "-e",
+                "CONFLUENCE_API_TOKEN",
+                "-e",
+                "JIRA_URL",
+                "-e",
+                "JIRA_USERNAME",
+                "-e",
+                "JIRA_API_TOKEN",
+                "ghcr.io/sooperset/mcp-atlassian:latest"
+            ],
+            "environment": {
+                "CONFLUENCE_URL": "{{ (bitwardenFields "item" "Confluence - API Token").space_url.value }}",
+                "CONFLUENCE_USERNAME": "{{ (bitwarden "item" "Confluence - API Token").login.username }}",
+                "CONFLUENCE_API_TOKEN": "{{ (bitwarden "item" "Confluence - API Token").login.password }}",
+                "JIRA_URL": "{{ (bitwardenFields "item" "Jira - API Token ").space_url.value }}",
+                "JIRA_USERNAME": "{{ (bitwarden "item" "Jira - API Token ").login.username }}",
+                "JIRA_API_TOKEN": "{{ (bitwarden "item" "Jira - API Token ").login.password }}"
+            }
         }
     }
-  }
 {{- end }}
 }
