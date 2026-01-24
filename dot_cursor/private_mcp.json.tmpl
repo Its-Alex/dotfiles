@@ -1,5 +1,6 @@
 {
   "mcpServers": {
+{{- if and (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "true") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "1") }}
     "mcp-atlassian": {
         "command": "podman",
         "args": [
@@ -30,4 +31,5 @@
         }
     }
   }
+{{- end }}
 }

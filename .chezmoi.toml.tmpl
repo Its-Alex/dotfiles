@@ -1,5 +1,4 @@
-encryption = "gpg"
-[gpg]
-    recipient = "D13067073B9A98A9"
 [bitwarden]
     unlock = "auto"
+[hooks.read-source-state.pre]
+    command = ".local/share/chezmoi/.install-password-manager.sh"

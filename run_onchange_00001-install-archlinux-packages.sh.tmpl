@@ -21,6 +21,7 @@ fi
 printf "\e[1;34m%s\e[1;0m\n" "Install system programs.."
 packages_list=(
     # System
+    gnupg
     flatpak
     unzip
     tar
@@ -68,6 +69,11 @@ packages_list=(
     jujutsu
 )
 yay -S --noconfirm --needed "${packages_list[@]}"
+
+# Install GPG key
+{{ if and (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "true") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "1") -}}
+echo "{{ bitwardenAttachment "kb3rqexmcioe8716h20kgjlqsaqw197f" "e1ac83ba-e272-4b58-90eb-ae4c009cf0f7" }}" | GPG_TTY=$(tty) gpg --import -
+{{ end -}}
 
 # Setup podman
 printf "\e[1;34m%s\e[1;0m\n" "Setup podman..."
