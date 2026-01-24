@@ -1,0 +1,33 @@
+{
+  "mcpServers": {
+    "mcp-atlassian": {
+        "command": "podman",
+        "args": [
+            "run",
+            "-i",
+            "--rm",
+            "-e",
+            "CONFLUENCE_URL",
+            "-e",
+            "CONFLUENCE_USERNAME",
+            "-e",
+            "CONFLUENCE_API_TOKEN",
+            "-e",
+            "JIRA_URL",
+            "-e",
+            "JIRA_USERNAME",
+            "-e",
+            "JIRA_API_TOKEN",
+            "ghcr.io/sooperset/mcp-atlassian:latest"
+        ],
+        "env": {
+            "CONFLUENCE_URL": "{{ (bitwardenFields "item" "Confluence - API Token").space_url.value }}",
+            "CONFLUENCE_USERNAME": "{{ (bitwarden "item" "Confluence - API Token").login.username }}",
+            "CONFLUENCE_API_TOKEN": "{{ (bitwarden "item" "Confluence - API Token").login.password }}",
+            "JIRA_URL": "{{ (bitwardenFields "item" "Jira - API Token ").space_url.value }}",
+            "JIRA_USERNAME": "{{ (bitwarden "item" "Jira - API Token ").login.username }}",
+            "JIRA_API_TOKEN": "{{ (bitwarden "item" "Jira - API Token ").login.password }}"
+        }
+    }
+  }
+}
