@@ -2,6 +2,7 @@
 direnv = 'latest'
 nodejs = 'latest'
 node = 'latest'
+bun = 'latest'
 
 [settings]
 experimental = true
