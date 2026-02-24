@@ -2,45 +2,45 @@
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/master/assets/oh-my-opencode.schema.json",
   "agents": {
     "sisyphus": {
-      "model": "cursor/sonnet-4.6",
-      "variant": "low"
+      "model": "amazon-bedrock/eu.anthropic.claude-opus-4-6-v1",
+      "variant": "medium"
     },
     "hephaestus": {
-      "model": "github-copilot/gpt-5.3-codex",
+      "model": "cursor/gpt-5.1-codex",
       "variant": "medium"
     },
     "oracle": {
-      "model": "github-copilot/gpt-5.2",
+      "model": "cursor/gpt-5.2",
       "variant": "high"
     },
     "librarian": {
-      "model": "cursor/sonnet-4.6"
+      "model": "amazon-bedrock/us.anthropic.claude-sonnet-4-6"
     },
     "explore": {
       "model": "github-copilot/gpt-5-mini"
     },
     "multimodal-looker": {
-      "model": "github-copilot/gemini-3-flash-preview"
+      "model": "google-vertex/gemini-3-flash-preview"
     },
     "prometheus": {
-      "model": "cursor/sonnet-4.6",
-      "variant": "max"
+      "model": "amazon-bedrock/eu.anthropic.claude-opus-4-6-v1",
+      "variant": "medium"
     },
     "metis": {
-      "model": "cursor/sonnet-4.6",
-      "variant": "max"
+      "model": "amazon-bedrock/eu.anthropic.claude-opus-4-6-v1",
+      "variant": "medium"
     },
     "momus": {
-      "model": "github-copilot/gpt-5.2",
+      "model": "cursor/gpt-5.2",
       "variant": "medium"
     },
     "atlas": {
-      "model": "cursor/sonnet-4.6"
+      "model": "amazon-bedrock/us.anthropic.claude-sonnet-4-6"
     }
   },
   "categories": {
     "visual-engineering": {
-      "model": "github-copilot/gemini-3-pro-preview",
+      "model": "google-vertex/gemini-3-pro-preview",
       "variant": "high"
     },
     "ultrabrain": {
@@ -52,20 +52,20 @@
       "variant": "medium"
     },
     "artistry": {
-      "model": "github-copilot/gemini-3-pro-preview",
+      "model": "google-vertex/gemini-3-pro-preview",
       "variant": "high"
     },
     "quick": {
       "model": "github-copilot/claude-haiku-4.5"
     },
     "unspecified-low": {
-      "model": "cursor/sonnet-4.6"
+      "model": "amazon-bedrock/us.anthropic.claude-sonnet-4-6"
     },
     "unspecified-high": {
-      "model": "cursor/sonnet-4.6"
+      "model": "amazon-bedrock/us.anthropic.claude-sonnet-4-6"
     },
     "writing": {
-      "model": "github-copilot/gemini-3-flash-preview"
+      "model": "google-vertex/gemini-3-flash-preview"
     }
   }
 }
