@@ -53,6 +53,11 @@
                     "name": "Cursor Agent Opus 4.6 Thinking"
                 }
             }
+        },
+        "amazon-bedrock": {
+            "options": {
+                "region": "eu-west-3",
+            }
         }
     },
 {{- if and (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "true") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "1") }}
