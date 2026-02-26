@@ -2,16 +2,16 @@
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/master/assets/oh-my-opencode.schema.json",
   "agents": {
     "sisyphus": {
-      "model": "amazon-bedrock/anthropic.claude-opus-4-6-v1",
-      "variant": "medium"
+      "model": "amazon-bedrock/anthropic.claude-sonnet-4-6",
+      "variant": "low"
     },
     "hephaestus": {
       "model": "cursor/gpt-5.1-codex",
-      "variant": "medium"
+      "variant": "low"
     },
     "oracle": {
       "model": "cursor/gpt-5.2",
-      "variant": "high"
+      "variant": "low"
     },
     "librarian": {
       "model": "amazon-bedrock/anthropic.claude-sonnet-4-6"
@@ -23,16 +23,16 @@
       "model": "google-vertex/gemini-3-flash-preview"
     },
     "prometheus": {
-      "model": "amazon-bedrock/anthropic.claude-opus-4-6-v1",
-      "variant": "medium"
+      "model": "amazon-bedrock/anthropic.claude-sonnet-4-6",
+      "variant": "low"
     },
     "metis": {
-      "model": "amazon-bedrock/anthropic.claude-opus-4-6-v1",
-      "variant": "medium"
+      "model": "amazon-bedrock/anthropic.claude-sonnet-4-6",
+      "variant": "low"
     },
     "momus": {
       "model": "cursor/gpt-5.2",
-      "variant": "medium"
+      "variant": "low"
     },
     "atlas": {
       "model": "amazon-bedrock/anthropic.claude-sonnet-4-6"
@@ -45,11 +45,11 @@
     },
     "ultrabrain": {
       "model": "github-copilot/gpt-5.3-codex",
-      "variant": "xhigh"
+      "variant": "low"
     },
     "deep": {
       "model": "github-copilot/gpt-5.3-codex",
-      "variant": "medium"
+      "variant": "low"
     },
     "artistry": {
       "model": "google-vertex/gemini-3-pro-preview",
@@ -59,10 +59,12 @@
       "model": "amazon-bedrock/anthropic.claude-haiku-4-5-20251001-v1:0"
     },
     "unspecified-low": {
-      "model": "amazon-bedrock/anthropic.claude-sonnet-4-6"
+      "model": "amazon-bedrock/anthropic.claude-sonnet-4-6",
+      "variant": "low"
     },
     "unspecified-high": {
-      "model": "amazon-bedrock/anthropic.claude-sonnet-4-6"
+      "model": "amazon-bedrock/anthropic.claude-sonnet-4-6",
+      "variant": "medium"
     },
     "writing": {
       "model": "google-vertex/gemini-3-flash-preview"
