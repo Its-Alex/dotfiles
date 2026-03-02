@@ -23,6 +23,14 @@ Writing guidelines:
 - Try to be clear and concise while keeping only the required context and what I specify.
 - Use plenty of links to resources (git repo, online docs) directly in the text, and don't add a dedicated section when it's not useful.
 
+Be careful with mcp-atlassian:
+- inward_issue = the blocker (the one that must be done first)
+- outward_issue = the blocked (the one that cannot start before)
+So to say "B is blocked by A":
+inward_issue_key = A  (the blocker)
+outward_issue_key = B  (the blocked)
+link_type = "Blocks"
+
 Mandatory workflow:
 1. Draft the summary and description of the issue following the guidelines above.
 2. **Show me the full text (summary + description) BEFORE creating the issue.**
