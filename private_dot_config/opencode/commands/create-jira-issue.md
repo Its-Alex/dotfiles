@@ -31,6 +31,11 @@ inward_issue_key = A  (the blocker)
 outward_issue_key = B  (the blocked)
 link_type = "Blocks"
 
+Here are the Jira ARIs for the Team field:
+Team Backend: ari:cloud:identity::team/55bf41de-ae65-461a-8c5d-1d486d47fe5f-30
+Team Web: ari:cloud:identity::team/d40e3617-a14f-4793-a86d-dccd229ac978
+Team SW: ari:cloud:identity::team/d40e3617-a14f-4793-a86d-dccd229ac978
+
 Mandatory workflow:
 1. Draft the summary and description of the issue following the guidelines above.
 2. **Show me the full text (summary + description) BEFORE creating the issue.**
