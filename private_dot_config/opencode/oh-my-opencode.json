@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/master/assets/oh-my-opencode.schema.json",
   "agents": {
     "sisyphus": {
-      "model": "amazon-bedrock/anthropic.claude-sonnet-4-6",
+      "model": "amazon-bedrock/anthropic.claude-opus-4-6-v1",
       "variant": "low"
     },
     "hephaestus": {
@@ -23,7 +23,7 @@
       "model": "google-vertex/gemini-3-flash-preview"
     },
     "prometheus": {
-      "model": "amazon-bedrock/anthropic.claude-sonnet-4-6",
+      "model": "amazon-bedrock/anthropic.claude-opus-4-6-v1",
       "variant": "low"
     },
     "metis": {
