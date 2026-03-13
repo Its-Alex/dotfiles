@@ -3,6 +3,11 @@
   "sisyphus_agent": {
     "default_builder_enabled": true
   },
+  "sisyphus": {
+    "tasks": {
+      "claude_code_compat": true
+    }
+  },
   "agents": {
     "sisyphus": {
       "model": "amazon-bedrock/anthropic.claude-sonnet-4-6",
