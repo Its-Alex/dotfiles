@@ -5,11 +5,11 @@
   },
   "agents": {
     "sisyphus": {
-      "model": "amazon-bedrock/anthropic.claude-opus-4-6-v1",
+      "model": "amazon-bedrock/anthropic.claude-sonnet-4-6",
       "variant": "low"
     },
     "hephaestus": {
-      "model": "cursor-acp/gpt-5.1-codex",
+      "model": "cursor-acp/gpt-5.1-codex-mini",
       "variant": "low"
     },
     "oracle": {
@@ -26,7 +26,7 @@
       "model": "google-vertex/gemini-3-flash-preview"
     },
     "prometheus": {
-      "model": "amazon-bedrock/anthropic.claude-opus-4-6-v1",
+      "model": "amazon-bedrock/anthropic.claude-sonnet-4-6",
       "variant": "low"
     },
     "metis": {
