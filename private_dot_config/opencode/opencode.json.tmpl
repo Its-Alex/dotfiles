@@ -2,61 +2,161 @@
   "$schema": "https://opencode.ai/config.json",
   "theme": "dracula",
   "plugin": [
-    "opencode-cursor-auth@1.0.16",
-    "oh-my-opencode@3.10.0"
+    "oh-my-opencode@3.10.0",
+    "@rama_nigg/open-cursor@2.3.17",
+    "cursor-acp"
   ],
   "provider": {
-    "cursor": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "Cursor Agent (local)",
-      "options": {
-        "baseURL": "http://127.0.0.1:32123/v1"
-      },
-      "models": {
-        "auto": {
-          "name": "Cursor Agent Auto"
-        },
-        "gpt-5": {
-          "name": "Cursor Agent GPT-5 (alias → gpt-5.2)"
-        },
-        "gpt-5.2": {
-          "name": "Cursor Agent GPT-5.2"
-        },
-        "gpt-5.1": {
-          "name": "Cursor Agent GPT-5.1"
-        },
-        "gpt-5.1-codex": {
-          "name": "Cursor Agent GPT-5.1 Codex"
-        },
-        "sonnet-4.5": {
-          "name": "Cursor Agent Sonnet 4.5"
-        },
-        "sonnet-4.5-thinking": {
-          "name": "Cursor Agent Sonnet 4.5 Thinking"
-        },
-        "opus-4.5": {
-          "name": "Cursor Agent Opus 4.5"
-        },
-        "opus-4.5-thinking": {
-          "name": "Cursor Agent Opus 4.5 Thinking"
-        },
-        "sonnet-4.6": {
-          "name": "Cursor Agent Sonnet 4.6"
-        },
-        "sonnet-4.6-thinking": {
-          "name": "Cursor Agent Sonnet 4.6 Thinking"
-        },
-        "opus-4.6": {
-          "name": "Cursor Agent Opus 4.6"
-        },
-        "opus-4.6-thinking": {
-          "name": "Cursor Agent Opus 4.6 Thinking"
-        }
-      }
-    },
     "amazon-bedrock": {
       "options": {
         "region": "eu-west-3"
+      }
+    },
+    "cursor-acp": {
+      "name": "Cursor",
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "http://127.0.0.1:32124/v1"
+      },
+      "models": {
+        "auto": {
+          "name": "Auto"
+        },
+        "composer-1.5": {
+          "name": "Composer 1.5"
+        },
+        "composer-1": {
+          "name": "Composer 1"
+        },
+        "gpt-5.3-codex-low": {
+          "name": "GPT-5.3 Codex Low"
+        },
+        "gpt-5.3-codex-low-fast": {
+          "name": "GPT-5.3 Codex Low Fast"
+        },
+        "gpt-5.3-codex": {
+          "name": "GPT-5.3 Codex"
+        },
+        "gpt-5.3-codex-fast": {
+          "name": "GPT-5.3 Codex Fast"
+        },
+        "gpt-5.3-codex-high": {
+          "name": "GPT-5.3 Codex High"
+        },
+        "gpt-5.3-codex-high-fast": {
+          "name": "GPT-5.3 Codex High Fast"
+        },
+        "gpt-5.3-codex-xhigh": {
+          "name": "GPT-5.3 Codex Extra High"
+        },
+        "gpt-5.3-codex-xhigh-fast": {
+          "name": "GPT-5.3 Codex Extra High Fast"
+        },
+        "gpt-5.2": {
+          "name": "GPT-5.2"
+        },
+        "gpt-5.3-codex-spark-preview": {
+          "name": "GPT-5.3 Codex Spark"
+        },
+        "gpt-5.2-codex-low": {
+          "name": "GPT-5.2 Codex Low"
+        },
+        "gpt-5.2-codex-low-fast": {
+          "name": "GPT-5.2 Codex Low Fast"
+        },
+        "gpt-5.2-codex": {
+          "name": "GPT-5.2 Codex"
+        },
+        "gpt-5.2-codex-fast": {
+          "name": "GPT-5.2 Codex Fast"
+        },
+        "gpt-5.2-codex-high": {
+          "name": "GPT-5.2 Codex High"
+        },
+        "gpt-5.2-codex-high-fast": {
+          "name": "GPT-5.2 Codex High Fast"
+        },
+        "gpt-5.2-codex-xhigh": {
+          "name": "GPT-5.2 Codex Extra High"
+        },
+        "gpt-5.2-codex-xhigh-fast": {
+          "name": "GPT-5.2 Codex Extra High Fast"
+        },
+        "gpt-5.1-codex-max": {
+          "name": "GPT-5.1 Codex Max"
+        },
+        "gpt-5.1-codex-max-high": {
+          "name": "GPT-5.1 Codex Max High"
+        },
+        "gpt-5.4-high": {
+          "name": "GPT-5.4 High"
+        },
+        "opus-4.6-thinking": {
+          "name": "Claude 4.6 Opus (Thinking)"
+        },
+        "gpt-5.4-medium": {
+          "name": "GPT-5.4"
+        },
+        "gpt-5.4-medium-fast": {
+          "name": "GPT-5.4 Fast"
+        },
+        "gpt-5.4-high-fast": {
+          "name": "GPT-5.4 High Fast"
+        },
+        "gpt-5.4-xhigh": {
+          "name": "GPT-5.4 Extra High"
+        },
+        "gpt-5.4-xhigh-fast": {
+          "name": "GPT-5.4 Extra High Fast"
+        },
+        "sonnet-4.6": {
+          "name": "Claude 4.6 Sonnet"
+        },
+        "sonnet-4.6-thinking": {
+          "name": "Claude 4.6 Sonnet (Thinking)"
+        },
+        "opus-4.6": {
+          "name": "Claude 4.6 Opus"
+        },
+        "opus-4.5": {
+          "name": "Claude 4.5 Opus"
+        },
+        "opus-4.5-thinking": {
+          "name": "Claude 4.5 Opus (Thinking)"
+        },
+        "gpt-5.2-high": {
+          "name": "GPT-5.2 High"
+        },
+        "gemini-3.1-pro": {
+          "name": "Gemini 3.1 Pro"
+        },
+        "grok": {
+          "name": "Grok"
+        },
+        "sonnet-4.5": {
+          "name": "Claude 4.5 Sonnet"
+        },
+        "sonnet-4.5-thinking": {
+          "name": "Claude 4.5 Sonnet (Thinking)"
+        },
+        "gpt-5.1-high": {
+          "name": "GPT-5.1 High"
+        },
+        "gemini-3-pro": {
+          "name": "Gemini 3 Pro"
+        },
+        "gemini-3-flash": {
+          "name": "Gemini 3 Flash"
+        },
+        "gpt-5.1-codex-mini": {
+          "name": "GPT-5.1 Codex Mini"
+        },
+        "kimi-k2.5": {
+          "name": "Kimi K2.5"
+        },
+        "gpt-5.4-low": {
+          "name": "GPT-5.4 Low"
+        }
       }
     }
   },

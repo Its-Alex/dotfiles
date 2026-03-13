@@ -6,11 +6,11 @@
       "variant": "low"
     },
     "hephaestus": {
-      "model": "cursor/gpt-5.1-codex",
+      "model": "cursor-acp/gpt-5.1-codex",
       "variant": "low"
     },
     "oracle": {
-      "model": "cursor/gpt-5.2",
+      "model": "cursor-acp/gpt-5.2",
       "variant": "low"
     },
     "librarian": {
@@ -31,7 +31,7 @@
       "variant": "low"
     },
     "momus": {
-      "model": "cursor/gpt-5.2",
+      "model": "cursor-acp/gpt-5.2",
       "variant": "low"
     },
     "atlas": {
