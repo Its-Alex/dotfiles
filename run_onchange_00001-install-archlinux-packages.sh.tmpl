@@ -80,6 +80,8 @@ printf "\e[1;34m%s\e[1;0m\n" "Setup podman..."
 sudo tee /etc/containers/registries.conf.d/10-unqualified-search-registries.conf > /dev/null <<'EOF'
 unqualified-search-registries = ["docker.io"]
 EOF
+# Enable btrfs support for podman
+sudo sed -i -E 's/^#?driver = .*/driver = "btrfs"/' /etc/containers/storage.conf
 # Enable podman socket for docker compose
 systemctl --user enable --now podman.socket
 
