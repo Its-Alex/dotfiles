@@ -66,41 +66,25 @@ return {
         },
         lazy = false,
         config = function()
-            require("mason-lspconfig").setup()
-            require("mason-lspconfig").setup_handlers {
-                function(server_name)
-                    require("lspconfig")[server_name].setup {}
-                end,
-
-                -- Allow lua to be aware of vim in neovim
-                ["lua_ls"] = function()
-                    local lspconfig = require('lspconfig')
-
-                    lspconfig.lua_ls.setup {
-                        settings = {
-                            Lua = {
-                                runtime = {
-                                    -- Tell the language server which version of Lua you're using
-                                    -- (most likely LuaJIT in the case of Neovim)
-                                    version = 'LuaJIT',
-                                },
-                                diagnostics = {
-                                    -- Get the language server to recognize the `vim` global
-                                    globals = {
-                                        'vim',
-                                        'require'
-                                    },
-                                    disable = { 'missing-fields' }
-                                },
-                                workspace = {
-                                    -- Make the server aware of Neovim runtime files
-                                    library = vim.api.nvim_get_runtime_file("", true),
-                                },
-                            },
+            -- Extend nvim-lspconfig defaults; must run before mason-lspconfig enables servers.
+            vim.lsp.config("lua_ls", {
+                settings = {
+                    Lua = {
+                        runtime = {
+                            version = "LuaJIT",
                         },
-                    }
-                end
-            }
+                        diagnostics = {
+                            globals = { "vim", "require" },
+                            disable = { "missing-fields" },
+                        },
+                        workspace = {
+                            library = vim.api.nvim_get_runtime_file("", true),
+                        },
+                    },
+                },
+            })
+
+            require("mason-lspconfig").setup()
         end
     },
 }
