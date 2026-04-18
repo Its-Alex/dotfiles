@@ -117,6 +117,10 @@ yay -S --noconfirm --needed thermald
 sudo systemctl enable --now thermald
 {{ end -}}
 
+# Setup userspace OOMKiller
+printf "\e[1;34m%s\e[1;0m\n" "Setup userspace OOMKiller"
+sudo systemctl enable --now systemd-oomd
+
 # Setup systemd-resolved with NetworkManager
 sudo systemctl enable --now systemd-resolved.service
 sudo ln -sf ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
