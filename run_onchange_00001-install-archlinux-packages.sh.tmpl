@@ -99,6 +99,11 @@ printf "\e[1;34m%s\e[1;0m\n" "Install flatpak programs.."
 flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 flatpak -y install --user flathub "${flatpak_flathub_apps_list[@]}"
 
+# Set GTK theme to Adwaita for Signal and Slack to prevent glitches
+# https://github.com/signalapp/Signal-Desktop/issues/7633
+flatpak override --user --env=GTK_THEME=Adwaita org.signal.Signal
+flatpak override --user --env=GTK_THEME=Adwaita com.slack.Slack
+
 printf "\e[1;34m%s\e[1;0m\n" "Setup flatpak programs.."
 # Allow Librewolf to access all devices (e.g. webcam)
 flatpak override --user --device=all io.gitlab.librewolf-community
