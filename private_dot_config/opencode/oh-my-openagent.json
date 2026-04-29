@@ -1,0 +1,216 @@
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json",
+  "sisyphus_agent": {
+    "default_builder_enabled": true
+  },
+  "sisyphus": {
+    "tasks": {
+      "claude_code_compat": true
+    }
+  },
+  "agents": {
+    "sisyphus": {
+      "model": "amazon-bedrock/eu.anthropic.claude-opus-4-7",
+      "variant": "max",
+      "fallback_models": [
+        {
+          "model": "cursor-acp/gpt-5.5-medium",
+        }
+      ]
+    },
+    "hephaestus": {
+      "model": "cursor-acp/gpt-5.5-medium",
+    },
+    "oracle": {
+      "model": "cursor-acp/gpt-5.5-medium",
+      "fallback_models": [
+        {
+          "model": "google-vertex/gemini-3.1-pro-preview",
+          "variant": "high"
+        },
+        {
+          "model": "google-vertex/gemini-3.1-pro-preview",
+          "variant": "high"
+        },
+        {
+          "model": "amazon-bedrock/eu.anthropic.claude-opus-4-7",
+          "variant": "max"
+        }
+      ]
+    },
+    "explore": {
+      "model": "cursor-acp/gpt-5-mini"
+    },
+    "multimodal-looker": {
+      "model": "opencode/gpt-5-nano"
+    },
+    "prometheus": {
+      "model": "amazon-bedrock/eu.anthropic.claude-opus-4-7",
+      "variant": "max",
+      "fallback_models": [
+        {
+          "model": "cursor-acp/gpt-5.5-medium",
+        },
+        {
+          "model": "google-vertex/gemini-3.1-pro-preview"
+        },
+        {
+          "model": "google-vertex/gemini-3.1-pro-preview"
+        }
+      ]
+    },
+    "metis": {
+      "model": "amazon-bedrock/eu.anthropic.claude-opus-4-7",
+      "variant": "max",
+      "fallback_models": [
+        {
+          "model": "cursor-acp/gpt-5.5-medium",
+        }
+      ]
+    },
+    "momus": {
+      "model": "cursor-acp/gpt-5.5-medium",
+      "fallback_models": [
+        {
+          "model": "amazon-bedrock/eu.anthropic.claude-opus-4-7",
+          "variant": "max"
+        },
+        {
+          "model": "google-vertex/gemini-3.1-pro-preview",
+          "variant": "high"
+        },
+        {
+          "model": "google-vertex/gemini-3.1-pro-preview",
+          "variant": "high"
+        }
+      ]
+    },
+    "atlas": {
+      "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
+      "fallback_models": [
+        {
+          "model": "cursor-acp/gpt-5.5-medium",
+        }
+      ]
+    },
+    "sisyphus-junior": {
+      "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
+      "fallback_models": [
+        {
+          "model": "cursor-acp/gpt-5.5-medium",
+        }
+      ]
+    }
+  },
+  "categories": {
+    "visual-engineering": {
+      "model": "google-vertex/gemini-3.1-pro-preview",
+      "variant": "high",
+      "fallback_models": [
+        {
+          "model": "google-vertex/gemini-3.1-pro-preview",
+          "variant": "high"
+        },
+        {
+          "model": "amazon-bedrock/eu.anthropic.claude-opus-4-7",
+          "variant": "max"
+        }
+      ]
+    },
+    "ultrabrain": {
+      "model": "google-vertex/gemini-3.1-pro-preview",
+      "variant": "high",
+      "fallback_models": [
+        {
+          "model": "google-vertex/gemini-3.1-pro-preview",
+          "variant": "high"
+        },
+        {
+          "model": "amazon-bedrock/eu.anthropic.claude-opus-4-7",
+          "variant": "max"
+        }
+      ]
+    },
+    "deep": {
+      "model": "cursor-acp/gpt-5.5-medium",
+      "fallback_models": [
+        {
+          "model": "amazon-bedrock/eu.anthropic.claude-opus-4-7",
+          "variant": "max"
+        },
+        {
+          "model": "google-vertex/gemini-3.1-pro-preview",
+          "variant": "high"
+        },
+        {
+          "model": "google-vertex/gemini-3.1-pro-preview",
+          "variant": "high"
+        }
+      ]
+    },
+    "artistry": {
+      "model": "google-vertex/gemini-3.1-pro-preview",
+      "variant": "high",
+      "fallback_models": [
+        {
+          "model": "google-vertex/gemini-3.1-pro-preview",
+          "variant": "high"
+        },
+        {
+          "model": "amazon-bedrock/eu.anthropic.claude-opus-4-7",
+          "variant": "max"
+        },
+        {
+          "model": "cursor-acp/gpt-5.5-medium"
+        }
+      ]
+    },
+    "quick": {
+      "model": "cursor-acp/gpt-5-mini",
+      "fallback_models": [
+        {
+          "model": "amazon-bedrock/eu.anthropic.claude-haiku-4-5-20251001-v1:0"
+        },
+        {
+          "model": "google-vertex/gemini-3-flash-preview"
+        },
+        {
+          "model": "google-vertex/gemini-3-flash-preview"
+        }
+      ]
+    },
+    "unspecified-low": {
+      "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
+      "fallback_models": [
+        {
+          "model": "google-vertex/gemini-3-flash-preview"
+        },
+        {
+          "model": "google-vertex/gemini-3-flash-preview"
+        }
+      ]
+    },
+    "unspecified-high": {
+      "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
+      "fallback_models": [
+        {
+          "model": "google-vertex/gemini-3-flash-preview"
+        },
+        {
+          "model": "google-vertex/gemini-3-flash-preview"
+        }
+      ]
+    },
+    "writing": {
+      "model": "google-vertex/gemini-3-flash-preview",
+      "fallback_models": [
+        {
+          "model": "google-vertex/gemini-3-flash-preview"
+        },
+        {
+          "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6"
+        }
+      ]
+    }
+  }
+}
