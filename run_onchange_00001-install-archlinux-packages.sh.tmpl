@@ -53,6 +53,7 @@ packages_list=(
     cursor-bin
     cursor-cli
     opencode-bin
+    rtk
     ## VPN
     networkmanager-openconnect
     ## Podman
@@ -84,6 +85,9 @@ EOF
 sudo sed -i -E 's/^#?driver = .*/driver = "btrfs"/' /etc/containers/storage.conf
 # Enable podman socket for docker compose
 systemctl --user enable --now podman.socket
+
+# Initialize rtk OpenCode hooks
+rtk init -g --opencode
 
 flatpak_flathub_apps_list=(
     io.gitlab.librewolf-community
