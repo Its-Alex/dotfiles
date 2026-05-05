@@ -14,12 +14,12 @@
       "variant": "max",
       "fallback_models": [
         {
-          "model": "cursor-acp/gpt-5.5-medium",
+          "model": "cursor-acp/gpt-5.5-medium"
         }
       ]
     },
     "hephaestus": {
-      "model": "cursor-acp/gpt-5.5-medium",
+      "model": "cursor-acp/gpt-5.5-medium"
     },
     "oracle": {
       "model": "cursor-acp/gpt-5.5-medium",
@@ -49,7 +49,7 @@
       "variant": "max",
       "fallback_models": [
         {
-          "model": "cursor-acp/gpt-5.5-medium",
+          "model": "cursor-acp/gpt-5.5-medium"
         },
         {
           "model": "google-vertex/gemini-3.1-pro-preview"
@@ -64,7 +64,7 @@
       "variant": "max",
       "fallback_models": [
         {
-          "model": "cursor-acp/gpt-5.5-medium",
+          "model": "cursor-acp/gpt-5.5-medium"
         }
       ]
     },
@@ -89,7 +89,7 @@
       "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
       "fallback_models": [
         {
-          "model": "cursor-acp/gpt-5.5-medium",
+          "model": "cursor-acp/gpt-5.5-medium"
         }
       ]
     },
@@ -97,7 +97,7 @@
       "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
       "fallback_models": [
         {
-          "model": "cursor-acp/gpt-5.5-medium",
+          "model": "cursor-acp/gpt-5.5-medium"
         }
       ]
     }
