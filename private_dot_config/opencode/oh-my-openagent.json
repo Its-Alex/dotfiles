@@ -10,46 +10,46 @@
   },
   "agents": {
     "sisyphus": {
-      "model": "amazon-bedrock/eu.anthropic.claude-opus-4-7",
-      "variant": "max",
+      "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
+      "variant": "high",
       "fallback_models": [
         {
-          "model": "cursor-acp/gpt-5.5-medium"
+          "model": "amazon-bedrock/deepseek.v3.2"
         }
       ]
     },
     "hephaestus": {
-      "model": "cursor-acp/gpt-5.5-medium"
+      "model": "amazon-bedrock/deepseek.v3.2"
     },
     "oracle": {
-      "model": "cursor-acp/gpt-5.5-medium",
+      "model": "amazon-bedrock/deepseek.v3.2",
       "fallback_models": [
         {
           "model": "google-vertex/gemini-3.1-pro-preview",
-          "variant": "high"
+          "variant": "medium"
         },
         {
           "model": "google-vertex/gemini-3.1-pro-preview",
-          "variant": "high"
+          "variant": "medium"
         },
         {
-          "model": "amazon-bedrock/eu.anthropic.claude-opus-4-7",
-          "variant": "max"
+          "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
+          "variant": "high"
         }
       ]
     },
     "explore": {
-      "model": "cursor-acp/gpt-5-mini"
+      "model": "google/gemini-2.5-flash-lite"
     },
     "multimodal-looker": {
-      "model": "opencode/gpt-5-nano"
+      "model": "amazon-bedrock/amazon.nova-micro-v1:0"
     },
     "prometheus": {
-      "model": "amazon-bedrock/eu.anthropic.claude-opus-4-7",
-      "variant": "max",
+      "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
+      "variant": "high",
       "fallback_models": [
         {
-          "model": "cursor-acp/gpt-5.5-medium"
+          "model": "amazon-bedrock/deepseek.v3.2"
         },
         {
           "model": "google-vertex/gemini-3.1-pro-preview"
@@ -60,28 +60,28 @@
       ]
     },
     "metis": {
-      "model": "amazon-bedrock/eu.anthropic.claude-opus-4-7",
-      "variant": "max",
+      "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
+      "variant": "high",
       "fallback_models": [
         {
-          "model": "cursor-acp/gpt-5.5-medium"
+          "model": "amazon-bedrock/deepseek.v3.2"
         }
       ]
     },
     "momus": {
-      "model": "cursor-acp/gpt-5.5-medium",
+      "model": "amazon-bedrock/deepseek.v3.2",
       "fallback_models": [
         {
-          "model": "amazon-bedrock/eu.anthropic.claude-opus-4-7",
-          "variant": "max"
-        },
-        {
-          "model": "google-vertex/gemini-3.1-pro-preview",
+          "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
           "variant": "high"
         },
         {
           "model": "google-vertex/gemini-3.1-pro-preview",
-          "variant": "high"
+          "variant": "medium"
+        },
+        {
+          "model": "google-vertex/gemini-3.1-pro-preview",
+          "variant": "medium"
         }
       ]
     },
@@ -89,7 +89,7 @@
       "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
       "fallback_models": [
         {
-          "model": "cursor-acp/gpt-5.5-medium"
+          "model": "amazon-bedrock/deepseek.v3.2"
         }
       ]
     },
@@ -97,76 +97,79 @@
       "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
       "fallback_models": [
         {
-          "model": "cursor-acp/gpt-5.5-medium"
+          "model": "amazon-bedrock/deepseek.v3.2"
         }
       ]
+    },
+    "librarian": {
+      "model": "google/gemini-2.0-flash-lite"
     }
   },
   "categories": {
     "visual-engineering": {
       "model": "google-vertex/gemini-3.1-pro-preview",
-      "variant": "high",
+      "variant": "medium",
       "fallback_models": [
         {
           "model": "google-vertex/gemini-3.1-pro-preview",
-          "variant": "high"
+          "variant": "medium"
         },
         {
-          "model": "amazon-bedrock/eu.anthropic.claude-opus-4-7",
-          "variant": "max"
+          "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
+          "variant": "high"
         }
       ]
     },
     "ultrabrain": {
       "model": "google-vertex/gemini-3.1-pro-preview",
-      "variant": "high",
+      "variant": "medium",
       "fallback_models": [
         {
           "model": "google-vertex/gemini-3.1-pro-preview",
-          "variant": "high"
+          "variant": "medium"
         },
         {
-          "model": "amazon-bedrock/eu.anthropic.claude-opus-4-7",
-          "variant": "max"
+          "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
+          "variant": "high"
         }
       ]
     },
     "deep": {
-      "model": "cursor-acp/gpt-5.5-medium",
+      "model": "amazon-bedrock/deepseek.v3.2",
       "fallback_models": [
         {
-          "model": "amazon-bedrock/eu.anthropic.claude-opus-4-7",
-          "variant": "max"
-        },
-        {
-          "model": "google-vertex/gemini-3.1-pro-preview",
+          "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
           "variant": "high"
         },
         {
           "model": "google-vertex/gemini-3.1-pro-preview",
-          "variant": "high"
+          "variant": "medium"
+        },
+        {
+          "model": "google-vertex/gemini-3.1-pro-preview",
+          "variant": "medium"
         }
       ]
     },
     "artistry": {
       "model": "google-vertex/gemini-3.1-pro-preview",
-      "variant": "high",
+      "variant": "medium",
       "fallback_models": [
         {
           "model": "google-vertex/gemini-3.1-pro-preview",
+          "variant": "medium"
+        },
+        {
+          "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
           "variant": "high"
         },
         {
-          "model": "amazon-bedrock/eu.anthropic.claude-opus-4-7",
-          "variant": "max"
-        },
-        {
-          "model": "cursor-acp/gpt-5.5-medium"
+          "model": "amazon-bedrock/deepseek.v3.2"
         }
       ]
     },
     "quick": {
-      "model": "cursor-acp/gpt-5-mini",
+      "model": "google/gemini-2.5-flash-lite",
       "fallback_models": [
         {
           "model": "amazon-bedrock/eu.anthropic.claude-haiku-4-5-20251001-v1:0"
