@@ -14,15 +14,15 @@
       "variant": "high",
       "fallback_models": [
         {
-          "model": "amazon-bedrock/deepseek.v3.2"
+          "model": "amazon-bedrock/eu.amazon.nova-pro-v1:0"
         }
       ]
     },
     "hephaestus": {
-      "model": "amazon-bedrock/deepseek.v3.2"
+      "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6"
     },
     "oracle": {
-      "model": "amazon-bedrock/deepseek.v3.2",
+      "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
       "fallback_models": [
         {
           "model": "google-vertex/gemini-3.1-pro-preview",
@@ -39,7 +39,8 @@
       ]
     },
     "explore": {
-      "model": "google-vertex/gemini-2.5-flash-lite",
+      "model": "google-vertex/gemini-2.0-flash-lite",
+      "thinking": {"type": "disabled"},
       "fallback_models": [
         {
           "model": "amazon-bedrock/eu.anthropic.claude-haiku-4-5-20251001-v1:0",
@@ -57,7 +58,7 @@
       "variant": "high",
       "fallback_models": [
         {
-          "model": "amazon-bedrock/deepseek.v3.2"
+          "model": "amazon-bedrock/eu.amazon.nova-pro-v1:0"
         },
         {
           "model": "google-vertex/gemini-3.1-pro-preview"
@@ -72,12 +73,12 @@
       "variant": "high",
       "fallback_models": [
         {
-          "model": "amazon-bedrock/deepseek.v3.2"
+          "model": "amazon-bedrock/eu.amazon.nova-pro-v1:0"
         }
       ]
     },
     "momus": {
-      "model": "amazon-bedrock/deepseek.v3.2",
+      "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
       "fallback_models": [
         {
           "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
@@ -97,7 +98,7 @@
       "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
       "fallback_models": [
         {
-          "model": "amazon-bedrock/deepseek.v3.2"
+          "model": "amazon-bedrock/eu.amazon.nova-pro-v1:0"
         }
       ]
     },
@@ -105,7 +106,7 @@
       "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
       "fallback_models": [
         {
-          "model": "amazon-bedrock/deepseek.v3.2"
+          "model": "amazon-bedrock/eu.amazon.nova-pro-v1:0"
         }
       ]
     },
@@ -152,7 +153,7 @@
       ]
     },
     "deep": {
-      "model": "amazon-bedrock/deepseek.v3.2",
+      "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
       "fallback_models": [
         {
           "model": "amazon-bedrock/eu.anthropic.claude-sonnet-4-6",
@@ -181,12 +182,13 @@
           "variant": "high"
         },
         {
-          "model": "amazon-bedrock/deepseek.v3.2"
+          "model": "amazon-bedrock/eu.amazon.nova-pro-v1:0"
         }
       ]
     },
     "quick": {
-      "model": "google-vertex/gemini-2.5-flash-lite",
+      "model": "google-vertex/gemini-2.0-flash-lite",
+      "thinking": {"type": "disabled"},
       "fallback_models": [
         {
           "model": "amazon-bedrock/eu.anthropic.claude-haiku-4-5-20251001-v1:0"
