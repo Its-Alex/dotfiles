@@ -2,15 +2,69 @@
   "$schema": "https://opencode.ai/config.json",
   "theme": "dracula",
   "plugin": [
-    "oh-my-openagent@3.17.6",
+    "oh-my-openagent@4.7.5",
     "@rama_nigg/open-cursor@2.3.20",
     "cursor-acp"
   ],
   "provider": {
-    "amazon-bedrock": {
-      "options": {
-        "region": "eu-west-3"
-      }
+    "openrouter": {
+      "whitelist": [
+        "anthropic/claude-3-haiku",
+        "anthropic/claude-3.5-haiku",
+        "anthropic/claude-haiku-4.5",
+        "anthropic/claude-opus-4",
+        "anthropic/claude-opus-4.1",
+        "anthropic/claude-opus-4.5",
+        "anthropic/claude-opus-4.6",
+        "anthropic/claude-opus-4.7",
+        "anthropic/claude-opus-4.8",
+        "anthropic/claude-sonnet-4",
+        "anthropic/claude-sonnet-4.5",
+        "anthropic/claude-sonnet-4.6",
+        "deepseek/deepseek-v3.1-terminus",
+        "deepseek/deepseek-v3.2",
+        "google/gemini-2.5-flash",
+        "google/gemini-2.5-flash-image",
+        "google/gemini-2.5-flash-lite",
+        "google/gemini-2.5-flash-lite-preview-09-2025",
+        "google/gemini-2.5-pro",
+        "google/gemini-2.5-pro-preview",
+        "google/gemini-2.5-pro-preview-05-06",
+        "google/gemini-3-flash-preview",
+        "google/gemini-3-pro-image-preview",
+        "google/gemini-3.1-flash-image-preview",
+        "google/gemini-3.1-flash-lite",
+        "google/gemini-3.1-flash-lite-preview",
+        "google/gemini-3.1-pro-preview",
+        "google/gemini-3.1-pro-preview-customtools",
+        "google/gemini-3.5-flash",
+        "google/gemma-4-26b-a4b-it",
+        "google/gemma-4-26b-a4b-it:free",
+        "google/gemma-4-31b-it:free",
+        "google/lyria-3-clip-preview",
+        "google/lyria-3-pro-preview",
+        "meta-llama/llama-3.1-70b-instruct",
+        "meta-llama/llama-3.3-70b-instruct",
+        "meta-llama/llama-4-maverick",
+        "meta-llama/llama-4-scout",
+        "minimax/minimax-m2",
+        "moonshotai/kimi-k2-thinking",
+        "amazon/nova-2-lite-v1",
+        "amazon/nova-lite-v1",
+        "amazon/nova-micro-v1",
+        "amazon/nova-premier-v1",
+        "amazon/nova-pro-v1",
+        "openai/gpt-oss-120b",
+        "openai/gpt-oss-20b",
+        "qwen/qwen3-235b-a22b-2507",
+        "qwen/qwen3-coder",
+        "qwen/qwen3-coder-30b-a3b-instruct",
+        "qwen/qwen3-next-80b-a3b-instruct",
+        "qwen/qwen3-next-80b-a3b-thinking",
+        "writer/palmyra-x5",
+        "z-ai/glm-4.7",
+        "z-ai/glm-5"
+      ]
     },
     "cursor-acp": {
       "name": "Cursor",
@@ -444,6 +498,7 @@
       "prompt": "Act as a pragmatic senior developer.\n\nGoal:\nGive directly useful, concrete, and quickly applicable answers.\n\nConstraints:\n- Get straight to the point (no fluff)\n- Provide concrete examples (code, commands, config)\n- If multiple options exist, give the best default + quick alternatives\n- Briefly explain the \"why\" only when useful\n- Prioritize simple, robust, maintainable solutions\n- Avoid unnecessary abstractions\n\nExpected format:\n1. Main solution (clear and fast)\n2. Concrete example (code or command)\n3. Alternatives (if relevant)\n4. Pitfalls / things to watch (if important)\n\nBehavior:\n- If the request is unclear, ask ONE targeted question max\n- If I make a mistake or bad choice, correct me clearly\n- Adapt detail level: concise by default, detailed if I ask\n- Assume I'm technical (no need to explain basics)"
     }
   },
+  "lsp": true,
 {{- if and (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "true") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "1") }}
   "mcp": {
     "mcp-atlassian": {
