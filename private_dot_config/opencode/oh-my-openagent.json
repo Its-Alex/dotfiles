@@ -6,17 +6,13 @@
       "variant": "max",
       "fallback_models": [
         {
-          "model": "openrouter/moonshotai/kimi-k2-thinking"
-        },
-        {
-          "model": "openrouter/google/gemini-3.1-pro-preview",
-          "variant": "high"
+          "model": "openrouter/google/gemini-2.5-pro"
         },
         {
           "model": "openrouter/qwen/qwen3-235b-a22b-2507"
         },
         {
-          "model": "openrouter/z-ai/glm-5"
+          "model": "openrouter/deepseek/deepseek-v3.2"
         }
       ]
     },
@@ -28,6 +24,9 @@
         },
         {
           "model": "openrouter/deepseek/deepseek-v3.2"
+        },
+        {
+          "model": "openrouter/qwen/qwen3-coder-30b-a3b-instruct"
         }
       ]
     },
@@ -36,25 +35,21 @@
       "variant": "max",
       "fallback_models": [
         {
-          "model": "openrouter/google/gemini-3.1-pro-preview",
-          "variant": "high"
+          "model": "openrouter/google/gemini-2.5-pro"
         },
         {
           "model": "openrouter/qwen/qwen3-235b-a22b-2507"
         },
         {
-          "model": "openrouter/z-ai/glm-5"
+          "model": "openrouter/moonshotai/kimi-k2-thinking"
         }
       ]
     },
     "librarian": {
-      "model": "openrouter/minimax/minimax-m2",
+      "model": "openrouter/qwen/qwen3-235b-a22b-2507",
       "fallback_models": [
         {
-          "model": "openrouter/anthropic/claude-haiku-4.5"
-        },
-        {
-          "model": "openrouter/google/gemini-3.1-flash-lite"
+          "model": "openrouter/google/gemini-2.5-flash"
         },
         {
           "model": "openrouter/google/gemini-2.5-flash-lite"
@@ -62,31 +57,28 @@
       ]
     },
     "explore": {
-      "model": "openrouter/anthropic/claude-haiku-4.5",
+      "model": "openrouter/qwen/qwen3-235b-a22b-2507",
       "fallback_models": [
         {
-          "model": "openrouter/minimax/minimax-m2"
-        },
-        {
-          "model": "openrouter/google/gemini-3.1-flash-lite"
-        },
-        {
           "model": "openrouter/google/gemini-2.5-flash-lite"
+        },
+        {
+          "model": "openrouter/google/gemma-4-31b-it:free"
         }
       ]
     },
     "multimodal-looker": {
-      "model": "openrouter/google/gemini-3.1-pro-preview",
-      "variant": "high",
+      "model": "openrouter/google/gemini-2.5-pro",
       "fallback_models": [
         {
-          "model": "openrouter/moonshotai/kimi-k2-thinking"
-        },
-        {
-          "model": "openrouter/z-ai/glm-4.7"
-        },
-        {
           "model": "openrouter/google/gemini-2.5-flash"
+        },
+        {
+          "model": "openrouter/google/gemini-3.1-pro-preview",
+          "variant": "high"
+        },
+        {
+          "model": "openrouter/google/gemini-2.5-flash-lite"
         }
       ]
     },
@@ -95,29 +87,28 @@
       "variant": "max",
       "fallback_models": [
         {
-          "model": "openrouter/google/gemini-3.1-pro-preview",
-          "variant": "high"
-        },
-        {
-          "model": "openrouter/z-ai/glm-5"
+          "model": "openrouter/google/gemini-2.5-pro"
         },
         {
           "model": "openrouter/qwen/qwen3-235b-a22b-2507"
+        },
+        {
+          "model": "openrouter/deepseek/deepseek-v3.2"
         }
       ]
     },
     "metis": {
       "model": "openrouter/anthropic/claude-sonnet-4.6",
+      "variant": "max",
       "fallback_models": [
         {
-          "model": "openrouter/google/gemini-3.1-pro-preview",
-          "variant": "high"
+          "model": "openrouter/google/gemini-2.5-pro"
         },
         {
-          "model": "openrouter/z-ai/glm-5"
+          "model": "openrouter/qwen/qwen3-235b-a22b-2507"
         },
         {
-          "model": "openrouter/moonshotai/kimi-k2-thinking"
+          "model": "openrouter/deepseek/deepseek-v3.2"
         }
       ]
     },
@@ -126,56 +117,52 @@
       "variant": "max",
       "fallback_models": [
         {
-          "model": "openrouter/google/gemini-3.1-pro-preview",
-          "variant": "high"
+          "model": "openrouter/google/gemini-2.5-pro"
         },
         {
           "model": "openrouter/qwen/qwen3-235b-a22b-2507"
         },
         {
-          "model": "openrouter/z-ai/glm-5"
+          "model": "openrouter/deepseek/deepseek-v3.2"
         }
       ]
     },
     "atlas": {
-      "model": "openrouter/anthropic/claude-sonnet-4.6",
+      "model": "openrouter/qwen/qwen3-235b-a22b-2507",
       "fallback_models": [
         {
-          "model": "openrouter/moonshotai/kimi-k2-thinking"
+          "model": "openrouter/deepseek/deepseek-v3.2"
         },
         {
-          "model": "openrouter/minimax/minimax-m2"
+          "model": "openrouter/google/gemini-2.5-flash"
         }
       ]
     },
     "sisyphus-junior": {
-      "model": "openrouter/anthropic/claude-sonnet-4.6",
+      "model": "openrouter/deepseek/deepseek-v3.2",
       "fallback_models": [
         {
-          "model": "openrouter/moonshotai/kimi-k2-thinking"
+          "model": "openrouter/qwen/qwen3-235b-a22b-2507"
         },
         {
-          "model": "openrouter/minimax/minimax-m2"
+          "model": "openrouter/google/gemini-2.5-flash"
         }
       ]
     }
   },
   "categories": {
     "visual-engineering": {
-      "model": "openrouter/google/gemini-3.1-pro-preview",
-      "variant": "high",
+      "model": "openrouter/google/gemini-2.5-pro",
       "fallback_models": [
         {
-          "model": "openrouter/z-ai/glm-5"
+          "model": "openrouter/google/gemini-2.5-flash"
         },
         {
           "model": "openrouter/anthropic/claude-sonnet-4.6"
         },
         {
-          "model": "openrouter/qwen/qwen3-235b-a22b-2507"
-        },
-        {
-          "model": "openrouter/moonshotai/kimi-k2-thinking"
+          "model": "openrouter/google/gemini-3.1-pro-preview",
+          "variant": "high"
         }
       ]
     },
@@ -184,14 +171,13 @@
       "variant": "max",
       "fallback_models": [
         {
-          "model": "openrouter/google/gemini-3.1-pro-preview",
-          "variant": "high"
+          "model": "openrouter/google/gemini-2.5-pro"
+        },
+        {
+          "model": "openrouter/moonshotai/kimi-k2-thinking"
         },
         {
           "model": "openrouter/qwen/qwen3-235b-a22b-2507"
-        },
-        {
-          "model": "openrouter/z-ai/glm-5"
         }
       ]
     },
@@ -199,66 +185,52 @@
       "model": "openrouter/anthropic/claude-sonnet-4.6",
       "fallback_models": [
         {
-          "model": "openrouter/google/gemini-3.1-pro-preview",
-          "variant": "high"
+          "model": "openrouter/google/gemini-2.5-pro"
         },
         {
-          "model": "openrouter/moonshotai/kimi-k2-thinking"
+          "model": "openrouter/qwen/qwen3-235b-a22b-2507"
         },
         {
-          "model": "openrouter/z-ai/glm-5"
+          "model": "openrouter/deepseek/deepseek-v3.2"
         }
       ]
     },
     "artistry": {
-      "model": "openrouter/google/gemini-3.1-pro-preview",
-      "variant": "high",
+      "model": "openrouter/google/gemini-2.5-pro",
       "fallback_models": [
         {
           "model": "openrouter/qwen/qwen3-235b-a22b-2507"
         },
         {
-          "model": "openrouter/moonshotai/kimi-k2-thinking"
+          "model": "openrouter/anthropic/claude-sonnet-4.6"
         },
         {
-          "model": "openrouter/z-ai/glm-5"
+          "model": "openrouter/deepseek/deepseek-v3.2"
         }
       ]
     },
     "quick": {
-      "model": "openrouter/google/gemini-3-flash-preview",
+      "model": "openrouter/google/gemini-2.5-flash-lite",
       "fallback_models": [
         {
           "model": "openrouter/anthropic/claude-haiku-4.5"
         },
         {
-          "model": "openrouter/google/gemini-3.5-flash"
+          "model": "openrouter/google/gemini-2.5-flash"
         },
         {
-          "model": "openrouter/google/gemini-3.1-flash-lite"
-        },
-        {
-          "model": "openrouter/minimax/minimax-m2"
-        },
-        {
-          "model": "openrouter/google/gemini-2.5-flash-lite"
+          "model": "openrouter/google/gemma-4-31b-it:free"
         }
       ]
     },
     "unspecified-low": {
-      "model": "openrouter/anthropic/claude-sonnet-4.6",
+      "model": "openrouter/qwen/qwen3-235b-a22b-2507",
       "fallback_models": [
         {
-          "model": "openrouter/qwen/qwen3-coder"
+          "model": "openrouter/deepseek/deepseek-v3.2"
         },
         {
-          "model": "openrouter/moonshotai/kimi-k2-thinking"
-        },
-        {
-          "model": "openrouter/google/gemini-3-flash-preview"
-        },
-        {
-          "model": "openrouter/google/gemini-3.5-flash"
+          "model": "openrouter/google/gemini-2.5-flash"
         },
         {
           "model": "openrouter/minimax/minimax-m2"
@@ -272,33 +244,24 @@
           "model": "openrouter/qwen/qwen3-coder"
         },
         {
-          "model": "openrouter/moonshotai/kimi-k2-thinking"
+          "model": "openrouter/qwen/qwen3-235b-a22b-2507"
         },
         {
-          "model": "openrouter/google/gemini-3-flash-preview"
-        },
-        {
-          "model": "openrouter/google/gemini-3.5-flash"
-        },
-        {
-          "model": "openrouter/minimax/minimax-m2"
+          "model": "openrouter/google/gemini-2.5-pro"
         }
       ]
     },
     "writing": {
-      "model": "openrouter/google/gemini-3-flash-preview",
+      "model": "openrouter/google/gemini-2.5-flash-lite",
       "fallback_models": [
         {
-          "model": "openrouter/google/gemini-3.5-flash"
+          "model": "openrouter/qwen/qwen3-235b-a22b-2507"
         },
         {
-          "model": "openrouter/moonshotai/kimi-k2-thinking"
+          "model": "openrouter/google/gemini-2.5-flash"
         },
         {
           "model": "openrouter/anthropic/claude-sonnet-4.6"
-        },
-        {
-          "model": "openrouter/minimax/minimax-m2"
         }
       ]
     }
