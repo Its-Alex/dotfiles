@@ -26,6 +26,9 @@ export UPDATE_ZSH_DAYS=15
 #  shellcheck source=/dev/null # Load oh_my_zsh
 source "${ZSH}/oh-my-zsh.sh"
 
+# Disable url-quote-magic (oh-my-zsh escapes special chars like ?, =, & on paste)
+zle -A .self-insert self-insert
+
 # Environment variable - System
 #  Path
 export PATH=/usr/local/bin:$PATH
