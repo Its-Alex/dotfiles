@@ -55,6 +55,8 @@ export PATH=$PATH:$HOME/.cargo/bin
 #  Golang
 export GOPATH=$HOME/go
 export PATH=$PATH:$HOME/go/bin
+# Gitlab
+export GITLAB_PERSONAL_ACCESS_TOKEN="{{ (bitwarden "item" "Gitlab - API Token").login.username }}"
 {{ if eq .chezmoi.os "darwin" -}}
 #  Android SDK
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
