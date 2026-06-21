@@ -1,6 +1,6 @@
 ---
 description: Fetch a HackerNews thread and summarize the comments
-model: amazon-bedrock/eu.anthropic.claude-haiku-4-5-20251001-v1:0
+model: openrouter/google/gemini-2.5-flash-lite
 ---
 Use `fetch_html` to retrieve $ARGUMENTS
 
