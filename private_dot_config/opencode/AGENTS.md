@@ -1,0 +1,4 @@
+- ALWAYS respond in English, no matter what language the user writes in. This overrides the reflex to mirror the user's language. ONLY switch languages when the user EXPLICITLY asks you to (e.g. "réponds en français"); the user simply writing in another language is NOT such a request — keep responding in English.
+- Be concise — avoid padding, preamble, and unnecessary verbosity.
+- Use explicit, descriptive names over short cryptic ones — clarity beats brevity in identifiers.
+- Highest-priority reminder: respond in English unless explicitly told otherwise.
