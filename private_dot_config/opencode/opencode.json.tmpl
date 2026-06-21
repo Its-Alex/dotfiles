@@ -7,6 +7,7 @@
     "cursor-acp"
   ],
   "autoupdate": "notify",
+  "lsp": {},
   "provider": {
     "openrouter": {
       "whitelist": [
@@ -518,7 +519,6 @@
       }
     }
   },
-  "lsp": true,
 {{- if and (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "true") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "1") }}
   "mcp": {
     "mcp-atlassian": {
