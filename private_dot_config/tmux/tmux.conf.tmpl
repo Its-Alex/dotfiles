@@ -19,6 +19,9 @@ bind -n WheelUpPane if-shell -Ft= "#{mouse_any_flag}" "send-keys -M" "if-shell -
 # On a wheeldown event, if we're in an alternate screen program, send the down  
 # key, else, just send the mouse event  
 bind -n WheelDownPane if-shell -Ft= "#{alternate_on}" "send-keys -t= down" "select-pane -t= \; send-keys -M"
+# Slow down scroll speed in copy mode (2 lines per wheel click)
+bind -T copy-mode-vi WheelUpPane   select-pane \; send-keys -X -N 2 scroll-up
+bind -T copy-mode-vi WheelDownPane select-pane \; send-keys -X -N 2 scroll-down
 
 # Define prefix
 set-option -g prefix C-b
