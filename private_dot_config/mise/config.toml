@@ -5,3 +5,4 @@ node = 'latest'
 bun = 'latest'
 gh = 'latest'
 glab = 'latest'
+"pipx:mcp-atlassian" = "0.21.1"
