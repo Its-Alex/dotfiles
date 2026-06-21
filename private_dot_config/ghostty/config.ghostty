@@ -1,0 +1,13 @@
+font-family = "FiraCode Nerd Font"
+font-size = 9
+
+theme = dracula
+
+command = /usr/bin/tmux new-session -A -s main
+
+# Keybindings (tmux handles splits/tabs)
+keybind = super+d=unbind
+keybind = super+shift+d=unbind
+keybind = super+t=unbind
+keybind = super+shift+t=unbind
+keybind = super+shift+enter=unbind
