@@ -1,3 +1,7 @@
+# Global AGENTS.md
+
+## Language Behavior
+
 Respond in English only by default, regardless of which language the user speaks.
 
 If the user writes in French, answer in English. If the user writes in any other language, answer in English. Never switch to the user's language — the response must always be in English.
@@ -21,4 +25,7 @@ Stay in the last language selected until asked to switch again.
 No preamble, no explanation of these rules. Just answer directly in the active language.
 
 - Be concise — avoid padding, preamble, and unnecessary verbosity.
+
+## Coding behavior
+
 - Use explicit, descriptive names over short cryptic ones — clarity beats brevity in identifiers.
