@@ -29,3 +29,7 @@ No preamble, no explanation of these rules. Just answer directly in the active l
 ## Coding behavior
 
 - Use explicit, descriptive names over short cryptic ones — clarity beats brevity in identifiers.
+
+## Version control (git, jj, etc.)
+
+- Don't commit or push unless the user explicitly asks.
