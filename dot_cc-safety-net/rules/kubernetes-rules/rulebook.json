@@ -1,0 +1,93 @@
+{
+  "rulebook_version": 1,
+  "name": "kubernetes-rules",
+  "version": "1.4.0",
+  "description": "Kubernetes safety rules.",
+  "author": "user",
+  "allowed_commands": [
+    "kubectl"
+  ],
+  "rules": [
+    {
+      "name": "block-kubectl-run",
+      "command": "kubectl",
+      "subcommand": "run",
+      "block_args": ["--restart=Never"],
+      "reason": "Running ad-hoc pods in production clusters can leave orphaned resources and expose cluster internals. Define the pod spec in a manifest instead."
+    },
+    {
+      "name": "block-kubectl-exec-shell",
+      "command": "kubectl",
+      "subcommand": "exec",
+      "block_args": ["/bin/sh", "/bin/bash", "sh", "bash"],
+      "reason": "Opening an interactive shell inside a production pod bypasses audit trails. Use 'kubectl logs' or port-forward for debugging."
+    },
+    {
+      "name": "block-kubectl-delete-pod",
+      "command": "kubectl",
+      "subcommand": "delete",
+      "block_args": ["pod", "pods"],
+      "reason": "Deleting pods directly in production clusters causes service interruption. Use 'kubectl rollout restart' or drain the node properly instead."
+    }
+  ],
+  "tests": [
+    {
+      "command": "kubectl run myapp --image=myimage --restart=Never",
+      "expect": "blocked",
+      "rule": "block-kubectl-run"
+    },
+    {
+      "command": "kubectl run myapp --image=myimage --restart=Never --rm -it -n mynamespace",
+      "expect": "blocked",
+      "rule": "block-kubectl-run"
+    },
+    {
+      "command": "kubectl run myapp --image myimage",
+      "expect": "allowed"
+    },
+    {
+      "command": "kubectl get pods -n mynamespace",
+      "expect": "allowed"
+    },
+    {
+      "command": "kubectl logs mypod -n mynamespace",
+      "expect": "allowed"
+    },
+    {
+      "command": "kubectl exec -n mynamespace mypod -c mycontainer -- /bin/sh",
+      "expect": "blocked",
+      "rule": "block-kubectl-exec-shell"
+    },
+    {
+      "command": "kubectl exec -it mypod -- bash",
+      "expect": "blocked",
+      "rule": "block-kubectl-exec-shell"
+    },
+    {
+      "command": "kubectl exec mypod -- cat /etc/config",
+      "expect": "allowed"
+    },
+    {
+      "command": "kubectl delete pod mypod -n mynamespace",
+      "expect": "blocked",
+      "rule": "block-kubectl-delete-pod"
+    },
+    {
+      "command": "kubectl delete pods -l app=myapp -n mynamespace",
+      "expect": "blocked",
+      "rule": "block-kubectl-delete-pod"
+    },
+    {
+      "command": "kubectl delete deployment myapp",
+      "expect": "allowed"
+    },
+    {
+      "command": "kubectl get secret mysecret -n mynamespace",
+      "expect": "allowed"
+    },
+    {
+      "command": "kubectl get secret mysecret -o yaml",
+      "expect": "allowed"
+    }
+  ]
+}

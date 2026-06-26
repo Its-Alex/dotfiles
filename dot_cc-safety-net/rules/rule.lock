@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "rulebooks": [
+    {
+      "spec": "kubernetes-rules",
+      "kind": "local-directory",
+      "path": "kubernetes-rules",
+      "name": "kubernetes-rules",
+      "version": "1.4.0",
+      "digest": "sha256:aed3a189d640de84a7c7e75b5145537d94d2df87d9bf8a03e694d177bb32c856"
+    }
+  ]
+}
