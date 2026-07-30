@@ -8,4 +8,5 @@ node = 'latest'
 bun = 'latest'
 gh = 'latest'
 glab = 'latest'
+aws-cli = 'latest'
 "pipx:mcp-atlassian" = "0.21.1"
