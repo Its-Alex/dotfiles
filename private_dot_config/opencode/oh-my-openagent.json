@@ -3,7 +3,6 @@
   "agents": {
     "sisyphus": {
       "model": "openrouter/anthropic/claude-sonnet-5",
-      "variant": "max",
       "fallback_models": [
         {
           "model": "openrouter/google/gemini-2.5-pro"
@@ -32,7 +31,6 @@
     },
     "oracle": {
       "model": "openrouter/anthropic/claude-sonnet-5",
-      "variant": "max",
       "fallback_models": [
         {
           "model": "openrouter/google/gemini-2.5-pro"
@@ -84,7 +82,6 @@
     },
     "prometheus": {
       "model": "openrouter/anthropic/claude-sonnet-5",
-      "variant": "max",
       "fallback_models": [
         {
           "model": "openrouter/google/gemini-2.5-pro"
@@ -99,7 +96,6 @@
     },
     "metis": {
       "model": "openrouter/anthropic/claude-sonnet-5",
-      "variant": "max",
       "fallback_models": [
         {
           "model": "openrouter/google/gemini-2.5-pro"
@@ -114,7 +110,6 @@
     },
     "momus": {
       "model": "openrouter/anthropic/claude-sonnet-5",
-      "variant": "max",
       "fallback_models": [
         {
           "model": "openrouter/google/gemini-2.5-pro"
@@ -168,7 +163,6 @@
     },
     "ultrabrain": {
       "model": "openrouter/anthropic/claude-sonnet-5",
-      "variant": "max",
       "fallback_models": [
         {
           "model": "openrouter/google/gemini-2.5-pro"
