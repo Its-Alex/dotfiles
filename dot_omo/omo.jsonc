@@ -1,0 +1,298 @@
+// OMO configuration
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/omo.schema.json",
+  "[opencode]": {
+    "agents": {
+      "sisyphus": {
+        "model": "openrouter/anthropic/claude-sonnet-5",
+        "reasoning": "medium",
+        "fallback_models": [
+          {
+            "model": "openrouter/google/gemini-2.5-pro"
+          },
+          {
+            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
+          },
+          {
+            "model": "openrouter/deepseek/deepseek-v3.2"
+          }
+        ]
+      },
+      "hephaestus": {
+        "model": "openrouter/qwen/qwen3-coder",
+        "fallback_models": [
+          {
+            "model": "openrouter/anthropic/claude-sonnet-5",
+            "reasoning": "medium"
+          },
+          {
+            "model": "openrouter/deepseek/deepseek-v3.2"
+          },
+          {
+            "model": "openrouter/qwen/qwen3-coder-30b-a3b-instruct"
+          }
+        ]
+      },
+      "oracle": {
+        "model": "openrouter/anthropic/claude-sonnet-5",
+        "reasoning": "medium",
+        "fallback_models": [
+          {
+            "model": "openrouter/google/gemini-2.5-pro"
+          },
+          {
+            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
+          },
+          {
+            "model": "openrouter/moonshotai/kimi-k2-thinking"
+          }
+        ]
+      },
+      "librarian": {
+        "model": "openrouter/qwen/qwen3-235b-a22b-2507",
+        "fallback_models": [
+          {
+            "model": "openrouter/google/gemini-2.5-flash"
+          },
+          {
+            "model": "openrouter/google/gemini-2.5-flash-lite"
+          }
+        ]
+      },
+      "explore": {
+        "model": "openrouter/qwen/qwen3-235b-a22b-2507",
+        "fallback_models": [
+          {
+            "model": "openrouter/google/gemini-2.5-flash-lite"
+          },
+          {
+            "model": "openrouter/google/gemma-4-31b-it:free"
+          }
+        ]
+      },
+      "multimodal-looker": {
+        "model": "openrouter/google/gemini-2.5-pro",
+        "fallback_models": [
+          {
+            "model": "openrouter/google/gemini-2.5-flash"
+          },
+          {
+            "model": "openrouter/google/gemini-3.1-pro-preview",
+            "reasoning": "high"
+          },
+          {
+            "model": "openrouter/google/gemini-2.5-flash-lite"
+          }
+        ]
+      },
+      "prometheus": {
+        "model": "openrouter/anthropic/claude-sonnet-5",
+        "reasoning": "medium",
+        "fallback_models": [
+          {
+            "model": "openrouter/google/gemini-2.5-pro"
+          },
+          {
+            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
+          },
+          {
+            "model": "openrouter/deepseek/deepseek-v3.2"
+          }
+        ]
+      },
+      "metis": {
+        "model": "openrouter/anthropic/claude-sonnet-5",
+        "reasoning": "medium",
+        "fallback_models": [
+          {
+            "model": "openrouter/google/gemini-2.5-pro"
+          },
+          {
+            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
+          },
+          {
+            "model": "openrouter/deepseek/deepseek-v3.2"
+          }
+        ]
+      },
+      "momus": {
+        "model": "openrouter/anthropic/claude-sonnet-5",
+        "reasoning": "medium",
+        "fallback_models": [
+          {
+            "model": "openrouter/google/gemini-2.5-pro"
+          },
+          {
+            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
+          },
+          {
+            "model": "openrouter/deepseek/deepseek-v3.2"
+          }
+        ]
+      },
+      "atlas": {
+        "model": "openrouter/qwen/qwen3-235b-a22b-2507",
+        "fallback_models": [
+          {
+            "model": "openrouter/deepseek/deepseek-v3.2"
+          },
+          {
+            "model": "openrouter/google/gemini-2.5-flash"
+          }
+        ]
+      },
+      "sisyphus-junior": {
+        "model": "openrouter/deepseek/deepseek-v3.2",
+        "fallback_models": [
+          {
+            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
+          },
+          {
+            "model": "openrouter/google/gemini-2.5-flash"
+          }
+        ]
+      }
+    },
+    "categories": {
+      "visual-engineering": {
+        "models": [
+          {
+            "model": "openrouter/google/gemini-2.5-pro"
+          },
+          {
+            "model": "openrouter/google/gemini-2.5-flash"
+          },
+          {
+            "model": "openrouter/anthropic/claude-sonnet-5",
+            "reasoning": "medium"
+          },
+          {
+            "model": "openrouter/google/gemini-3.1-pro-preview",
+            "reasoning": "high"
+          }
+        ]
+      },
+      "ultrabrain": {
+        "models": [
+          {
+            "model": "openrouter/anthropic/claude-sonnet-5",
+            "reasoning": "medium"
+          },
+          {
+            "model": "openrouter/google/gemini-2.5-pro"
+          },
+          {
+            "model": "openrouter/moonshotai/kimi-k2-thinking"
+          },
+          {
+            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
+          }
+        ]
+      },
+      "deep": {
+        "models": [
+          {
+            "model": "openrouter/anthropic/claude-sonnet-5",
+            "reasoning": "medium"
+          },
+          {
+            "model": "openrouter/google/gemini-2.5-pro"
+          },
+          {
+            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
+          },
+          {
+            "model": "openrouter/deepseek/deepseek-v3.2"
+          }
+        ]
+      },
+      "artistry": {
+        "models": [
+          {
+            "model": "openrouter/google/gemini-2.5-pro"
+          },
+          {
+            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
+          },
+          {
+            "model": "openrouter/anthropic/claude-sonnet-5",
+            "reasoning": "medium"
+          },
+          {
+            "model": "openrouter/deepseek/deepseek-v3.2"
+          }
+        ]
+      },
+      "quick": {
+        "models": [
+          {
+            "model": "openrouter/google/gemini-2.5-flash-lite"
+          },
+          {
+            "model": "openrouter/anthropic/claude-haiku-4.5"
+          },
+          {
+            "model": "openrouter/google/gemini-2.5-flash"
+          },
+          {
+            "model": "openrouter/google/gemma-4-31b-it:free"
+          }
+        ]
+      },
+      "unspecified-low": {
+        "models": [
+          {
+            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
+          },
+          {
+            "model": "openrouter/deepseek/deepseek-v3.2"
+          },
+          {
+            "model": "openrouter/google/gemini-2.5-flash"
+          },
+          {
+            "model": "openrouter/minimax/minimax-m2"
+          }
+        ]
+      },
+      "unspecified-high": {
+        "models": [
+          {
+            "model": "openrouter/anthropic/claude-sonnet-5",
+            "reasoning": "medium"
+          },
+          {
+            "model": "openrouter/qwen/qwen3-coder"
+          },
+          {
+            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
+          },
+          {
+            "model": "openrouter/google/gemini-2.5-pro"
+          }
+        ]
+      },
+      "writing": {
+        "models": [
+          {
+            "model": "openrouter/google/gemini-2.5-flash-lite"
+          },
+          {
+            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
+          },
+          {
+            "model": "openrouter/google/gemini-2.5-flash"
+          },
+          {
+            "model": "openrouter/anthropic/claude-sonnet-5",
+            "reasoning": "medium"
+          }
+        ]
+      }
+    }
+  },
+  "_migrations": [
+    "2026-07-opencode-config-unification",
+    "2026-08-reasoning-unification"
+  ]
+}
