@@ -28,6 +28,7 @@ packages_list=(
     fzf
     jq
     os-prober
+    earlyoom # Raw %-memory/swap OOM backstop, complements PSI-pressure-based systemd-oomd
     fwupd
     systemd-resolvconf
     ## Keyboard
@@ -133,9 +134,70 @@ yay -S --noconfirm --needed thermald
 sudo systemctl enable --now thermald
 {{ end -}}
 
-# Setup userspace OOMKiller
-printf "\e[1;34m%s\e[1;0m\n" "Setup userspace OOMKiller"
+# Userspace OOM protection: systemd-oomd kills on PSI stall pressure, earlyoom
+# on low available memory as a backstop for when pressure never crosses the
+# threshold in time.
+printf "\e[1;34m%s\e[1;0m\n" "Setup userspace OOMKiller (systemd-oomd + earlyoom)..."
+
+# Only the reaction time needs tuning (20s, matching Ubuntu). The other limits
+# stay stock: they are ratios, so already machine-relative.
+sudo mkdir -p /etc/systemd/oomd.conf.d
+sudo tee /etc/systemd/oomd.conf.d/10-interactive-desktop.conf > /dev/null <<'EOF'
+[OOM]
+DefaultMemoryPressureDurationSec=20s
+EOF
+
+# Arch leaves every cgroup at ManagedOOM*=auto, which oomd does not monitor, so
+# it never kills whatever the limits say. Opt the user session in, as Ubuntu
+# does. A kill takes one descendant cgroup (one app), not the whole session.
+sudo mkdir -p /etc/systemd/system/user@.service.d
+sudo tee /etc/systemd/system/user@.service.d/10-oomd.conf > /dev/null <<'EOF'
+[Service]
+ManagedOOMMemoryPressure=kill
+ManagedOOMMemoryPressureLimit=50%
+EOF
+
+# Makes the stock 90% SwapUsedLimit effective. Delete for pressure-only kills.
+sudo mkdir -p "/etc/systemd/system/-.slice.d"
+sudo tee "/etc/systemd/system/-.slice.d/10-oomd.conf" > /dev/null <<'EOF'
+[Slice]
+ManagedOOMSwap=kill
+EOF
+
+# A fixed percentage does not port across machines: 10% is 819MiB on 8GiB RAM
+# (too late to react) but 12.8GiB on 128GiB (fires far too early). Derive an
+# absolute KiB floor from this host's RAM instead, clamped at both ends.
+mem_total_kib=$(awk '/^MemTotal:/{print $2}' /proc/meminfo)
+earlyoom_term_kib=$(( mem_total_kib / 10 ))
+earlyoom_term_min_kib=$(( 1024 * 1024 ))     # 1 GiB
+earlyoom_term_max_kib=$(( 4 * 1024 * 1024 )) # 4 GiB
+if (( earlyoom_term_kib < earlyoom_term_min_kib )); then
+    earlyoom_term_kib=$earlyoom_term_min_kib
+fi
+if (( earlyoom_term_kib > earlyoom_term_max_kib )); then
+    earlyoom_term_kib=$earlyoom_term_max_kib
+fi
+earlyoom_kill_kib=$(( earlyoom_term_kib / 2 ))
+earlyoom_kill_min_kib=$(( 512 * 1024 )) # 512 MiB
+if (( earlyoom_kill_kib < earlyoom_kill_min_kib )); then
+    earlyoom_kill_kib=$earlyoom_kill_min_kib
+fi
+
+printf "\e[1;34m%s\e[1;0m\n" "earlyoom thresholds: SIGTERM below $(( earlyoom_term_kib / 1024 ))MiB available, SIGKILL below $(( earlyoom_kill_kib / 1024 ))MiB"
+
+# -M takes KiB; only -M is passed, never -m, because given both earlyoom keeps
+# the lower value. -s 100 ignores free swap, which otherwise has to be low too:
+# on a large swapfile that means minutes of thrashing first. This keeps the
+# behaviour identical on zram, a big swapfile, or no swap at all.
+# --avoid protects session-critical processes it must never kill.
+sudo tee /etc/default/earlyoom > /dev/null <<EOF
+EARLYOOM_ARGS="-M ${earlyoom_term_kib},${earlyoom_kill_kib} -s 100 -r 3600 --avoid '(^|/)(dbus-daemon|dbus-broker|systemd|systemd-logind|gnome-shell|gnome-session|Xorg|sshd)\$'"
+EOF
+
+sudo systemctl daemon-reload
 sudo systemctl enable --now systemd-oomd
+sudo systemctl restart systemd-oomd # apply oomd.conf.d override if already running
+sudo systemctl enable --now earlyoom
 
 # Setup systemd-resolved with NetworkManager
 sudo systemctl enable --now systemd-resolved.service
