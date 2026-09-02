@@ -80,21 +80,21 @@ Today I mainly use two computer:
     ```sh
     $ neofetch --stdout
     OS: Arch Linux x86_64
-    Host: Latitude 3420
-    Kernel: 6.9.1-arch1-1
-    Uptime: 13 hours, 33 mins
-    Packages: 869 (pacman), 23 (flatpak)
-    Shell: zsh 5.9
-    Resolution: 1920x1080
-    DE: GNOME 46.1
+    Host: 21RV001RFR ThinkPad P14s Gen 6 AMD
+    Kernel: 7.2.2-arch1-1
+    Uptime: 30 mins
+    Packages: 1099 (pacman), 17 (flatpak)
+    Shell: zsh 5.9.2
+    Resolution: 1920x1200
+    DE: GNOME 50.4
     WM: Mutter
-    WM Theme: Flat-Remix-Blue-Dark-fullPanel
+    WM Theme: Adwaita
     Theme: Numix-Frost [GTK2/3]
     Icons: Numix-Square [GTK2/3]
     Terminal: tmux
-    CPU: 11th Gen Intel i7-1165G7 (8) @ 4.700GHz
-    GPU: Intel TigerLake-LP GT2 [Iris Xe Graphics]
-    Memory: 6613MiB / 15738MiB
+    CPU: AMD Ryzen AI 9 HX PRO 370 w/ Radeon 890M (24) @ 5.157GHz
+    GPU: AMD ATI Radeon 880M / 890M
+    Memory: 5330MiB / 59896MiB
     ```
 
 ## Linux
