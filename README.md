@@ -132,3 +132,28 @@ can use:
 ```shell
 $ ./scripts/config-snapper.sh
 ```
+
+### ClamAV
+
+To configure [ClamAV](https://docs.clamav.net/) with on-access (real-time)
+scanning and a weekly scan, use:
+
+```shell
+$ sudo ./scripts/config-clamav.sh
+```
+
+This is only needed on the work computer, where an anti-malware agent is
+required. It is safe to re-run. Notes:
+
+- Real-time scanning watches `~/Downloads` and `/tmp` only, and blocks access
+  until the scan returns. Remove the `OnAccessIncludePath /tmp` line from the
+  script if the desktop stalls, since browsers and IDEs churn heavily there.
+- Detections are moved to `/var/quarantine`. Check it before assuming a hit is
+  real, false positives on build artifacts are common.
+- `clamd` keeps ~1GiB resident to hold the signature database.
+- Verify it actually blocks, rather than just running:
+
+    ```shell
+    $ curl -s https://secure.eicar.org/eicar.com -o ~/Downloads/eicar.com
+    $ cat ~/Downloads/eicar.com   # expect: Operation not permitted
+    ```
