@@ -32,8 +32,18 @@ set-option -g mode-keys vi
 set-option -sg escape-time 10
 
 # Enable clipboard outside tmux
+# Accept OSC 52 escape sequences from applications (OpenCode, nvim, ...) and
+# forward them to the outer terminal. The default "external" silently discards
+# application-originated sequences, which breaks in-app copy.
+set-option -g set-clipboard on
+# OpenCode also emits its OSC 52 wrapped in a tmux DCS passthrough sequence as a
+# fallback; without this tmux discards that too.
+set-option -g allow-passthrough on
+
 bind -T copy-mode-vi 'v' send -X begin-selection
-if-shell -b 'test $(uname) = "Linux"' 'bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "xclip -in -selection clipboard"'
+# Prefer the native Wayland tool, fall back to xclip on X11.
+if-shell -b 'test $(uname) = "Linux" && test -n "$WAYLAND_DISPLAY"' 'bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "wl-copy"'
+if-shell -b 'test $(uname) = "Linux" && test -z "$WAYLAND_DISPLAY"' 'bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "xclip -in -selection clipboard"'
 if-shell -b 'test $(uname) = "Darwin"' 'bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "pbcopy"'
 
 # Activity/Notification
