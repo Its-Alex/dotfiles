@@ -118,6 +118,9 @@ flatpak -y install --user flathub "${flatpak_flathub_apps_list[@]}"
 flatpak override --user --env=GTK_THEME=Adwaita org.signal.Signal
 flatpak override --user --env=GTK_THEME=Adwaita com.slack.Slack
 
+# Set Signal passwordstore to gnome-libsecret to prevent passwordstore error
+flatpak override --user --env=SIGNAL_PASSWORD_STORE=gnome-libsecret org.signal.Signal
+
 printf "\e[1;34m%s\e[1;0m\n" "Setup flatpak programs.."
 # Allow Librewolf to access all devices (e.g. webcam)
 flatpak override --user --device=all io.gitlab.librewolf-community
