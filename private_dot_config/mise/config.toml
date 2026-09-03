@@ -9,4 +9,5 @@ bun = 'latest'
 gh = 'latest'
 glab = 'latest'
 aws-cli = 'latest'
+pipx = 'latest'
 "pipx:mcp-atlassian" = "0.21.1"
