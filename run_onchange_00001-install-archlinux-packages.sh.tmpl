@@ -129,13 +129,6 @@ echo 'ACTION=="add", ATTR{idVendor}=="045e", ATTR{idProduct}=="02fe", ATTR{autho
 sudo udevadm control --reload-rules
 sudo udevadm trigger
 
-{{ if eq .chezmoi.hostname "tp-pf-664dzm-alex" -}}
-# Install and configure thermald
-printf "\e[1;34m%s\e[1;0m\n" "Install thermald"
-yay -S --noconfirm --needed thermald
-sudo systemctl enable --now thermald
-{{ end -}}
-
 # Userspace OOM protection: systemd-oomd kills on PSI stall pressure, earlyoom
 # on low available memory as a backstop for when pressure never crosses the
 # threshold in time.
