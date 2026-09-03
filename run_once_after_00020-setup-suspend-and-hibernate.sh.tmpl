@@ -7,6 +7,23 @@ if [ "$(id -u)" -ne 0 ]; then
   exec sudo bash "$0" "$@"
 fi
 
+printf "\e[1;34m%s\e[1;0m\n" "Check that the initramfs uses the systemd hook..."
+# Hibernation resume is handled by systemd-hibernate-resume.service, which is pulled in by the
+# `systemd` mkinitcpio hook and reads the HibernateLocation EFI variable. Without that hook there is
+# no resume support at all (and no `resume=`/`resume_offset=` fallback is configured here), so the
+# swapfile below would be useless.
+# Drop-ins override /etc/mkinitcpio.conf and the alphabetically last one wins, so the effective
+# HOOKS= is the last match. `|| true`: no match, or an unexpanded glob when conf.d is missing/empty.
+mkinitcpio_hooks_line=$(grep -h '^[[:space:]]*HOOKS=' /etc/mkinitcpio.conf /etc/mkinitcpio.conf.d/*.conf 2>/dev/null | tail -n 1 || true)
+if ! grep -qw systemd <<<"$mkinitcpio_hooks_line"; then
+    printf "\e[1;31m%s\e[1;0m\n" \
+        "ERROR: the 'systemd' hook is missing from the initramfs HOOKS." \
+        "  effective HOOKS: ${mkinitcpio_hooks_line:-<no HOOKS= line found>}" \
+        "Hibernation resume relies on systemd-hibernate-resume.service, which requires that hook." \
+        "Fix /etc/mkinitcpio.conf (and run 'mkinitcpio -P') manually, then re-run this script." >&2
+    exit 1
+fi
+
 ram=$(free -g | awk '/Mem:/{print $2}')
 swap_size=$(( (ram * 3 + 3) / 4 ))
 
@@ -23,12 +40,6 @@ printf "\e[1;34m%s\e[1;0m\n" "Add swapfile to /etc/fstab..."
 fstab_line='/swap/swapfile none swap defaults,pri=50 0 0'
 if ! grep -Fxq "$fstab_line" /etc/fstab; then
     echo "$fstab_line" >> /etc/fstab
-fi
-
-printf "\e[1;34m%s\e[1;0m\n" "Add resume hook to mkinitcpio..."
-if ! grep -qE '^HOOKS=.*resume' /etc/mkinitcpio.conf; then
-    sed -i 's/\(HOOKS=.*\)filesystems/\1filesystems resume/' /etc/mkinitcpio.conf
-    mkinitcpio -P
 fi
 
 printf "\e[1;34m%s\e[1;0m\n" "Setup systemd logind and sleepd configuration for suspend then hibernated..."
