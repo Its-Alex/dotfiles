@@ -13,23 +13,31 @@ else
 fi
 
 
-if [[ "$(snapper list-configs | grep -c root)" == "0" ]]; then
-    # Umount default subvolume /.snapshots to let snapper create subvolume
-    # https://wiki.archlinux.org/title/Snapper#Configuration_of_snapper_and_mount_point
-    if [[ -d /.snapshots ]]; then
-        umount /.snapshots
-        rm -r /.snapshots
+if ! snapper list-configs | awk 'NR>2 {print $1}' | grep -qx root; then
+    # Snapper refuses to create a config if the name is still listed in
+    # SNAPPER_CONFIGS, even when /etc/snapper/configs/root no longer exists.
+    # Drop the stale entry so create-config can repopulate it.
+    if [[ -f /etc/conf.d/snapper ]] && ! [[ -f /etc/snapper/configs/root ]]; then
+        sed -i '/^SNAPPER_CONFIGS=/c\SNAPPER_CONFIGS=""' /etc/conf.d/snapper
     fi
 
-    # Create snapper config
+    # snapper create-config wants to create /.snapshots itself, so clear
+    # whatever is currently there (leftover mount, plain dir, or subvolume).
+    if mountpoint -q /.snapshots; then
+        umount /.snapshots
+    fi
+    if [[ -d /.snapshots ]]; then
+        if btrfs subvolume show /.snapshots &>/dev/null; then
+            btrfs subvolume delete /.snapshots
+        else
+            rm -rf /.snapshots
+        fi
+    fi
+
+    # Create snapper config. This also creates /.snapshots as a subvolume
+    # nested in the currently mounted root subvolume (e.g. @), so no fstab
+    # entry is needed.
     snapper -c root create-config /
-
-    # Remove volume created by snapper
-    btrfs subvolume delete /.snapshots
-
-    # Mount default subvolume /.snapshots
-    mkdir /.snapshots
-    mount -a
 fi
 
 # Configuration snapper configuration
