@@ -541,6 +541,22 @@
         "JIRA_USERNAME": "{{ (bitwarden "item" "Jira - API Token ").login.username }}",
         "JIRA_API_TOKEN": "{{ (bitwarden "item" "Jira - API Token ").login.password }}"
       }
+    },
+    "linear": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "mcp-remote",
+        "https://mcp.linear.app/mcp",
+        "--header",
+        "Authorization:${LINEAR_AUTH_HEADER}"
+      ],
+      "environment": {
+        "LINEAR_AUTH_HEADER": "Bearer {{ (bitwarden "item" "Linear - API Key").login.password }}"
+      }
     }
   }
 {{- end }},

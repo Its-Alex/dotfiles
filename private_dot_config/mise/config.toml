@@ -10,4 +10,5 @@ gh = 'latest'
 glab = 'latest'
 aws-cli = 'latest'
 pipx = 'latest'
+"npm:mcp-remote" = 'latest'
 "pipx:mcp-atlassian" = "0.21.1"
