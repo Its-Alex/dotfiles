@@ -1,0 +1,31 @@
+{{ if and (eq .chezmoi.os "linux") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "true") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "1") -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+if ! command -v claude > /dev/null; then
+    exit 0
+fi
+
+printf "\e[1;34m%s\e[1;0m\n" "Configure Claude Code MCP servers (user scope)..."
+
+claude mcp remove mcp-atlassian --scope user 2>&1 || true
+claude mcp add --scope user \
+    --env CONFLUENCE_URL="{{ (bitwardenFields "item" "Confluence - API Token").space_url.value }}" \
+    --env CONFLUENCE_USERNAME="{{ (bitwarden "item" "Confluence - API Token").login.username }}" \
+    --env CONFLUENCE_API_TOKEN="{{ (bitwarden "item" "Confluence - API Token").login.password }}" \
+    --env JIRA_URL="{{ (bitwardenFields "item" "Jira - API Token ").space_url.value }}" \
+    --env JIRA_USERNAME="{{ (bitwarden "item" "Jira - API Token ").login.username }}" \
+    --env JIRA_API_TOKEN="{{ (bitwarden "item" "Jira - API Token ").login.password }}" \
+    --transport stdio \
+    mcp-atlassian -- mise exec -- mcp-atlassian
+
+claude mcp remove linear --scope user 2>&1 || true
+claude mcp add --scope user \
+    --transport stdio \
+    linear -- mise exec -- mcp-remote https://mcp.linear.app/mcp --header "Authorization:Bearer {{ (bitwarden "item" "Linear - API Key").login.password }}"
+
+printf "\e[1;34m%s\e[1;0m\n" "Install CC Safety Net for Claude Code..."
+
+mise exec -- npx -y cc-safety-net@latest install --claude-code
+
+{{ end -}}

@@ -65,6 +65,8 @@ packages_list=(
     cursor-bin
     cursor-cli
     opencode-bin
+    claude-code
+    claude-desktop
     rtk
     ## VPN
     networkmanager-openconnect
@@ -104,8 +106,12 @@ EOF
 # Enable podman socket for docker compose
 systemctl --user enable --now podman.socket
 
-# Initialize rtk OpenCode hooks
-rtk init -g --opencode
+# Initialize rtk hooks. rtk has no combined "all agents" flag: --opencode
+# installs the OpenCode plugin ONLY (verified: on a clean slate, `rtk init -g
+# --opencode --auto-patch` alone leaves Claude Code fully unconfigured — no
+# hook, no RTK.md, no settings.json patch). Each target needs its own call.
+rtk init -g --agent claude --auto-patch
+rtk init -g --opencode --auto-patch
 
 flatpak_flathub_apps_list=(
     io.gitlab.librewolf-community

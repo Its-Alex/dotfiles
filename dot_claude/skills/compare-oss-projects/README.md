@@ -1,0 +1,1 @@
+Source: https://github.com/stephane-klein/sklein-devbox-chezmoi/tree/b9aa31c6817ad795d9be45e6f1eabe9936fec676/dot_config/opencode/skill/sklein-compare-oss-projects
