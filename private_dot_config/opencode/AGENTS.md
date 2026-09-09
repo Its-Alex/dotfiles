@@ -33,3 +33,9 @@ No preamble, no explanation of these rules. Just answer directly in the active l
 ## Version control (git, jj, etc.)
 
 - Don't commit or push unless the user explicitly asks.
+
+## Root-privileged commands
+
+- Never run a command that requires root privileges automatically — always stop and ask the user to run it manually, then wait for confirmation/output before continuing.
+- This applies whether or not the command is explicitly prefixed with `sudo`/`su`/`doas`/`pkexec`. Many commands require root without any such prefix, e.g. `systemctl` (service state changes), `mount`/`umount`, `useradd`/`usermod`/`userdel`, `passwd`, `iptables`/`ufw`/`firewall-cmd`, `apt`/`yum`/`dnf`/`pacman` (install/remove), `modprobe`/`insmod`/`rmmod`, `fdisk`/`parted`/`mkfs`, `reboot`/`shutdown`/`poweroff`, `nmcli`, `timedatectl`, `hostnamectl`.
+- When such a command is needed, present the exact command to the user and ask them to run it manually instead of executing it yourself.

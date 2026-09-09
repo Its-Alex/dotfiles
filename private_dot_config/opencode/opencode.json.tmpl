@@ -543,5 +543,47 @@
       }
     }
   }
-{{- end }}
+{{- end }},
+  "permission": {
+    "bash": {
+      "sudo *": "deny",
+      "su": "deny",
+      "su *": "deny",
+      "doas *": "deny",
+      "pkexec *": "deny",
+      "visudo*": "deny",
+      "systemctl *": "deny",
+      "service *": "deny",
+      "mount *": "deny",
+      "umount *": "deny",
+      "useradd *": "deny",
+      "usermod *": "deny",
+      "userdel *": "deny",
+      "groupadd *": "deny",
+      "groupdel *": "deny",
+      "passwd*": "deny",
+      "iptables *": "deny",
+      "ip6tables *": "deny",
+      "ufw *": "deny",
+      "firewall-cmd *": "deny",
+      "apt *": "deny",
+      "apt-get *": "deny",
+      "yum *": "deny",
+      "dnf *": "deny",
+      "pacman *": "deny",
+      "modprobe *": "deny",
+      "insmod *": "deny",
+      "rmmod *": "deny",
+      "fdisk *": "deny",
+      "parted *": "deny",
+      "mkfs*": "deny",
+      "reboot*": "deny",
+      "shutdown*": "deny",
+      "poweroff*": "deny",
+      "halt*": "deny",
+      "nmcli *": "deny",
+      "timedatectl *": "deny",
+      "hostnamectl *": "deny"
+    }
+  }
 }
