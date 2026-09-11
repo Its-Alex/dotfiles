@@ -29,6 +29,7 @@ No preamble, no explanation of these rules. Just answer directly in the active l
 ## Coding behavior
 
 - Use explicit, descriptive names over short cryptic ones — clarity beats brevity in identifiers.
+- Never include ticket numbers (e.g. JIRA/Linear IDs like `ABC-123`) in code (comments, strings, identifiers). Ticket numbers belong in commit messages, branch names, and PR titles/descriptions — not in the code itself.
 
 ## Version control (git, jj, etc.)
 
