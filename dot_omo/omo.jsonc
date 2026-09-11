@@ -8,80 +8,90 @@
         "reasoning": "medium",
         "fallback_models": [
           {
-            "model": "openrouter/google/gemini-2.5-pro"
+            // Terminal-Bench 2.1 88.2, TB 3.0 28.3 (best open score on the hardest
+            // version), AutomationBench 48.2 - post-trained specifically for
+            // long-horizon agentic orchestration.
+            "model": "opencode-go/glm-5.3"
           },
           {
-            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
-          },
-          {
-            "model": "openrouter/deepseek/deepseek-v3.2"
+            // Terminal-Bench 2.1 90.6, DeepSWE 74.2 - highest agentic-coding scores
+            // in the whole opencode-go catalog, at flash-tier price.
+            "model": "opencode-go/deepseek-v4.1-flash"
           }
         ]
       },
       "hephaestus": {
-        "model": "openrouter/qwen/qwen3-coder",
+        // Hephaestus' system prompt is written for "an autonomous deep worker based
+        // on GPT-5.6". gpt-5.6-luna is the only GPT model in opencode-go, so it is
+        // the only prompt-native fit. GPQA 92.3, MMLU-Pro 86.0, 1.05M context.
+        "model": "opencode-go/gpt-5.6-luna",
         "fallback_models": [
           {
             "model": "openrouter/anthropic/claude-sonnet-5",
             "reasoning": "medium"
           },
           {
-            "model": "openrouter/deepseek/deepseek-v3.2"
-          },
-          {
-            "model": "openrouter/qwen/qwen3-coder-30b-a3b-instruct"
+            "model": "opencode-go/deepseek-v4.1-flash"
           }
         ]
       },
       "oracle": {
-        "model": "openrouter/anthropic/claude-sonnet-5",
-        "reasoning": "medium",
+        // Read-only reasoning with no prompt-adherence stakes, so raw reasoning
+        // scores dominate: Grok 4.6 posts GPQA 94.9 / MMLU-Pro 89.4 and a TB 2.1
+        // of 88.4 independently measured by Artificial Analysis, while Sonnet 5
+        // publishes no GPQA and scores 43.2 on HLE without tools.
+        "model": "opencode-go/grok-4.6",
         "fallback_models": [
           {
-            "model": "openrouter/google/gemini-2.5-pro"
+            "model": "openrouter/anthropic/claude-sonnet-5",
+            "reasoning": "xhigh"
           },
           {
-            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
-          },
-          {
-            "model": "openrouter/moonshotai/kimi-k2-thinking"
+            // GPQA 93.5, BrowseComp 91.2, DeepSWE 67.5, 1M context.
+            "model": "opencode-go/kimi-k3"
           }
         ]
       },
       "librarian": {
-        "model": "openrouter/qwen/qwen3-235b-a22b-2507",
+        // Docs/OSS research: 1.05M context, native PDF input for spec reading,
+        // GPQA 92.3, strong tool calling, $0.20/$1.20.
+        "model": "opencode-go/gpt-5.6-luna",
         "fallback_models": [
           {
-            "model": "openrouter/google/gemini-2.5-flash"
+            "model": "opencode-go/glm-5.3-flash"
           },
           {
-            "model": "openrouter/google/gemini-2.5-flash-lite"
+            "model": "opencode-go/qwen3.8-flash"
           }
         ]
       },
       "explore": {
-        "model": "openrouter/qwen/qwen3-235b-a22b-2507",
+        // Contextual grep is prefill-bound, not generation-bound. Qwen3.8 is the
+        // only flash-tier model whose prefill rate *rises* with context
+        // (1206 -> 2591 tok/s from 4K to 131K, vs flat for GLM/DeepSeek), so it
+        // reads large context fastest. 1M window, $0.15/$0.47.
+        "model": "opencode-go/qwen3.8-flash",
         "fallback_models": [
           {
-            "model": "openrouter/google/gemini-2.5-flash-lite"
+            "model": "opencode-go/glm-5.3-flash"
           },
           {
-            "model": "openrouter/google/gemma-4-31b-it:free"
+            "model": "opencode-go/mimo-v2.5"
           }
         ]
       },
       "multimodal-looker": {
-        "model": "openrouter/google/gemini-2.5-pro",
+        // Best documented vision scores at flash price: CharXiv-R 89.4 (charts and
+        // diagrams), MMVU 80.5, MVBench 77.8. Accepts image + video + PDF.
+        "model": "opencode-go/glm-5.3-flash",
         "fallback_models": [
           {
-            "model": "openrouter/google/gemini-2.5-flash"
+            // VideoMME 90.4, RealWorldQA 88.0 - stronger on video and photographs.
+            "model": "opencode-go/qwen3.8-max"
           },
           {
-            "model": "openrouter/google/gemini-3.1-pro-preview",
-            "reasoning": "high"
-          },
-          {
-            "model": "openrouter/google/gemini-2.5-flash-lite"
+            // Only non-contributor model in the catalog that accepts audio input.
+            "model": "opencode-go/mimo-v2-omni"
           }
         ]
       },
@@ -90,13 +100,10 @@
         "reasoning": "medium",
         "fallback_models": [
           {
-            "model": "openrouter/google/gemini-2.5-pro"
+            "model": "opencode-go/grok-4.6"
           },
           {
-            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
-          },
-          {
-            "model": "openrouter/deepseek/deepseek-v3.2"
+            "model": "opencode-go/glm-5.3"
           }
         ]
       },
@@ -105,13 +112,10 @@
         "reasoning": "medium",
         "fallback_models": [
           {
-            "model": "openrouter/google/gemini-2.5-pro"
+            "model": "opencode-go/grok-4.6"
           },
           {
-            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
-          },
-          {
-            "model": "openrouter/deepseek/deepseek-v3.2"
+            "model": "opencode-go/minimax-m3"
           }
         ]
       },
@@ -120,35 +124,41 @@
         "reasoning": "medium",
         "fallback_models": [
           {
-            "model": "openrouter/google/gemini-2.5-pro"
+            "model": "opencode-go/grok-4.6"
           },
           {
-            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
-          },
-          {
-            "model": "openrouter/deepseek/deepseek-v3.2"
+            "model": "opencode-go/glm-5.3"
           }
         ]
       },
       "atlas": {
-        "model": "openrouter/qwen/qwen3-235b-a22b-2507",
+        // Atlas orchestrates a todo list via task() and never edits source, so
+        // automation and long-horizon agent scores matter more than raw coding:
+        // AutomationBench 48.2 (vs 25.1 for DeepSeek V4 Flash), Agents' Last
+        // Exam 28.5, 1M context.
+        "model": "opencode-go/glm-5.3",
         "fallback_models": [
           {
-            "model": "openrouter/deepseek/deepseek-v3.2"
+            // IFEval 90.0 - best instruction adherence in the catalog, which is
+            // what keeps an orchestrator on its todo list.
+            "model": "opencode-go/longcat-2.0"
           },
           {
-            "model": "openrouter/google/gemini-2.5-flash"
+            "model": "opencode-go/minimax-m3"
           }
         ]
       },
       "sisyphus-junior": {
-        "model": "openrouter/deepseek/deepseek-v3.2",
+        // High-volume focused executor: best quality-per-dollar in the catalog.
+        // TB 2.1 90.6, DeepSWE 74.2, Codeforces 3471, 1M context, 384K max output,
+        // at $0.15/$0.60.
+        "model": "opencode-go/deepseek-v4.1-flash",
         "fallback_models": [
           {
-            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
+            "model": "opencode-go/glm-5.3-flash"
           },
           {
-            "model": "openrouter/google/gemini-2.5-flash"
+            "model": "opencode-go/qwen3.8-flash"
           }
         ]
       }
@@ -157,18 +167,16 @@
       "visual-engineering": {
         "models": [
           {
-            "model": "openrouter/google/gemini-2.5-pro"
+            // CharXiv-R 89.4 on chart/diagram reading - the multimodal skill that
+            // actually maps to UI review. Image + video + PDF at $0.15/$0.50.
+            "model": "opencode-go/glm-5.3-flash"
           },
           {
-            "model": "openrouter/google/gemini-2.5-flash"
+            "model": "opencode-go/qwen3.8-max"
           },
           {
             "model": "openrouter/anthropic/claude-sonnet-5",
             "reasoning": "medium"
-          },
-          {
-            "model": "openrouter/google/gemini-3.1-pro-preview",
-            "reasoning": "high"
           }
         ]
       },
@@ -176,82 +184,74 @@
         "models": [
           {
             "model": "openrouter/anthropic/claude-sonnet-5",
-            "reasoning": "medium"
+            "reasoning": "xhigh"
           },
           {
-            "model": "openrouter/google/gemini-2.5-pro"
+            // GPQA 94.9 / MMLU-Pro 89.4 - top reasoning pair in the catalog.
+            "model": "opencode-go/grok-4.6"
           },
           {
-            "model": "openrouter/moonshotai/kimi-k2-thinking"
-          },
-          {
-            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
+            "model": "opencode-go/kimi-k3"
           }
         ]
       },
       "deep": {
         "models": [
           {
+            // xhigh is Anthropic's stated setting for agentic tasks running over
+            // 30 minutes, which is this category's definition.
             "model": "openrouter/anthropic/claude-sonnet-5",
-            "reasoning": "medium"
+            "reasoning": "xhigh"
           },
           {
-            "model": "openrouter/google/gemini-2.5-pro"
+            "model": "opencode-go/glm-5.3"
           },
           {
-            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
-          },
-          {
-            "model": "openrouter/deepseek/deepseek-v3.2"
+            "model": "opencode-go/deepseek-v4.1-flash"
           }
         ]
       },
       "artistry": {
         "models": [
           {
-            "model": "openrouter/google/gemini-2.5-pro"
-          },
-          {
-            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
+            "model": "opencode-go/grok-4.6"
           },
           {
             "model": "openrouter/anthropic/claude-sonnet-5",
             "reasoning": "medium"
           },
           {
-            "model": "openrouter/deepseek/deepseek-v3.2"
+            "model": "opencode-go/minimax-m3"
           }
         ]
       },
       "quick": {
         "models": [
           {
-            "model": "openrouter/google/gemini-2.5-flash-lite"
+            // Cheapest non-contributor model in the catalog ($0.14/$0.28) that
+            // still posts GPQA 84.9 / MMLU-Pro 82.9.
+            "model": "opencode-go/mimo-v2.5"
           },
           {
             "model": "openrouter/anthropic/claude-haiku-4.5"
           },
           {
-            "model": "openrouter/google/gemini-2.5-flash"
-          },
-          {
-            "model": "openrouter/google/gemma-4-31b-it:free"
+            "model": "opencode-go/qwen3.8-flash"
           }
         ]
       },
       "unspecified-low": {
         "models": [
           {
-            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
+            // AA Intelligence Index 57 at $0.15/$0.50 - best intelligence-per-dollar
+            // in the catalog.
+            "model": "opencode-go/glm-5.3-flash"
           },
           {
-            "model": "openrouter/deepseek/deepseek-v3.2"
+            "model": "opencode-go/deepseek-v4-flash"
           },
           {
-            "model": "openrouter/google/gemini-2.5-flash"
-          },
-          {
-            "model": "openrouter/minimax/minimax-m2"
+            "model": "opencode-go/mimo-v2.5"
           }
         ]
       },
@@ -262,28 +262,27 @@
             "reasoning": "medium"
           },
           {
-            "model": "openrouter/qwen/qwen3-coder"
+            "model": "opencode-go/glm-5.3"
           },
           {
-            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
-          },
-          {
-            "model": "openrouter/google/gemini-2.5-pro"
+            // SWE-bench Verified 80.6, LiveCodeBench 93.5, Codeforces 3206.
+            "model": "opencode-go/deepseek-v4-pro"
           }
         ]
       },
       "writing": {
         "models": [
           {
-            "model": "openrouter/google/gemini-2.5-flash-lite"
+            // IFEval 90.0 - highest instruction-following score in the catalog,
+            // which is the measurable proxy for following a writing brief.
+            "model": "opencode-go/longcat-2.0"
           },
           {
-            "model": "openrouter/qwen/qwen3-235b-a22b-2507"
+            "model": "opencode-go/gpt-5.6-luna"
           },
           {
-            "model": "openrouter/google/gemini-2.5-flash"
-          },
-          {
+            // Kept at medium: prose is not intelligence-bottlenecked, and this is
+            // the one slot where Anthropic's cost step-down is the right trade.
             "model": "openrouter/anthropic/claude-sonnet-5",
             "reasoning": "medium"
           }
