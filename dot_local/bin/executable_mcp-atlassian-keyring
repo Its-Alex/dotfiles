@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+#
+# Launches the Atlassian MCP server with its credentials resolved from the GNOME
+# keyring at start-up, so no token is ever written to an on-disk config file.
+# The keyring is seeded from Bitwarden by
+# run_onchange_00002-seed-gnome-keyring.sh.tmpl.
+set -euo pipefail
+
+keyring_get() {
+    secret-tool lookup service dotfiles key "$1" 2>/dev/null || true
+}
+
+export CONFLUENCE_URL="$(keyring_get CONFLUENCE_URL)"
+export CONFLUENCE_USERNAME="$(keyring_get CONFLUENCE_USERNAME)"
+export CONFLUENCE_API_TOKEN="$(keyring_get CONFLUENCE_API_TOKEN)"
+export JIRA_URL="$(keyring_get JIRA_URL)"
+export JIRA_USERNAME="$(keyring_get JIRA_USERNAME)"
+export JIRA_API_TOKEN="$(keyring_get JIRA_API_TOKEN)"
+
+exec mise exec -- mcp-atlassian "$@"

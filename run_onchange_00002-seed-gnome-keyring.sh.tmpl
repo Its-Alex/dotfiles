@@ -1,0 +1,31 @@
+{{ if and (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "true") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "1") -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Seed the GNOME keyring with the API tokens read from Bitwarden. The keyring is
+# encrypted at rest and unlocked with the login session, so the tokens are never
+# stored in cleartext on disk (unlike baking them into ~/.zshrc). Re-running this
+# script is idempotent: it overwrites the matching keyring entries.
+if ! command -v secret-tool > /dev/null; then
+    printf "\e[1;33m%s\e[1;0m\n" "secret-tool not found (install libsecret); skipping keyring seeding."
+    exit 0
+fi
+
+printf "\e[1;34m%s\e[1;0m\n" "Seed the GNOME keyring with API tokens from Bitwarden..."
+
+seed_keyring_entry() {
+    local name="$1" value="$2"
+    printf '%s' "$value" | secret-tool store --label="dotfiles: ${name}" service dotfiles key "$name"
+}
+
+seed_keyring_entry GITLAB_PERSONAL_ACCESS_TOKEN "{{ (bitwarden "item" "Gitlab - API Token").login.password }}"
+seed_keyring_entry LINEAR_API_KEY "{{ (bitwarden "item" "Linear - API Key").login.password }}"
+seed_keyring_entry CONFLUENCE_URL "{{ (bitwardenFields "item" "Confluence - API Token").space_url.value }}"
+seed_keyring_entry CONFLUENCE_USERNAME "{{ (bitwarden "item" "Confluence - API Token").login.username }}"
+seed_keyring_entry CONFLUENCE_API_TOKEN "{{ (bitwarden "item" "Confluence - API Token").login.password }}"
+seed_keyring_entry JIRA_URL "{{ (bitwardenFields "item" "Jira - API Token ").space_url.value }}"
+seed_keyring_entry JIRA_USERNAME "{{ (bitwarden "item" "Jira - API Token ").login.username }}"
+seed_keyring_entry JIRA_API_TOKEN "{{ (bitwarden "item" "Jira - API Token ").login.password }}"
+
+printf "\e[1;32m%s\e[1;0m\n" "GNOME keyring seeded."
+{{ end -}}

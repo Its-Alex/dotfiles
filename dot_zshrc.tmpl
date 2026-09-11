@@ -1,5 +1,18 @@
 #!/usr/bin/env bash
 
+# Ambient secrets are read from the GNOME keyring, which is encrypted at rest
+# and unlocked with the login session. It is seeded from Bitwarden by
+# run_onchange_00002-seed-gnome-keyring.sh, so no token is written in cleartext.
+# The Atlassian and Linear tokens are deliberately NOT exported here: the
+# keyring-backed wrappers in ~/.local/bin read them on demand, so they never
+# enter the shell environment or any unrelated child process.
+_keyring_export() {
+    local name="$1" value
+    value="$(secret-tool lookup service dotfiles key "$name" 2>/dev/null)" || return 0
+    [ -n "$value" ] && export "$name=$value"
+    return 0
+}
+
 {{ if eq .chezmoi.os "darwin" -}}
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
@@ -48,6 +61,10 @@ export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/gcr/ssh
 {{- end }}
 # Use podman with docker compose
 export DOCKER_HOST=unix:///run/user/1000/podman/podman.sock
+if command -v secret-tool >/dev/null 2>&1; then
+    # Gitlab (used by CLI tools such as glab)
+    _keyring_export GITLAB_PERSONAL_ACCESS_TOKEN
+fi
 
 # Environment variable - Languages
 #  Rust
@@ -55,8 +72,6 @@ export PATH=$PATH:$HOME/.cargo/bin
 #  Golang
 export GOPATH=$HOME/go
 export PATH=$PATH:$HOME/go/bin
-# Gitlab
-export GITLAB_PERSONAL_ACCESS_TOKEN="{{ (bitwarden "item" "Gitlab - API Token").login.username }}"
 # CC Safety Net
 export CC_SAFETY_NET_PARANOID_RM=1
 export CC_SAFETY_NET_WORKTREE=1

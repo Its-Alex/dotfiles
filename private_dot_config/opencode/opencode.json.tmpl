@@ -73,38 +73,18 @@
       "type": "local",
       "enabled": true,
       "command": [
-        "mise",
-        "exec",
-        "--",
-        "mcp-atlassian"
-      ],
-      "environment": {
-        "CONFLUENCE_URL": "{{ (bitwardenFields "item" "Confluence - API Token").space_url.value }}",
-        "CONFLUENCE_USERNAME": "{{ (bitwarden "item" "Confluence - API Token").login.username }}",
-        "CONFLUENCE_API_TOKEN": "{{ (bitwarden "item" "Confluence - API Token").login.password }}",
-        "JIRA_URL": "{{ (bitwardenFields "item" "Jira - API Token ").space_url.value }}",
-        "JIRA_USERNAME": "{{ (bitwarden "item" "Jira - API Token ").login.username }}",
-        "JIRA_API_TOKEN": "{{ (bitwarden "item" "Jira - API Token ").login.password }}"
-      }
+        "{{ .chezmoi.homeDir }}/.local/bin/mcp-atlassian-keyring"
+      ]
     },
     "linear": {
       "type": "local",
       "enabled": true,
       "command": [
-        "mise",
-        "exec",
-        "--",
-        "mcp-remote",
-        "https://mcp.linear.app/mcp",
-        "--header",
-        "Authorization:${LINEAR_AUTH_HEADER}"
-      ],
-      "environment": {
-        "LINEAR_AUTH_HEADER": "Bearer {{ (bitwarden "item" "Linear - API Key").login.password }}"
-      }
+        "{{ .chezmoi.homeDir }}/.local/bin/mcp-remote-linear-keyring"
+      ]
     }
-  }
-{{- end }},
+  },
+{{- end }}
   "permission": {
     "bash": {
       "sudo *": "deny",

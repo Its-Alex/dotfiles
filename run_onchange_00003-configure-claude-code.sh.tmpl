@@ -1,0 +1,28 @@
+{{ if and (eq .chezmoi.os "linux") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "true") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "1") -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+if ! command -v claude > /dev/null; then
+    exit 0
+fi
+
+printf "\e[1;34m%s\e[1;0m\n" "Configure Claude Code MCP servers (user scope)..."
+
+# The MCP servers read their credentials from the GNOME keyring at start-up
+# (see the keyring-backed wrappers in dot_local/bin), so Claude Code never
+# persists any token into ~/.claude.json.
+claude mcp remove mcp-atlassian --scope user 2>&1 || true
+claude mcp add --scope user \
+    --transport stdio \
+    mcp-atlassian -- mcp-atlassian-keyring
+
+claude mcp remove linear --scope user 2>&1 || true
+claude mcp add --scope user \
+    --transport stdio \
+    linear -- mcp-remote-linear-keyring
+
+printf "\e[1;34m%s\e[1;0m\n" "Install CC Safety Net for Claude Code..."
+
+mise exec -- npx -y cc-safety-net@latest install --claude-code
+
+{{ end -}}

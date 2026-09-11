@@ -4,5 +4,6 @@ README.md
 archlinux-gnome-install.sh
 mise.toml
 scripts/
+docs/
 gnome-extensions.txt
 gnome-shell-extensions.dconf

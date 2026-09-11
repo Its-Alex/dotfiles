@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+#
+# Launches the Linear MCP proxy with its API key resolved from the GNOME keyring
+# at start-up, so no token is ever written to an on-disk config file. The
+# keyring is seeded from Bitwarden by
+# run_onchange_00002-seed-gnome-keyring.sh.tmpl.
+set -euo pipefail
+
+LINEAR_API_KEY="$(secret-tool lookup service dotfiles key LINEAR_API_KEY 2>/dev/null || true)"
+export LINEAR_API_KEY
+
+exec mise exec -- mcp-remote https://mcp.linear.app/mcp \
+    --header "Authorization:Bearer ${LINEAR_API_KEY}" "$@"
