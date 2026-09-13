@@ -55,6 +55,15 @@ if [[ -d /boot/grub/ ]]; then
     sudo grub-mkconfig -o /boot/grub/grub.cfg
 fi
 
+if [[ -f /etc/bluetooth/main.conf ]]; then
+    printf "\e[1;34m%s\e[1;0m\n" "Disable Bluetooth auto-enable on boot"
+    if grep -q '^#\?AutoEnable=' /etc/bluetooth/main.conf; then
+        sudo sed -i '/^#\?AutoEnable=/c\AutoEnable=false' /etc/bluetooth/main.conf
+    else
+        printf '\n[Policy]\nAutoEnable=false\n' | sudo tee -a /etc/bluetooth/main.conf > /dev/null
+    fi
+fi
+
 if [[ ! -d "${HOME}/.oh-my-zsh" ]]; then
     printf "\e[1;34m%s\e[1;0m\n" "Setup ohmyzsh"
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
