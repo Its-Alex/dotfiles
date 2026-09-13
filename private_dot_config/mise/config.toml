@@ -2,6 +2,8 @@
 lockfile = true
 
 [tools]
+age = 'latest'
+gopass = 'latest'
 direnv = 'latest'
 nodejs = 'latest'
 node = 'latest'

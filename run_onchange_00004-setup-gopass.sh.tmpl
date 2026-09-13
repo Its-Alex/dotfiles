@@ -1,0 +1,70 @@
+{{ if and (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "true") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "1") -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+# gopass always stores ~/.config/gopass/age/identities age-encrypted and refuses
+# a plaintext file, so the key goes through `gopass age identities add`, whose
+# two positional arguments make it non-interactive.
+#
+# The passphrase is normally cached in the OS keyring (age.usekeychain, service
+# "gopass", username = the file path). That keyring is local and never backed
+# up, so the same passphrase also lives in Bitwarden: GOPASS_AGE_PASSWORD makes
+# a fresh machine unattended and keeps the file recoverable.
+#
+# Settings are set with `gopass config` rather than a managed file: gopass
+# rewrites ~/.config/gopass/config itself, which would report drift every apply.
+gopass_bin="$(command -v gopass || true)"
+if [ -z "$gopass_bin" ] && command -v mise > /dev/null; then
+    printf "\e[1;34m%s\e[1;0m\n" "Install age and gopass through mise..."
+    mise install age gopass > /dev/null 2>&1 || true
+    gopass_bin="$(mise which gopass 2> /dev/null || true)"
+fi
+
+if [ -z "$gopass_bin" ]; then
+    printf "\e[1;33m%s\e[1;0m\n" "gopass not found and not installable through mise; skipping gopass setup."
+    exit 0
+fi
+
+printf "\e[1;34m%s\e[1;0m\n" "Configure gopass (age identity and settings)..."
+
+# `with` rather than `.value`: a missing field would otherwise abort the whole
+# apply with a template error, instead of reporting it below.
+age_identity="{{ with (index (bitwardenFields "item" "Age - gopass identity") "age-identity") }}{{ .value }}{{ end }}"
+age_recipient="{{ with (index (bitwardenFields "item" "Age - gopass identity") "age-recipient") }}{{ .value }}{{ end }}"
+age_keyring_pass="{{ with (index (bitwardenFields "item" "Age - gopass identity") "gopass-keyring-pass") }}{{ .value }}{{ end }}"
+
+# Without this guard an empty recipient would make the grep below match any
+# output, silently skipping the installation.
+if [ -z "$age_identity" ] || [ -z "$age_recipient" ]; then
+    printf "\e[1;31m%s\e[1;0m\n" "Bitwarden item \"Age - gopass identity\" is missing the age-identity or age-recipient field."
+    exit 1
+fi
+
+# Empty when the field is absent: gopass then falls back to the keyring, and
+# prompts once on a machine whose keyring holds nothing yet.
+if [ -z "$age_keyring_pass" ]; then
+    printf "\e[1;33m%s\e[1;0m\n" "No gopass-keyring-pass field; gopass may prompt for the identities passphrase."
+fi
+
+if GOPASS_AGE_PASSWORD="$age_keyring_pass" "$gopass_bin" age identities 2> /dev/null | grep -qF "$age_recipient"; then
+    printf "\e[1;32m%s\e[1;0m\n" "age identity already installed."
+else
+    GOPASS_AGE_PASSWORD="$age_keyring_pass" "$gopass_bin" age identities add "$age_identity" "$age_recipient"
+    printf "\e[1;32m%s\e[1;0m\n" "age identity installed."
+fi
+
+# Both stay on: the keyring supplies the passphrase, the agent keeps identities
+# unlocked in memory. Without the agent every call redoes the scrypt derivation
+# (575 ms per `gopass show`, against 12 ms with it).
+"$gopass_bin" config age.usekeychain true > /dev/null
+"$gopass_bin" config age.agent-enabled true > /dev/null
+
+# Only once the infrastructure repository is cloned, so a fresh machine does not
+# get a mount pointing at a missing directory.
+store_path="{{ .chezmoi.homeDir }}/Documents/personal-infra-as-code/passwords"
+if [ -d "$store_path" ]; then
+    "$gopass_bin" config mounts.path "$store_path" > /dev/null
+fi
+
+printf "\e[1;32m%s\e[1;0m\n" "gopass configured."
+{{ end -}}
