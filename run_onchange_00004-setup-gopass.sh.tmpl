@@ -53,6 +53,19 @@ else
     printf "\e[1;32m%s\e[1;0m\n" "age identity installed."
 fi
 
+# gopass only writes to the keyring after an interactive prompt: a passphrase
+# given through GOPASS_AGE_PASSWORD is never cached, so without this the next
+# interactive call falls back to pinentry, which can silently replay a stale
+# passphrase from its own cache and fail with "incorrect passphrase".
+# Same attributes and label as go-keyring, which gopass reads them with.
+if [ -n "$age_keyring_pass" ]; then
+    identities_path="${XDG_CONFIG_HOME:-$HOME/.config}/gopass/age/identities"
+    printf '%s' "$age_keyring_pass" | secret-tool store \
+        --label="Password for '$identities_path' on 'gopass'" \
+        service gopass username "$identities_path"
+    printf "\e[1;32m%s\e[1;0m\n" "age identities passphrase cached in the OS keyring."
+fi
+
 # Both stay on: the keyring supplies the passphrase, the agent keeps identities
 # unlocked in memory. Without the agent every call redoes the scrypt derivation
 # (575 ms per `gopass show`, against 12 ms with it).
