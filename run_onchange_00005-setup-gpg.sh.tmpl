@@ -1,0 +1,63 @@
+{{ if and (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "true") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "1") -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+# GPG is only used to sign commits (git and jj), so a fresh machine needs the
+# secret keys imported and their passphrases cached in the keyring; without the
+# cache every commit blocks on a pinentry prompt.
+if ! command -v gpg > /dev/null; then
+    printf "\e[1;33m%s\e[1;0m\n" "gpg not found (install gnupg); skipping GPG setup."
+    exit 0
+fi
+
+printf "\e[1;34m%s\e[1;0m\n" "Import GPG secret keys from Bitwarden..."
+# --batch: a passphrase-protected key otherwise makes gpg-agent prompt to
+# re-encrypt it, and with the key on stdin that prompt fails.
+# Personal
+echo "{{ bitwardenAttachment "kb3rqexmcioe8716h20kgjlqsaqw197f" "e1ac83ba-e272-4b58-90eb-ae4c009cf0f7" }}" | gpg --batch --import -
+# Relex work
+echo "{{ bitwardenAttachment "t8fgmvnlv4v21ju1plt26t2rb3ngu6ts" "e10d8cc9-6527-49ab-b1b9-b4d301314972" }}" | gpg --batch --import -
+
+if ! command -v secret-tool > /dev/null; then
+    printf "\e[1;33m%s\e[1;0m\n" "secret-tool not found (install libsecret); skipping GPG passphrase seeding."
+    exit 0
+fi
+
+printf "\e[1;34m%s\e[1;0m\n" "Seed GPG passphrases into the keyring..."
+
+# pinentry looks up the "keygrip" attribute ("n/<keygrip>" as sent by gpg-agent)
+# under the org.gnupg.Passphrase schema; keygrips are read back from the imported
+# keys, so signing (primary) and decryption (subkey) are both covered.
+seed_gpg_passphrase() {
+    local item="$2" key="$3" keygrip
+    local passphrase
+    # Decoded from base64: interpolating the passphrase raw would let a "$" or
+    # backtick in it be expanded by the shell.
+    passphrase="$(printf '%s' "$1" | base64 -d)"
+    if [ -z "$passphrase" ]; then
+        printf "\e[1;33m%s\e[1;0m\n" "No password on Bitwarden item \"$item\"; skipping its GPG passphrase."
+        return 0
+    fi
+    while IFS= read -r keygrip; do
+        printf '%s' "$passphrase" | secret-tool store --label="GnuPG: n/$keygrip" \
+            xdg:schema org.gnupg.Passphrase \
+            stored-by "GnuPG Pinentry" \
+            keygrip "n/$keygrip"
+    done < <(gpg --with-colons --with-keygrip --list-secret-keys "$key" 2> /dev/null | awk -F: '/^grp:/ { print $10 }')
+}
+
+# Personal key, by id: the name "GPG" substring-matches "GPG - Relex" and `bw get`
+# errors on multiple results.
+seed_gpg_passphrase \
+    "{{ dig "login" "password" "" (bitwarden "item" "e1ac83ba-e272-4b58-90eb-ae4c009cf0f7") | b64enc }}" \
+    "e1ac83ba-e272-4b58-90eb-ae4c009cf0f7" \
+    D13067073B9A98A9
+
+# Relex work key.
+seed_gpg_passphrase \
+    "{{ dig "login" "password" "" (bitwarden "item" "GPG - Relex") | b64enc }}" \
+    "GPG - Relex" \
+    974BFB075A70590F
+
+printf "\e[1;32m%s\e[1;0m\n" "GPG configured."
+{{ end -}}
