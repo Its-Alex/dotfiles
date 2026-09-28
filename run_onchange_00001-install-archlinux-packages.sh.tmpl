@@ -84,9 +84,12 @@ packages_list=(
 )
 yay -S --noconfirm --needed "${packages_list[@]}"
 
-# Install GPG key
+# Install GPG keys
 {{ if and (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "true") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "1") -}}
+# Personal
 echo "{{ bitwardenAttachment "kb3rqexmcioe8716h20kgjlqsaqw197f" "e1ac83ba-e272-4b58-90eb-ae4c009cf0f7" }}" | GPG_TTY=$(tty) gpg --import -
+# Relex work
+echo "{{ bitwardenAttachment "t8fgmvnlv4v21ju1plt26t2rb3ngu6ts" "e10d8cc9-6527-49ab-b1b9-b4d301314972" }}" | GPG_TTY=$(tty) gpg --import -
 {{ end -}}
 
 # Setup podman

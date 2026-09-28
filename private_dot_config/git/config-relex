@@ -1,0 +1,12 @@
+[user]
+    email = alexandre.marre@relexsolutions.com
+    name = alexandre-marre_relex
+    signingkey = 974BFB075A70590F
+[core]
+    sshCommand = "ssh -F /dev/null -i ~/.ssh/relex -o IdentitiesOnly=yes"
+[credential "https://github.com"]
+	helper = 
+	helper = !/home/alex/.local/share/mise/installs/gh/2.100.0/gh_2.100.0_linux_amd64/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/home/alex/.local/share/mise/installs/gh/2.100.0/gh_2.100.0_linux_amd64/bin/gh auth git-credential
