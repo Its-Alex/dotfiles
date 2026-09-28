@@ -48,6 +48,28 @@ When the issues exist in Linear, mirror this in the real `blocks` / `blockedBy`
 relations. The written tree and the relation graph must agree; a reader trusting
 one over the other will sequence the work wrong.
 
+### A Todo line is an action, never a reference
+
+A reader must tell at a glance what **they** have to do in this issue and what is
+only context. The same issue link means two different things depending on where
+it sits, so the position carries the meaning:
+
+- **A Todo contains only what is done in this issue.** Every line starts with a
+  verb. If a line describes work that happens elsewhere, it does not belong here.
+- **A line that starts with an issue ID is a sub-issue to complete**:
+  `- [ ] [SOF-xxx] Title`. Only parent issues use this form, and the sub-issue
+  carries the work.
+- **An issue link inside a line is a reference, never a task.** Write it in
+  parentheses, prefixed with "voir": `(voir [SOF-837](…))`. The reader has
+  nothing to do in the linked issue.
+- **Work that must be finished elsewhere first goes in `# Requirements`**, not in
+  the Todo: "Nom et tags du workspace arrêtés ([SOF-843](…), deux premières
+  étapes)". Mirror it with a `blockedBy` relation when it blocks the whole issue;
+  when it blocks a single line only, say so on that line instead.
+- **Keep the Todo current.** A line made obsolete by a decision taken elsewhere is
+  ticked with the reason and the link (`- [X] … — tranché en [SOF-835](…)`), or
+  deleted. Two lines saying the same thing are merged.
+
 ## 3. Writing register
 
 - **Issues are written in French.** Titles are English and use **plain natural
