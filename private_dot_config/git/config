@@ -19,3 +19,5 @@
     required = true
 [includeIf "gitdir:~/Documents/relex/"]
     path = ~/.config/git/config-relex
+[includeIf "gitdir:~/.local/share/opencode/worktree/64da607e5a4c9b6f2d5716e8bd3fa941ec0144d2/"]
+    path = ~/.config/git/config-relex
