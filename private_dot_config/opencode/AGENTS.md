@@ -32,6 +32,12 @@ No preamble, no explanation of these rules. Just answer directly in the active l
 - Never include ticket numbers (e.g. JIRA/Linear IDs like `ABC-123`) in code (comments, strings, identifiers). Ticket numbers belong in commit messages, branch names, and PR titles/descriptions — not in the code itself.
 - Let the code document itself. Comment only what the code cannot express: a non-obvious constraint, a surprising behaviour, or a decision a reader would otherwise "fix" wrongly. Never restate what the code already says.
 
+## Delegation to subagents
+
+- Before grepping/reading more than 2-3 files to answer "where is X?", "which file does Y?", or "how is Z structured?", delegate to the `explore` subagent instead of searching inline. Fire several `explore` tasks in parallel for independent questions.
+- Before using a library/framework API you are not certain about (syntax, options, version differences), delegate to the `librarian` subagent instead of answering from memory.
+- Skip delegation for trivial lookups (a single known file, a symbol you just saw).
+
 ## Version control (git, jj, etc.)
 
 - Don't commit or push unless the user explicitly asks.

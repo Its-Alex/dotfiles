@@ -2,7 +2,6 @@
   "$schema": "https://opencode.ai/config.json",
   "theme": "dracula",
   "plugin": [
-    "oh-my-openagent@5.1.0",
     "cc-safety-net@2.4.11"
   ],
   "autoupdate": "notify",
@@ -69,8 +68,22 @@
       ]
     }
   },
-{{- if and (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "true") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "1") }}
   "mcp": {
+    "context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp",
+      "enabled": true
+    },
+    "websearch": {
+      "type": "remote",
+      "url": "https://mcp.exa.ai/mcp",
+      "enabled": true
+    },
+    "grep_app": {
+      "type": "remote",
+      "url": "https://mcp.grep.app",
+      "enabled": true
+    }{{- if and (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "true") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "1") }},
     "mcp-atlassian": {
       "type": "local",
       "enabled": true,
@@ -85,8 +98,8 @@
         "{{ .chezmoi.homeDir }}/.local/bin/mcp-remote-linear-keyring"
       ]
     }
-  },
 {{- end }}
+  },
   "permission": {
     "bash": {
       "sudo *": "deny",
