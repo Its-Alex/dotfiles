@@ -140,6 +140,17 @@
       "nmcli *": "deny",
       "timedatectl *": "deny",
       "hostnamectl *": "deny"
+    },
+    "edit": {
+      "*": "allow",
+      "~/.ssh/**": "ask",
+      "~/.gnupg/**": "ask"
+    },
+    "doom_loop": "allow",
+    "external_directory": {
+      "*": "ask",
+      "~/**": "allow",
+      "/tmp/**": "allow"
     }
   }
 }
