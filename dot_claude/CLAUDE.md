@@ -32,6 +32,14 @@ No preamble, no explanation of these rules. Just answer directly in the active l
 - Never include ticket numbers (e.g. JIRA/Linear IDs like `ABC-123`) in code (comments, strings, identifiers). Ticket numbers belong in commit messages, branch names, and PR titles/descriptions — not in the code itself.
 - Let the code document itself. Comment only what the code cannot express: a non-obvious constraint, a surprising behaviour, or a decision a reader would otherwise "fix" wrongly. Never restate what the code already says.
 
+## Referencing and links
+
+- Always give an external link when one exists, instead of a bare identifier or a citation-less mention.
+- Cite documentation with the most specific URL, including the anchor/fragment — e.g. `https://opencode.ai/docs/plugins/#create-a-plugin` rather than the page root.
+- For GitHub (or GitLab, etc.) references, link the item itself — the PR/issue/commit URL rather than just `#40108`, and a file at a specific revision/line rather than a path alone.
+- Link packages, releases, discussions, and standards to their canonical source too.
+- Only link targets you are confident are correct; never invent or guess a URL. If you can't verify one, state it without a link.
+
 ## Version control (git, jj, etc.)
 
 - Don't commit or push unless the user explicitly asks.
