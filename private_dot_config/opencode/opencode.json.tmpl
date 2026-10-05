@@ -1,158 +1,84 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "theme": "dracula",
-  "plugin": [
-    "cc-safety-net@2.4.11",
+  "plugins": [
+    "cc-safety-net@2.6.0",
     "@jonathanmorley/opencode-claude-compat@0.3.0"
   ],
-  "autoupdate": "notify",
-  "lsp": {},
+  "update": "notify",
   "model": "openrouter/anthropic/claude-sonnet-5.5",
-  "provider": {
-    "openrouter": {
-      "whitelist": [
-        "anthropic/claude-3-haiku",
-        "anthropic/claude-3.5-haiku",
-        "anthropic/claude-haiku-4.5",
-        "anthropic/claude-opus-4",
-        "anthropic/claude-opus-4.1",
-        "anthropic/claude-opus-4.5",
-        "anthropic/claude-opus-4.6",
-        "anthropic/claude-opus-4.7",
-        "anthropic/claude-opus-4.8",
-        "anthropic/claude-opus-5",
-        "anthropic/claude-opus-5.5",
-        "anthropic/claude-sonnet-4",
-        "anthropic/claude-sonnet-4.5",
-        "anthropic/claude-sonnet-4.6",
-        "anthropic/claude-sonnet-5",
-        "anthropic/claude-sonnet-5.5",
-        "anthropic/claude-fable-5",
-        "deepseek/deepseek-v3.1-terminus",
-        "deepseek/deepseek-v3.2",
-        "google/gemini-2.5-flash",
-        "google/gemini-2.5-flash-image",
-        "google/gemini-2.5-flash-lite",
-        "google/gemini-2.5-flash-lite-preview-09-2025",
-        "google/gemini-2.5-pro",
-        "google/gemini-2.5-pro-preview",
-        "google/gemini-2.5-pro-preview-05-06",
-        "google/gemini-3-flash-preview",
-        "google/gemini-3-pro-image-preview",
-        "google/gemini-3.1-flash-image-preview",
-        "google/gemini-3.1-flash-lite",
-        "google/gemini-3.1-flash-lite-preview",
-        "google/gemini-3.1-pro-preview",
-        "google/gemini-3.1-pro-preview-customtools",
-        "google/gemini-3.5-flash",
-        "google/gemma-4-26b-a4b-it",
-        "google/gemma-4-26b-a4b-it:free",
-        "google/gemma-4-31b-it:free",
-        "google/lyria-3-clip-preview",
-        "google/lyria-3-pro-preview",
-        "minimax/minimax-m2",
-        "moonshotai/kimi-k2-thinking",
-        "amazon/nova-2-lite-v1",
-        "amazon/nova-lite-v1",
-        "amazon/nova-micro-v1",
-        "amazon/nova-premier-v1",
-        "amazon/nova-pro-v1",
-        "openai/gpt-oss-120b",
-        "openai/gpt-oss-20b",
-        "qwen/qwen3-235b-a22b-2507",
-        "qwen/qwen3-coder",
-        "qwen/qwen3-coder-30b-a3b-instruct",
-        "qwen/qwen3-next-80b-a3b-instruct",
-        "qwen/qwen3-next-80b-a3b-thinking",
-        "writer/palmyra-x5",
-        "z-ai/glm-4.7",
-        "z-ai/glm-5"
-      ]
-    }
-  },
   "mcp": {
-    "context7": {
-      "type": "remote",
-      "url": "https://mcp.context7.com/mcp",
-      "enabled": true
-    },
-    "websearch": {
-      "type": "remote",
-      "url": "https://mcp.exa.ai/mcp",
-      "enabled": true
-    },
-    "grep_app": {
-      "type": "remote",
-      "url": "https://mcp.grep.app",
-      "enabled": true
-    }{{- if and (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "true") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "1") }},
-    "mcp-atlassian": {
-      "type": "local",
-      "enabled": true,
-      "command": [
-        "{{ .chezmoi.homeDir }}/.local/bin/mcp-atlassian-keyring"
-      ]
-    },
-    "linear": {
-      "type": "local",
-      "enabled": true,
-      "command": [
-        "{{ .chezmoi.homeDir }}/.local/bin/mcp-remote-linear-keyring"
-      ]
-    }
+    "servers": {
+      "context7": {
+        "type": "remote",
+        "url": "https://mcp.context7.com/mcp"
+      },
+      "websearch": {
+        "type": "remote",
+        "url": "https://mcp.exa.ai/mcp"
+      },
+      "grep_app": {
+        "type": "remote",
+        "url": "https://mcp.grep.app"
+      }{{- if and (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "true") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "1") }},
+      "mcp-atlassian": {
+        "type": "local",
+        "command": [
+          "{{ .chezmoi.homeDir }}/.local/bin/mcp-atlassian-keyring"
+        ]
+      },
+      "linear": {
+        "type": "local",
+        "command": [
+          "{{ .chezmoi.homeDir }}/.local/bin/mcp-remote-linear-keyring"
+        ]
+      }
 {{- end }}
-  },
-  "permission": {
-    "bash": {
-      "sudo *": "deny",
-      "su": "deny",
-      "su *": "deny",
-      "doas *": "deny",
-      "pkexec *": "deny",
-      "visudo*": "deny",
-      "systemctl *": "deny",
-      "service *": "deny",
-      "mount *": "deny",
-      "umount *": "deny",
-      "useradd *": "deny",
-      "usermod *": "deny",
-      "userdel *": "deny",
-      "groupadd *": "deny",
-      "groupdel *": "deny",
-      "passwd*": "deny",
-      "iptables *": "deny",
-      "ip6tables *": "deny",
-      "ufw *": "deny",
-      "firewall-cmd *": "deny",
-      "apt *": "deny",
-      "apt-get *": "deny",
-      "yum *": "deny",
-      "dnf *": "deny",
-      "pacman *": "deny",
-      "modprobe *": "deny",
-      "insmod *": "deny",
-      "rmmod *": "deny",
-      "fdisk *": "deny",
-      "parted *": "deny",
-      "mkfs*": "deny",
-      "reboot*": "deny",
-      "shutdown*": "deny",
-      "poweroff*": "deny",
-      "halt*": "deny",
-      "nmcli *": "deny",
-      "timedatectl *": "deny",
-      "hostnamectl *": "deny"
-    },
-    "edit": {
-      "*": "allow",
-      "~/.ssh/**": "ask",
-      "~/.gnupg/**": "ask"
-    },
-    "doom_loop": "allow",
-    "external_directory": {
-      "*": "ask",
-      "~/**": "allow",
-      "/tmp/**": "allow"
     }
-  }
+  },
+  "permissions": [
+    { "action": "shell", "resource": "sudo *", "effect": "deny" },
+    { "action": "shell", "resource": "su", "effect": "deny" },
+    { "action": "shell", "resource": "su *", "effect": "deny" },
+    { "action": "shell", "resource": "doas *", "effect": "deny" },
+    { "action": "shell", "resource": "pkexec *", "effect": "deny" },
+    { "action": "shell", "resource": "visudo*", "effect": "deny" },
+    { "action": "shell", "resource": "systemctl *", "effect": "deny" },
+    { "action": "shell", "resource": "service *", "effect": "deny" },
+    { "action": "shell", "resource": "mount *", "effect": "deny" },
+    { "action": "shell", "resource": "umount *", "effect": "deny" },
+    { "action": "shell", "resource": "useradd *", "effect": "deny" },
+    { "action": "shell", "resource": "usermod *", "effect": "deny" },
+    { "action": "shell", "resource": "userdel *", "effect": "deny" },
+    { "action": "shell", "resource": "groupadd *", "effect": "deny" },
+    { "action": "shell", "resource": "groupdel *", "effect": "deny" },
+    { "action": "shell", "resource": "passwd*", "effect": "deny" },
+    { "action": "shell", "resource": "iptables *", "effect": "deny" },
+    { "action": "shell", "resource": "ip6tables *", "effect": "deny" },
+    { "action": "shell", "resource": "ufw *", "effect": "deny" },
+    { "action": "shell", "resource": "firewall-cmd *", "effect": "deny" },
+    { "action": "shell", "resource": "apt *", "effect": "deny" },
+    { "action": "shell", "resource": "apt-get *", "effect": "deny" },
+    { "action": "shell", "resource": "yum *", "effect": "deny" },
+    { "action": "shell", "resource": "dnf *", "effect": "deny" },
+    { "action": "shell", "resource": "pacman *", "effect": "deny" },
+    { "action": "shell", "resource": "modprobe *", "effect": "deny" },
+    { "action": "shell", "resource": "insmod *", "effect": "deny" },
+    { "action": "shell", "resource": "rmmod *", "effect": "deny" },
+    { "action": "shell", "resource": "fdisk *", "effect": "deny" },
+    { "action": "shell", "resource": "parted *", "effect": "deny" },
+    { "action": "shell", "resource": "mkfs*", "effect": "deny" },
+    { "action": "shell", "resource": "reboot*", "effect": "deny" },
+    { "action": "shell", "resource": "shutdown*", "effect": "deny" },
+    { "action": "shell", "resource": "poweroff*", "effect": "deny" },
+    { "action": "shell", "resource": "halt*", "effect": "deny" },
+    { "action": "shell", "resource": "nmcli *", "effect": "deny" },
+    { "action": "shell", "resource": "timedatectl *", "effect": "deny" },
+    { "action": "shell", "resource": "hostnamectl *", "effect": "deny" },
+    { "action": "edit", "resource": "*", "effect": "allow" },
+    { "action": "edit", "resource": "~/.ssh/*", "effect": "ask" },
+    { "action": "edit", "resource": "~/.gnupg/*", "effect": "ask" },
+    { "action": "external_directory", "resource": "*", "effect": "ask" },
+    { "action": "external_directory", "resource": "~/*", "effect": "allow" },
+    { "action": "external_directory", "resource": "/tmp/*", "effect": "allow" }
+  ]
 }
