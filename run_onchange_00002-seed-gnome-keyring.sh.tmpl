@@ -20,6 +20,7 @@ seed_keyring_entry() {
 
 seed_keyring_entry GITLAB_PERSONAL_ACCESS_TOKEN "{{ (bitwarden "item" "Gitlab - API Token").login.password }}"
 seed_keyring_entry LINEAR_API_KEY "{{ (bitwarden "item" "Linear - API Key").login.password }}"
+seed_keyring_entry TFE_TOKEN "{{ (bitwarden "item" "Terraform - API Token").login.password }}"
 seed_keyring_entry CONFLUENCE_URL "{{ (bitwardenFields "item" "Confluence - API Token").space_url.value }}"
 seed_keyring_entry CONFLUENCE_USERNAME "{{ (bitwarden "item" "Confluence - API Token").login.username }}"
 seed_keyring_entry CONFLUENCE_API_TOKEN "{{ (bitwarden "item" "Confluence - API Token").login.password }}"

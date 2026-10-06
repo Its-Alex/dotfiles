@@ -21,6 +21,11 @@ claude mcp add --scope user \
     --transport stdio \
     linear -- mcp-remote-linear-keyring
 
+claude mcp remove terraform --scope user 2>&1 || true
+claude mcp add --scope user \
+    --transport stdio \
+    terraform -- mcp-terraform-keyring
+
 printf "\e[1;34m%s\e[1;0m\n" "Install CC Safety Net for Claude Code..."
 
 mise exec -- npx -y cc-safety-net@latest install --claude-code

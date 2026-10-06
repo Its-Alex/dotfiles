@@ -17,7 +17,7 @@ manager directly.
 
 - Host: Arch Linux + GNOME; dotfiles managed by chezmoi.
 - Secrets are consumed at runtime by the shell (GitLab), the opencode and Claude
-  Code MCP servers (Confluence/Jira/Linear), and jj commit signing (GPG).
+  Code MCP servers (Confluence/Jira/Linear/Terraform), and jj commit signing (GPG).
 - Requirements: nothing in cleartext at rest, and no repeated passphrase prompts.
 
 ## Why the keyring for delivery
@@ -68,7 +68,8 @@ source. The file-store options were still evaluated:
 - `dot_local/bin/executable_mcp-atlassian-keyring` and
   `dot_local/bin/executable_mcp-remote-linear-keyring` read the MCP tokens from
   the keyring on demand and `exec` the server, so those tokens never enter the
-  shell environment.
+  shell environment. `dot_local/bin/executable_mcp-terraform-keyring` does the
+  same for the Terraform MCP server (`TFE_TOKEN`, run through Docker).
 - `private_dot_config/opencode/opencode.json.tmpl` and the Claude Code MCP config
   point at those wrappers.
 - The GPG passphrase is stored by `pinentry-gnome3` under `org.gnupg.Passphrase`;

@@ -31,6 +31,12 @@
         "command": [
           "{{ .chezmoi.homeDir }}/.local/bin/mcp-remote-linear-keyring"
         ]
+      },
+      "terraform": {
+        "type": "local",
+        "command": [
+          "{{ .chezmoi.homeDir }}/.local/bin/mcp-terraform-keyring"
+        ]
       }
 {{- end }}
     }

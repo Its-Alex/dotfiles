@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#
+# Launches the Terraform MCP server with its HCP Terraform token resolved from
+# the GNOME keyring at start-up, so no token is ever written to an on-disk config
+# file. The keyring is seeded from Bitwarden by
+# run_onchange_00002-seed-gnome-keyring.sh.tmpl.
+set -euo pipefail
+
+TFE_TOKEN="$(secret-tool lookup service dotfiles key TFE_TOKEN 2>/dev/null || true)"
+if [[ -n "${TFE_TOKEN}" ]]; then
+    export TFE_TOKEN
+fi
+
+exec mise exec -- terraform-mcp-server stdio "$@"
