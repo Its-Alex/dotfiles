@@ -4,3 +4,4 @@ grand-theft-focus@zalckos.github.com
 appindicatorsupport@rgcjonas.gmail.com
 user-theme@gnome-shell-extensions.gcampax.github.com
 monitor@astraext.github.io
+nightthemeswitcher@romainvigier.fr

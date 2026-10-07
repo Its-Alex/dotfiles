@@ -125,6 +125,7 @@ $ systemctl --user enable gcr-ssh-agent.socket
 - [`Dash to dock`](https://micheleg.github.io/dash-to-dock/)
 - [`GNOME Fuzzy App Search`](https://extensions.gnome.org/extension/3956/gnome-fuzzy-app-search/)
 - [`Grand Theft Focus`](https://extensions.gnome.org/extension/5410/grand-theft-focus/)
+- [`Night Theme Switcher`](https://extensions.gnome.org/extension/2236/night-theme-switcher/)
 - [`System monitor next`](https://extensions.gnome.org/extension/3010/system-monitor-next/)
 - [`Extension manager`](https://github.com/mjakeman/extension-manager)
 

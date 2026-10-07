@@ -113,6 +113,8 @@ if command -v gsettings > /dev/null; then
     gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
     # Enable Nightlight
     gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true
+    # Enable location services (sunrise/sunset for Night Theme Switcher)
+    gsettings set org.gnome.system.location enabled true
     # Disable hot corners
     gsettings set org.gnome.desktop.interface enable-hot-corners false
     # Set gnome shell theme

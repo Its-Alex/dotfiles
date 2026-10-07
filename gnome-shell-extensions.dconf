@@ -71,6 +71,11 @@ show-mounts=false
 show-show-apps-button=false
 show-trash=false
 
+[nightthemeswitcher/time]
+manual-schedule=false
+nightthemeswitcher-ondemand-keybinding=['<Shift><Super>t']
+offset=0.0
+
 [system-monitor-panel]
 panel-position='left'
 refresh-interval=30
