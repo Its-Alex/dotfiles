@@ -74,7 +74,8 @@ fi
 if [[ ! -d "/usr/share/icons/Twilight-cursors" ]]; then
     printf "\e[1;34m%s\e[1;0m\n" "Setup Twilight cursors"
     rm -rf /tmp/Twilight-Cursors
-    git clone git@github.com:yeyushengfan258/Twilight-Cursors.git /tmp/Twilight-Cursors
+    # Fork with SVG cursors for GNOME 51+, until https://github.com/yeyushengfan258/Twilight-Cursors/pull/2 is merged
+    git clone --branch gnome-51-svg-cursors git@github.com:Its-Alex/Twilight-Cursors.git /tmp/Twilight-Cursors
     (
         cd  /tmp/Twilight-Cursors
         sudo ./install.sh

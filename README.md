@@ -134,7 +134,7 @@ You can find them in [gnome-extensions.txt](./gnome-extensions.txt).
 #### Themes
 
 - [`flat-remix-gnome`](https://github.com/daniruiz/flat-remix-gnome)
-- [`Twilight cursors`](https://github.com/yeyushengfan258/Twilight-Cursors)
+- [`Twilight cursors`](https://github.com/yeyushengfan258/Twilight-Cursors) (installed from [my fork](https://github.com/Its-Alex/Twilight-Cursors/tree/gnome-51-svg-cursors) until [#2](https://github.com/yeyushengfan258/Twilight-Cursors/pull/2) is merged)
 
 ### Snapper
 
