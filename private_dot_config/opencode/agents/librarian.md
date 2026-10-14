@@ -3,23 +3,6 @@ description: Reference grep for external resources. Looks up official library/fr
 mode: subagent
 model: opencode-go/deepseek-v4.1-flash
 temperature: 0.1
-permission:
-  edit: deny
-  task: deny
-  webfetch: allow
-  websearch: allow
-  read: allow
-  glob: allow
-  grep: allow
-  list: allow
-  bash:
-    "gh search *": allow
-    "gh repo view*": allow
-    "gh pr view*": allow
-    "gh issue view*": allow
-    "gh release view*": allow
-    "gh release list*": allow
-    "*": deny
 ---
 
 You are a fast, read-only research agent for external references.

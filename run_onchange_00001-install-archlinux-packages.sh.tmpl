@@ -96,17 +96,10 @@ EOF
 # Enable podman socket for docker compose
 systemctl --user enable --now podman.socket
 
-# Initialize rtk hooks. rtk has no combined "all agents" flag: --opencode
-# installs the OpenCode plugin ONLY (verified: on a clean slate, `rtk init -g
-# --opencode --auto-patch` alone leaves Claude Code fully unconfigured — no
-# hook, no RTK.md, no settings.json patch). Each target needs its own call.
-rtk init -g --agent claude --auto-patch
-# DISABLED: the OpenCode plugin is chezmoi-managed (dot_config/opencode/plugins/
-# private_rtk.ts) with a hand-patched dual V1+V2 entrypoint, because rtk does
-# not ship OpenCode v2 support yet (https://github.com/rtk-ai/rtk/issues/3463).
-# `rtk init -g --opencode` would silently overwrite that patch. Re-enable once
-# the issue is resolved and rtk generates a v2-compatible plugin.
-# rtk init -g --opencode --auto-patch
+# Initialize rtk hooks. Since rtk 0.52.0, --opencode sets up Claude Code too
+# (hook, RTK.md, settings.json) and installs an OpenCode 2 compatible plugin
+# (https://github.com/rtk-ai/rtk/issues/3463), so one call covers both.
+rtk init -g --opencode --auto-patch
 
 flatpak_flathub_apps_list=(
     io.gitlab.librewolf-community

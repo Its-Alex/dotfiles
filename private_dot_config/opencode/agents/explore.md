@@ -3,20 +3,6 @@ description: Contextual grep for this codebase. Answers "Where is X?", "Which fi
 mode: subagent
 model: opencode-go/deepseek-v4.1-flash
 temperature: 0.1
-permission:
-  edit: deny
-  task: deny
-  webfetch: deny
-  websearch: deny
-  read: allow
-  glob: allow
-  grep: allow
-  list: allow
-  bash:
-    "rg *": allow
-    "git log*": allow
-    "git grep*": allow
-    "*": deny
 ---
 
 You are a fast, read-only codebase search agent.

@@ -86,5 +86,49 @@
     { "action": "external_directory", "resource": "*", "effect": "ask" },
     { "action": "external_directory", "resource": "~/*", "effect": "allow" },
     { "action": "external_directory", "resource": "/tmp/*", "effect": "allow" }
-  ]
+  ],
+  "agents": {
+    "explore": {
+      "permissions": [
+        { "action": "edit", "resource": "*", "effect": "deny" },
+        { "action": "subagent", "resource": "*", "effect": "deny" },
+        { "action": "webfetch", "resource": "*", "effect": "deny" },
+        { "action": "websearch", "resource": "*", "effect": "deny" },
+        { "action": "read", "resource": "*", "effect": "allow" },
+        { "action": "glob", "resource": "*", "effect": "allow" },
+        { "action": "grep", "resource": "*", "effect": "allow" },
+        { "action": "list", "resource": "*", "effect": "allow" },
+        { "action": "shell", "resource": "*", "effect": "deny" },
+        { "action": "shell", "resource": "rg *", "effect": "allow" },
+        { "action": "shell", "resource": "git log*", "effect": "allow" },
+        { "action": "shell", "resource": "git grep*", "effect": "allow" },
+        { "action": "shell", "resource": "rtk rg *", "effect": "allow" },
+        { "action": "shell", "resource": "rtk git log*", "effect": "allow" }
+      ]
+    },
+    "librarian": {
+      "permissions": [
+        { "action": "edit", "resource": "*", "effect": "deny" },
+        { "action": "subagent", "resource": "*", "effect": "deny" },
+        { "action": "webfetch", "resource": "*", "effect": "allow" },
+        { "action": "websearch", "resource": "*", "effect": "allow" },
+        { "action": "read", "resource": "*", "effect": "allow" },
+        { "action": "glob", "resource": "*", "effect": "allow" },
+        { "action": "grep", "resource": "*", "effect": "allow" },
+        { "action": "list", "resource": "*", "effect": "allow" },
+        { "action": "shell", "resource": "*", "effect": "deny" },
+        { "action": "shell", "resource": "gh search *", "effect": "allow" },
+        { "action": "shell", "resource": "gh repo view*", "effect": "allow" },
+        { "action": "shell", "resource": "gh pr view*", "effect": "allow" },
+        { "action": "shell", "resource": "gh issue view*", "effect": "allow" },
+        { "action": "shell", "resource": "gh release view*", "effect": "allow" },
+        { "action": "shell", "resource": "gh release list*", "effect": "allow" },
+        { "action": "shell", "resource": "rtk gh repo view*", "effect": "allow" },
+        { "action": "shell", "resource": "rtk gh pr view*", "effect": "allow" },
+        { "action": "shell", "resource": "rtk gh issue view*", "effect": "allow" },
+        { "action": "shell", "resource": "rtk gh release view*", "effect": "allow" },
+        { "action": "shell", "resource": "rtk gh release list*", "effect": "allow" }
+      ]
+    }
+  }
 }
