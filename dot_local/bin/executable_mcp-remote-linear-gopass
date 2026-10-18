@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 #
 # Launches the Linear MCP proxy with its API key resolved from gopass at
-# start-up, so no token is ever written to an on-disk config file. The store is
+# start-up, so no token is ever written to an on-disk config file. The entry is
 # seeded from Bitwarden by run_onchange_00004-seed-gopass.sh.tmpl.
 set -euo pipefail
 
-LINEAR_API_KEY="$(gopass show --password "dotfiles/LINEAR_API_KEY" 2>/dev/null || true)"
+LINEAR_API_KEY="$(gopass show --password bitwarden/linear/api-key 2>/dev/null || true)"
 export LINEAR_API_KEY
 
 exec mise exec -- mcp-remote https://mcp.linear.app/mcp \

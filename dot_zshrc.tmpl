@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-# Ambient secrets are read from gopass (the global store), which is age-encrypted
-# at rest and versioned in git. It is seeded from Bitwarden by
+# Ambient secrets are read from the `bitwarden` gopass mount, which is
+# age-encrypted at rest and seeded from Bitwarden by
 # run_onchange_00004-seed-gopass.sh, so no token is written in cleartext.
 # The Atlassian and Linear tokens are deliberately NOT exported here: the
 # gopass-backed wrappers in ~/.local/bin read them on demand, so they never
 # enter the shell environment or any unrelated child process.
 # The timeout bounds a locked store, so shell start-up can never block on it.
 _gopass_export() {
-    local name="$1" value
-    value="$(timeout 3 gopass show --password "dotfiles/$name" 2>/dev/null)" || return 0
+    local name="$1" entry="$2" value
+    value="$(timeout 3 gopass show --password "$entry" 2>/dev/null)" || return 0
     [ -n "$value" ] && export "$name=$value"
     return 0
 }
@@ -75,7 +75,7 @@ export DOCKER_HOST=unix:///run/user/1000/podman/podman.sock
 # Interactive shells only: a non-interactive shell must never trigger pinentry.
 if [[ $- == *i* ]] && command -v gopass >/dev/null 2>&1; then
     # Gitlab (used by CLI tools such as glab)
-    _gopass_export GITLAB_PERSONAL_ACCESS_TOKEN
+    _gopass_export GITLAB_PERSONAL_ACCESS_TOKEN bitwarden/gitlab/api-token
 fi
 
 # Environment variable - Languages

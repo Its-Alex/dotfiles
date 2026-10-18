@@ -7,7 +7,8 @@ through gopass, instead of reading a file-based password manager directly.
 
 - **Source of truth:** Bitwarden, read through chezmoi's `bitwarden` template
   functions and seeded into gopass at `chezmoi apply` time.
-- **Runtime delivery:** gopass, an age-encrypted, git-backed file store.
+- **Runtime delivery:** gopass, from a local `bitwarden` mount that is never
+  pushed anywhere.
 - **Kept on libsecret:** the GPG passphrase (pinentry's own store) and whatever
   GNOME applications manage for themselves. The chezmoi-managed path no longer
   calls `secret-tool`.
@@ -21,8 +22,8 @@ through gopass, instead of reading a file-based password manager directly.
 
 ## Why gopass for delivery
 
-- Encrypted at rest (age) and versioned in git, so every change is auditable and
-  recoverable.
+- Encrypted at rest (age), with git versioning available for the secrets that
+  live only in gopass.
 - Portable: a single static binary on Linux, macOS and Windows, independent of a
   desktop session or D-Bus.
 - Fast enough once the age agent holds the unlocked identity: ~12 ms per read,
@@ -40,19 +41,39 @@ through gopass, instead of reading a file-based password manager directly.
 
 ## Stores
 
-- **Global store** — `~/.local/share/gopass/stores/root`, backed by the private
-  `Its-Alex/password-store` repository. Holds everything this repository seeds
-  (`dotfiles/*`) as well as personal secrets.
-- **Repository-scoped store** — `~/Documents/personal-infra-as-code/passwords`,
-  selected with a `GOPASS_CONFIG_KEY_0`/`_VALUE_0` override in that
-  repository's `.env.sh`. Holds the infrastructure credentials its
-  Ansible/OpenTofu code consumes.
+| Store | Path | Storage | Holds |
+| --- | --- | --- | --- |
+| Global (root) | `~/.local/share/gopass/stores/root` | git, `Its-Alex/password-store` | personal secrets whose source of truth is gopass |
+| `bitwarden` mount | `~/.local/share/gopass/stores/bitwarden` | local files, no git | copies of the Bitwarden items the dotfiles consume |
+| Repository-scoped | `~/Documents/personal-infra-as-code/passwords` | committed in that repository | the infrastructure credentials its Ansible/OpenTofu code consumes |
 
-`mounts.path` takes priority over the pass-compatible `PASSWORD_STORE_DIR`, so
-the repository-scoped store is selected by overriding `mounts.path` with
-`GOPASS_CONFIG_KEY_0`/`_VALUE_0` (which outranks every config file) rather than
-with `PASSWORD_STORE_DIR`. The `GOPASS_CONFIG` file-path variable is not
-honoured by gopass 1.17.2 and must not be used for this.
+The `bitwarden` mount is deliberately not versioned: Bitwarden is its source
+and every machine rebuilds it at `chezmoi apply` time, so pushing it would only
+expose the entries (several are work credentials) for no benefit. It needs no
+backup for the same reason. Never edit it by hand: the next change in Bitwarden
+overwrites it.
+
+Its entries are named after the service, one per Bitwarden item. The password is
+the first line and extra fields are `key: value` lines:
+
+| Entry | Lines |
+| --- | --- |
+| `bitwarden/gitlab/api-token` | password |
+| `bitwarden/linear/api-key` | password |
+| `bitwarden/terraform/api-token` | password |
+| `bitwarden/atlassian/confluence` | password, `url`, `username` |
+| `bitwarden/atlassian/jira` | password, `url`, `username` |
+
+Read the password with `gopass show --password <entry>` and a field with
+`gopass show <entry> <key>`.
+
+The repository-scoped store is selected in that repository's `.mise.toml` by
+overriding `mounts.path` with `GOPASS_CONFIG_COUNT`/`GOPASS_CONFIG_KEY_0`/
+`GOPASS_CONFIG_VALUE_0`, which outrank every config file. `PASSWORD_STORE_DIR`
+does not work for this, because `mounts.path` takes priority over it. Nor does
+`GOPASS_CONFIG`: despite its documentation it is read relative to `$HOME`, and
+only when `~/.config/gopass/config` does not exist
+([gopasspw/gopass#3674](https://github.com/gopasspw/gopass/issues/3674)).
 
 ## Passphrase handling
 
@@ -64,9 +85,11 @@ honoured by gopass 1.17.2 and must not be used for this.
 ## How it is wired in this repository
 
 - `run_onchange_00002-setup-gopass.sh.tmpl` installs the age identity, points
-  `mounts.path` at the global store and clones it from the private repository.
-  It is guarded by `CHEZMOI_PASSWORD_MANAGER_DISABLED`.
-- `run_onchange_00004-seed-gopass.sh.tmpl` seeds `dotfiles/*` from Bitwarden.
+  `mounts.path` at the global store (cloning it from the private repository, or
+  creating it on the first machine) and creates the local `bitwarden` mount. It
+  is guarded by `CHEZMOI_PASSWORD_MANAGER_DISABLED`.
+- `run_onchange_00004-seed-gopass.sh.tmpl` seeds the `bitwarden` mount. It skips
+  an empty Bitwarden value and leaves an unchanged entry alone.
 - `dot_zshrc.tmpl` exports only ambient secrets (`GITLAB_PERSONAL_ACCESS_TOKEN`)
   from gopass.
 - `dot_local/bin/executable_mcp-atlassian-gopass`,

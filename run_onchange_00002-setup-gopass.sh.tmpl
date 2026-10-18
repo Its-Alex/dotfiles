@@ -86,5 +86,21 @@ if [ ! -d "$store_path" ]; then
     fi
 fi
 
+# The copies of Bitwarden items live in their own mount without git: Bitwarden
+# is their source and the seed script rebuilds them on every machine, so pushing
+# them would only expose them (several are work credentials) for no benefit.
+mirror_name="bitwarden"
+mirror_path="${XDG_DATA_HOME:-$HOME/.local/share}/gopass/stores/${mirror_name}"
+if [ ! -d "$store_path" ]; then
+    printf "\e[1;33m%s\e[1;0m\n" "Global store missing; skipping the ${mirror_name} mount."
+elif ! "$gopass_bin" --nosync mounts 2> /dev/null | grep -qF "${mirror_name} ("; then
+    if [ -d "$mirror_path" ]; then
+        "$gopass_bin" mounts add "$mirror_name" "$mirror_path"
+    else
+        printf "\e[1;34m%s\e[1;0m\n" "Create the local ${mirror_name} mount..."
+        "$gopass_bin" init --crypto age --storage fs --store "$mirror_name" --path "$mirror_path" "$age_recipient"
+    fi
+fi
+
 printf "\e[1;32m%s\e[1;0m\n" "gopass configured."
 {{ end -}}
