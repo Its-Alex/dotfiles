@@ -1,15 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Instance-scope settings only: they live in this file alone. Profile settings
-# live in preferences.json, which wins on read; the copy the app mirrors here
-# is only for older builds, so it is not managed.
-#
-# privateRelay.enabled is read when the app starts; relayUrl is left as stored.
-#
-# Removed keys are ones no current build reads or writes, so the app never
-# brings them back. The profile copy the app mirrors into this file is not
-# listed: it is rewritten on every save.
+# Instance-scope keys only; profile settings live in preferences.json, which wins
+# on read (the copy the app mirrors here is for older builds, unmanaged).
+# privateRelay.enabled is read at start, relayUrl left as stored. Removed keys are
+# ones no current build reads or writes. The mirrored profile copy is not listed:
+# it is rewritten on every save.
 removed_keys='["sidebarSessionGroupingMode"]'
 
 managed_settings=$(cat <<'JSON'

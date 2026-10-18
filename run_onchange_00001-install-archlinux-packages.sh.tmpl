@@ -96,9 +96,7 @@ EOF
 # Enable podman socket for docker compose
 systemctl --user enable --now podman.socket
 
-# Initialize rtk hooks. Since rtk 0.52.0, --opencode sets up Claude Code too
-# (hook, RTK.md, settings.json) and installs an OpenCode 2 compatible plugin
-# (https://github.com/rtk-ai/rtk/issues/3463), so one call covers both.
+# Since rtk 0.52.0, --opencode also sets up Claude Code (rtk-ai/rtk#3463).
 rtk init -g --opencode --auto-patch
 
 flatpak_flathub_apps_list=(
@@ -115,12 +113,11 @@ printf "\e[1;34m%s\e[1;0m\n" "Install flatpak programs.."
 flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 flatpak -y install --user flathub "${flatpak_flathub_apps_list[@]}"
 
-# Set GTK theme to Adwaita for Signal and Slack to prevent glitches
-# https://github.com/signalapp/Signal-Desktop/issues/7633
+# Adwaita for Signal and Slack, which glitch on the Numix theme (signal#7633).
 flatpak override --user --env=GTK_THEME=Adwaita org.signal.Signal
 flatpak override --user --env=GTK_THEME=Adwaita com.slack.Slack
 
-# Set Signal passwordstore to gnome-libsecret to prevent passwordstore error
+# Otherwise Signal errors on the password store.
 flatpak override --user --env=SIGNAL_PASSWORD_STORE=gnome-libsecret org.signal.Signal
 
 printf "\e[1;34m%s\e[1;0m\n" "Setup flatpak programs.."
@@ -128,27 +125,23 @@ printf "\e[1;34m%s\e[1;0m\n" "Setup flatpak programs.."
 flatpak override --user --device=all io.gitlab.librewolf-community
 
 printf "\e[1;34m%s\e[1;0m\n" "Disable Xbox Wireless Adapter for Windows"
-# Device Xbox Wireless Adapter for Windows was always appearing as Wifi Key
+# Otherwise the adapter enumerates as a Wifi Key.
 echo 'ACTION=="add", ATTR{idVendor}=="045e", ATTR{idProduct}=="02fe", ATTR{authorized}="0"' | sudo tee "/etc/udev/rules.d/99-disable-xbox-adapter.rules" > /dev/null
 sudo udevadm control --reload-rules
 sudo udevadm trigger
 
-# Userspace OOM protection: systemd-oomd kills on PSI stall pressure, earlyoom
-# on low available memory as a backstop for when pressure never crosses the
-# threshold in time.
+# systemd-oomd kills on PSI pressure, earlyoom on low memory as a backstop.
 printf "\e[1;34m%s\e[1;0m\n" "Setup userspace OOMKiller (systemd-oomd + earlyoom)..."
 
-# Only the reaction time needs tuning (20s, matching Ubuntu). The other limits
-# stay stock: they are ratios, so already machine-relative.
+# Only the reaction time needs tuning; the other limits are ratios.
 sudo mkdir -p /etc/systemd/oomd.conf.d
 sudo tee /etc/systemd/oomd.conf.d/10-interactive-desktop.conf > /dev/null <<'EOF'
 [OOM]
 DefaultMemoryPressureDurationSec=20s
 EOF
 
-# Arch leaves every cgroup at ManagedOOM*=auto, which oomd does not monitor, so
-# it never kills whatever the limits say. Opt the user session in, as Ubuntu
-# does. A kill takes one descendant cgroup (one app), not the whole session.
+# Arch leaves cgroups at ManagedOOM*=auto, which oomd does not monitor: opt the
+# user session in (a kill takes one app's cgroup, not the session).
 sudo mkdir -p /etc/systemd/system/user@.service.d
 sudo tee /etc/systemd/system/user@.service.d/10-oomd.conf > /dev/null <<'EOF'
 [Service]
@@ -163,9 +156,8 @@ sudo tee "/etc/systemd/system/-.slice.d/10-oomd.conf" > /dev/null <<'EOF'
 ManagedOOMSwap=kill
 EOF
 
-# A fixed percentage does not port across machines: 10% is 819MiB on 8GiB RAM
-# (too late to react) but 12.8GiB on 128GiB (fires far too early). Derive an
-# absolute KiB floor from this host's RAM instead, clamped at both ends.
+# A fixed percentage does not port across machines, so derive an absolute KiB
+# floor from this host's RAM, clamped at both ends.
 mem_total_kib=$(awk '/^MemTotal:/{print $2}' /proc/meminfo)
 earlyoom_term_kib=$(( mem_total_kib / 10 ))
 earlyoom_term_min_kib=$(( 1024 * 1024 ))     # 1 GiB
@@ -184,11 +176,9 @@ fi
 
 printf "\e[1;34m%s\e[1;0m\n" "earlyoom thresholds: SIGTERM below $(( earlyoom_term_kib / 1024 ))MiB available, SIGKILL below $(( earlyoom_kill_kib / 1024 ))MiB"
 
-# -M takes KiB; only -M is passed, never -m, because given both earlyoom keeps
-# the lower value. -s 100 ignores free swap, which otherwise has to be low too:
-# on a large swapfile that means minutes of thrashing first. This keeps the
-# behaviour identical on zram, a big swapfile, or no swap at all.
-# --avoid protects session-critical processes it must never kill.
+# -M takes KiB and is passed alone: given both -m and -M, earlyoom keeps the
+# lower. -s 100 ignores free swap, which on a large swapfile would mean minutes
+# of thrashing first. --avoid protects session-critical processes.
 sudo tee /etc/default/earlyoom > /dev/null <<EOF
 EARLYOOM_ARGS="-M ${earlyoom_term_kib},${earlyoom_kill_kib} -s 100 -r 3600 --avoid '(^|/)(dbus-daemon|dbus-broker|systemd|systemd-logind|gnome-shell|gnome-session|Xorg|sshd)\$'"
 EOF

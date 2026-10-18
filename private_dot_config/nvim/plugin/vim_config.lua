@@ -27,7 +27,6 @@ vim.opt.hlsearch = true
 
 vim.opt.wildmenu = true
 
--- Make wildmenu behave like similar to Bash completion.
 vim.opt.wildmode = 'list:longest'
 
 vim.opt.swapfile = false

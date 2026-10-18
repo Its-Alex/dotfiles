@@ -7,12 +7,10 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 printf "\e[1;34m%s\e[1;0m\n" "Check that the initramfs uses the systemd hook..."
-# Hibernation resume is handled by systemd-hibernate-resume.service, which is pulled in by the
-# `systemd` mkinitcpio hook and reads the HibernateLocation EFI variable. Without that hook there is
-# no resume support at all (and no `resume=`/`resume_offset=` fallback is configured here), so the
-# swapfile below would be useless.
-# Drop-ins override /etc/mkinitcpio.conf and the alphabetically last one wins, so the effective
-# HOOKS= is the last match. `|| true`: no match, or an unexpanded glob when conf.d is missing/empty.
+# Resume needs the `systemd` mkinitcpio hook (systemd-hibernate-resume.service reads
+# HibernateLocation); without it the swapfile below is useless. Drop-ins override
+# /etc/mkinitcpio.conf and the last alphabetically wins, so HOOKS= is the last match.
+# `|| true`: no match, or an unexpanded glob when conf.d is missing.
 mkinitcpio_hooks_line=$(grep -h '^[[:space:]]*HOOKS=' /etc/mkinitcpio.conf /etc/mkinitcpio.conf.d/*.conf 2>/dev/null | tail -n 1 || true)
 if ! grep -qw systemd <<<"$mkinitcpio_hooks_line"; then
     printf "\e[1;31m%s\e[1;0m\n" \
@@ -27,9 +25,8 @@ ram=$(free -g | awk '/Mem:/{print $2}')
 swap_size=$(( (ram * 3 + 3) / 4 ))
 
 printf "\e[1;34m%s\e[1;0m\n" "Ensure /swap is a dedicated subvolume..."
-# btrfs returns ETXTBSY when snapshotting a subvolume that holds an active swapfile, so a swapfile
-# inside @ silently breaks every snapper snapshot of /. Snapshots are not recursive, so a dedicated
-# @swap subvolume is excluded from snapshots of @ and lifts that restriction.
+# btrfs gives ETXTBSY when snapshotting a subvolume with an active swapfile, so a
+# swapfile inside @ breaks snapshots of /. A separate @swap subvolume avoids both.
 swap_mount_line="UUID=$(findmnt -no UUID /) /swap btrfs rw,relatime,ssd,space_cache=v2,subvol=/@swap 0 0"
 if ! mountpoint -q /swap; then
     swapoff /swap/swapfile 2>/dev/null || true
@@ -58,10 +55,9 @@ fi
 mountpoint -q /swap || mount /swap
 
 printf "\e[1;34m%s\e[1;0m\n" "Add swapfile (of ${swap_size}G) for hibernate..."
-# mkswapfile sets NOCOW, preallocates and runs mkswap itself, so no separate chmod/mkswap is needed.
-# NOCOW is also what keeps the swapfile uncompressed: btrfs applies `compress` per filesystem rather
-# than per subvolume mount, so /swap inherits the root mount's compression whatever its fstab options
-# say. Do not try to "fix" that with compress=no here, it would apply to the whole filesystem.
+# mkswapfile sets NOCOW, preallocates and runs mkswap itself. NOCOW is also what keeps
+# the swapfile uncompressed: btrfs applies `compress` per filesystem, so /swap inherits
+# the root's. Do not add compress=no here, it would apply to the whole filesystem.
 if [[ ! -f /swap/swapfile ]]; then
     btrfs filesystem mkswapfile -s "${swap_size}g" /swap/swapfile
 fi

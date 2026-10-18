@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Profile settings that differ from OpenChamber's defaults. Per-surface keys
-# (themes, sidebar view) are only written under surfaces.desktop: the base
-# value is what other surfaces fall back to. updatedAt is left untouched so
-# the app keeps treating its own timestamps as authoritative.
+# Profile settings differing from the defaults. Per-surface keys are written only
+# under surfaces.desktop, the base value other surfaces fall back to. updatedAt is
+# left untouched so the app keeps its own timestamps authoritative.
 managed_preferences=$(cat <<'JSON'
 {
   "version": 1,

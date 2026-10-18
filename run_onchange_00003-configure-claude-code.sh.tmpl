@@ -8,9 +8,8 @@ fi
 
 printf "\e[1;34m%s\e[1;0m\n" "Configure Claude Code MCP servers (user scope)..."
 
-# The MCP servers read their credentials from gopass at start-up (see the
-# gopass-backed wrappers in dot_local/bin), so Claude Code never persists any
-# token into ~/.claude.json.
+# The dot_local/bin MCP wrappers read credentials from gopass at start-up, so
+# Claude Code never persists a token into ~/.claude.json.
 claude mcp remove mcp-atlassian --scope user 2>&1 || true
 claude mcp add --scope user \
     --transport stdio \

@@ -2,18 +2,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# gopass always stores ~/.config/gopass/age/identities age-encrypted and refuses
-# a plaintext file, so the key goes through `gopass age identities add`, whose
-# two positional arguments make it non-interactive.
+# gopass refuses a plaintext identity file, so the key goes through
+# `gopass age identities add` (two positional args, hence non-interactive).
 #
-# Every chezmoi-managed gopass call passes the identities passphrase through
-# GOPASS_AGE_PASSWORD (read from Bitwarden), so an apply never prompts. An
-# interactive shell instead relies on the OS keyring (age.usekeychain) and on
-# the age agent, which keeps the unlocked identity in memory: ~12 ms per read,
-# against ~575 ms when the identity is re-derived on every call.
+# Applies never prompt: the passphrase travels in GOPASS_AGE_PASSWORD. An
+# interactive shell uses the keyring (age.usekeychain) plus the age agent, which
+# is ~12 ms per read against ~575 ms when re-derived.
 #
-# Settings are set with `gopass config` rather than a managed file: gopass
-# rewrites ~/.config/gopass/config itself, which would report drift every apply.
+# Settings via `gopass config`, not a managed file: gopass rewrites its config
+# itself, which would report drift on every apply.
 gopass_bin="$(command -v gopass || true)"
 if [ -z "$gopass_bin" ] && command -v mise > /dev/null; then
     printf "\e[1;34m%s\e[1;0m\n" "Install age and gopass through mise..."
@@ -28,20 +25,17 @@ fi
 
 printf "\e[1;34m%s\e[1;0m\n" "Configure gopass (age identity and global store)..."
 
-# `with` rather than `.value`: a missing field would otherwise abort the whole
-# apply with a template error, instead of reporting it below.
+# `with`, not `.value`: a missing field must not abort the apply.
 age_identity="{{ with (index (bitwardenFields "item" "Age - gopass identity") "age-identity") }}{{ .value }}{{ end }}"
 age_recipient="{{ with (index (bitwardenFields "item" "Age - gopass identity") "age-recipient") }}{{ .value }}{{ end }}"
 age_keyring_pass="{{ with (index (bitwardenFields "item" "Age - gopass identity") "gopass-keyring-pass") }}{{ .value }}{{ end }}"
 
-# Absent when the Bitwarden field is missing: exporting nothing lets gopass fall
-# back to the OS keyring instead of being handed an empty passphrase.
+# Export nothing when absent, so gopass falls back to the OS keyring.
 if [ -n "$age_keyring_pass" ]; then
     export GOPASS_AGE_PASSWORD="$age_keyring_pass"
 fi
 
-# Without this guard an empty recipient would make the grep below match any
-# output, silently skipping the installation.
+# Without this guard an empty recipient makes the grep below match anything.
 if [ -z "$age_identity" ] || [ -z "$age_recipient" ]; then
     printf "\e[1;31m%s\e[1;0m\n" "Bitwarden item \"Age - gopass identity\" is missing the age-identity or age-recipient field."
     exit 1
@@ -54,21 +48,18 @@ else
     printf "\e[1;32m%s\e[1;0m\n" "age identity installed."
 fi
 
-# Both stay on: the keyring supplies the passphrase to an interactive shell, and
-# the agent keeps the identity unlocked in memory.
+# Both stay on: keyring for interactive use, agent to keep it unlocked.
 "$gopass_bin" config age.usekeychain true > /dev/null
 "$gopass_bin" config age.agent-enabled true > /dev/null
 
-# This is the global (system-wide) store, backed by the private password-store
-# repository. A repository-scoped store is selected separately by overriding
-# mounts.path with GOPASS_CONFIG_KEY_0/_VALUE_0 in that repository.
+# The global store, backed by the private password-store repo. A repo-scoped
+# store overrides mounts.path with GOPASS_CONFIG_KEY_0/_VALUE_0 instead.
 store_path="${XDG_DATA_HOME:-$HOME/.local/share}/gopass/stores/root"
 store_remote="git@github.com:Its-Alex/password-store.git"
 "$gopass_bin" config mounts.path "$store_path" > /dev/null
 
 if [ ! -d "$store_path" ]; then
-    # BatchMode and accept-new keep an unattended apply from hanging on an SSH
-    # passphrase or an unknown host key.
+    # BatchMode + accept-new so an unattended apply cannot hang on SSH.
     if [ -n "$(GIT_TERMINAL_PROMPT=0 GIT_SSH_COMMAND='ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new' \
         git ls-remote --heads "$store_remote" 2> /dev/null)" ]; then
         # The store already exists on the remote: adopt it.
@@ -76,8 +67,7 @@ if [ ! -d "$store_path" ]; then
         "$gopass_bin" clone --crypto age --path "$store_path" "$store_remote" \
             || printf "\e[1;33m%s\e[1;0m\n" "Clone failed; run: gopass clone --crypto age ${store_remote}"
     else
-        # First machine: create the store locally so gopass is usable at once.
-        # Publishing it is a deliberate one-off manual step.
+        # First machine: create locally so gopass works at once; publishing is manual.
         printf "\e[1;34m%s\e[1;0m\n" "Initialise the global password store..."
         "$gopass_bin" init --crypto age --path "$store_path" "$age_recipient"
         git -C "$store_path" remote get-url origin > /dev/null 2>&1 \
@@ -86,9 +76,8 @@ if [ ! -d "$store_path" ]; then
     fi
 fi
 
-# The copies of Bitwarden items live in their own mount without git: Bitwarden
-# is their source and the seed script rebuilds them on every machine, so pushing
-# them would only expose them (several are work credentials) for no benefit.
+# The Bitwarden mirror is a separate, git-less mount: Bitwarden is the source and
+# the seed script rebuilds it, so pushing would only expose work credentials.
 mirror_name="bitwarden"
 mirror_path="${XDG_DATA_HOME:-$HOME/.local/share}/gopass/stores/${mirror_name}"
 if [ ! -d "$store_path" ]; then

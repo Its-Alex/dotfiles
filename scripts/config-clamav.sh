@@ -1,17 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Configure ClamAV with on-access (real-time) scanning.
-#
-# ClamAV is signature-only with no behavioural detection, and its database is
-# overwhelmingly Windows malware, so treat this as a filter for downloaded files
-# rather than as host protection. It exists here to satisfy a corporate
-# "endpoint must run an anti-malware agent" requirement.
-#
-# Run manually, it is not applied by chezmoi (scripts/ is in .chezmoiignore):
-#   $ sudo ./scripts/config-clamav.sh
-#
-# Safe to re-run: every file is rewritten and the services restarted.
+# Configures ClamAV on-access scanning. Signature-only and mostly Windows
+# signatures: a download filter, kept to satisfy a corporate AV requirement.
+# Run manually: sudo ./scripts/config-clamav.sh (scripts/ is in .chezmoiignore).
 
 if [[ "$EUID" -ne 0 ]]; then
     printf "\e[1;31m%s\e[1;0m\n" "Please run this script as root!"
@@ -33,19 +25,15 @@ if [[ -z "$target_home" || ! -d "$target_home" ]]; then
 fi
 
 quarantine_dir=/var/quarantine
-# clamd's temp directory must NOT sit under a watched path: clamd extracts
-# archives there, which raises new fanotify events, which create more temp
-# files. clamonacc detects the overlap and refuses to watch the path at all,
-# silently leaving it unprotected, so /tmp cannot be both watched and used.
+# Not under a watched path: clamd extracts archives there, and the resulting
+# fanotify events make clamonacc refuse to watch the path at all (silently).
 clamd_tmp_dir=/var/tmp/clamav
 
 printf "\e[1;34m%s\e[1;0m\n" "Install ClamAV..."
 yay -S --noconfirm --needed clamav
 
 printf "\e[1;34m%s\e[1;0m\n" "Create quarantine and clamd temp directories..."
-# tmpfiles.d rather than mkdir so /var/tmp/clamav survives systemd's periodic
-# /var/tmp cleanup, which would otherwise delete it under a running clamd.
-# The package already ships /run/clamav, /var/log/clamav and /var/lib/clamav.
+# tmpfiles.d, not mkdir: survives systemd's periodic /var/tmp cleanup.
 cat <<EOT > /etc/tmpfiles.d/clamav-local.conf
 d ${clamd_tmp_dir} 0750 clamav clamav -
 d ${quarantine_dir} 0700 root root -
@@ -53,12 +41,9 @@ EOT
 systemd-tmpfiles --create /etc/tmpfiles.d/clamav-local.conf
 
 printf "\e[1;34m%s\e[1;0m\n" "Configure clamd (on-access scanning)..."
-# The whole file is rewritten rather than appended to: clamd.conf has no drop-in
-# support and appending is not idempotent, because multi-value directives such
-# as OnAccessIncludePath accumulate on every run. Arch's shipped clamd.conf is
-# ~30KB of comments around only six active directives, all reproduced below.
-# clamd.conf is in pacman's backup array, so upgrades leave a .pacnew rather
-# than overwriting this.
+# Rewritten, not appended: clamd.conf has no drop-in support and multi-value
+# directives accumulate. It is in pacman's backup array, so upgrades leave a
+# .pacnew rather than overwriting this.
 cat <<EOT > /etc/clamav/clamd.conf
 # Managed by scripts/config-clamav.sh - re-run it instead of editing by hand.
 LogFile /var/log/clamav/clamd.log
@@ -69,20 +54,15 @@ User clamav
 TemporaryDirectory ${clamd_tmp_dir}
 
 # ---- On-access scanning (clamonacc) ----
-# Mandatory: clamonacc exits 2 on startup unless at least one of
-# OnAccessExcludeUID / OnAccessExcludeUname / OnAccessExcludeRootUID is set,
-# because scanning clamd's own file access is an infinite event loop.
+# Mandatory: without an OnAccessExclude*, clamonacc exits 2 on startup (scanning
+# clamd's own file access is an infinite event loop).
 OnAccessExcludeUname clamav
 OnAccessExcludeRootUID yes
 
-# Watched recursively. Deliberately narrow: with OnAccessPrevention below every
-# write inside these paths blocks until the scan returns. Widening this to all
-# of ${target_home} makes git/cargo/npm painful and needs exclusions for
-# node_modules, target/, .git and friends. Downloads is where untrusted files
-# actually land.
+# Deliberately narrow: with OnAccessPrevention every write here blocks until the
+# scan returns, so watching all of ${target_home} stalls git/cargo/npm.
 OnAccessIncludePath ${target_home}/Downloads
-# /tmp is a common drop location for payloads. Remove this line if the desktop
-# stalls: browsers, IDEs and language servers churn heavily in /tmp.
+# Common payload drop location; remove if the desktop stalls on /tmp churn.
 OnAccessIncludePath /tmp
 
 OnAccessExcludePath ${target_home}/.cache
@@ -90,16 +70,14 @@ OnAccessExcludePath /var/lib/clamav
 OnAccessExcludePath ${clamd_tmp_dir}
 OnAccessExcludePath ${quarantine_dir}
 
-# Block access until the scan completes instead of only logging after the fact.
-# Requires CONFIG_FANOTIFY_ACCESS_PERMISSIONS=y (checked at the end of this
-# script); without it clamonacc degrades to notify-only and cannot stop a read.
+# Block until the scan completes. Needs CONFIG_FANOTIFY_ACCESS_PERMISSIONS=y
+# (checked at the end); otherwise it degrades to notify-only.
 OnAccessPrevention yes
 
 # Also scan on create and move, not only on open.
 OnAccessExtraScanning yes
 
-# Anything larger is skipped on access. Raising this costs CPU on every large
-# file touched inside a watched path.
+# Larger files are skipped; raising this costs CPU on every large file touched.
 OnAccessMaxFileSize 50M
 EOT
 
@@ -109,17 +87,15 @@ cat <<EOT > /etc/clamav/freshclam.conf
 UpdateLogFile /var/log/clamav/freshclam.log
 PidFile /run/clamav/freshclam.pid
 DatabaseMirror database.clamav.net
-# Signal clamd to reload after an update, otherwise the running daemon keeps
-# matching against the signatures it loaded at boot.
+# Without this clamd keeps matching the signatures it loaded at boot.
 NotifyClamd /etc/clamav/clamd.conf
 # Default is 24 checks per day; ClamAV publishes several times a day.
 Checks 4
 EOT
 
 printf "\e[1;34m%s\e[1;0m\n" "Fetch initial signature database if missing..."
-# clamav-daemon.service and .socket both carry ConditionPathExistsGlob on
-# main.{cvd,cld,inc} and daily.*, so on a fresh install they silently refuse to
-# start until freshclam has run once. ~107MB, so only fetch when truly absent.
+# The packaged units carry ConditionPathExistsGlob on the database files, so they
+# silently refuse to start until freshclam has run once (~107MB).
 database_present=0
 for database_file in /var/lib/clamav/daily.cvd /var/lib/clamav/daily.cld /var/lib/clamav/daily.inc; do
     if [[ -e "$database_file" ]]; then
@@ -127,21 +103,16 @@ for database_file in /var/lib/clamav/daily.cvd /var/lib/clamav/daily.cld /var/li
     fi
 done
 if [[ "$database_present" -eq 0 ]]; then
-    # freshclam.service holds a lock on the database directory, so it has to be
-    # stopped for a foreground fetch.
+    # freshclam.service locks the database directory, so stop it for the fetch.
     systemctl stop clamav-freshclam.service 2>/dev/null || true
     freshclam --foreground
 fi
 
 printf "\e[1;34m%s\e[1;0m\n" "Override clamonacc service..."
-# Two fixes over the packaged unit:
-#   --fdpass : clamd runs as the unprivileged `clamav` user and cannot read most
-#              of the files it is asked to scan. fd-passing hands it an already
-#              open descriptor from root-owned clamonacc instead.
-#   --move   : the packaged unit points at /root/quarantine, which nothing
-#              creates, so quarantining fails.
-# Restart=on-failure covers the transient case where clamd is still loading the
-# ~1GiB signature set when clamonacc gives up waiting for its socket.
+# Over the packaged unit: --fdpass hands the unprivileged clamd an open
+# descriptor from root-owned clamonacc, and --move points at a quarantine dir
+# that exists. Restart=on-failure covers clamd still loading its signatures when
+# clamonacc gives up waiting for the socket.
 mkdir -p /etc/systemd/system/clamav-clamonacc.service.d/
 cat <<EOT > /etc/systemd/system/clamav-clamonacc.service.d/override.conf
 [Service]
@@ -152,8 +123,7 @@ RestartSec=10
 EOT
 
 printf "\e[1;34m%s\e[1;0m\n" "Configure logrotate for clamonacc log..."
-# The packaged /etc/logrotate.d/clamav only covers clamd.log, freshclam.log and
-# clamav-milter.log, so clamonacc.log would grow unbounded.
+# The packaged logrotate config omits clamonacc.log, which would grow unbounded.
 cat <<'EOT' > /etc/logrotate.d/clamav-local
 /var/log/clamav/clamonacc.log {
 	weekly
@@ -170,15 +140,13 @@ printf "\e[1;34m%s\e[1;0m\n" "Enable ClamAV services..."
 systemctl daemon-reload
 systemctl enable --now clamav-freshclam.service
 systemctl enable --now clamav-daemon.socket clamav-daemon.service
-# clamd before clamonacc: clamonacc reads the OnAccess* directives through
-# clamd's socket, so starting it against a stale daemon reapplies nothing.
+# clamd first: clamonacc reads OnAccess* through clamd's socket.
 systemctl restart clamav-daemon.service
 systemctl enable clamav-clamonacc.service
 systemctl restart clamav-clamonacc.service
 
 printf "\e[1;34m%s\e[1;0m\n" "Verify kernel supports on-access prevention..."
-# OnAccessPrevention silently degrades to notify-only without this, which looks
-# identical in `systemctl status` but cannot actually block anything.
+# Without this, OnAccessPrevention silently degrades to notify-only.
 kernel_config="$( (zcat /proc/config.gz 2>/dev/null || cat "/boot/config-$(uname -r)" 2>/dev/null) || true )"
 if [[ -n "$kernel_config" ]] && ! grep -q '^CONFIG_FANOTIFY_ACCESS_PERMISSIONS=y' <<< "$kernel_config"; then
     printf "\e[1;31m%s\e[1;0m\n" \

@@ -7,17 +7,10 @@ set-option -g destroy-unattached off
 set-option -g detach-on-destroy on
 
 set-option -g mouse on
-# Basically, on a wheelup event:  
-#   if mouse is enabled, send the mouse event,  
-#   else if we're in an alternate screen program, send the up key,  
-#   else if pane is in copy mode, send the mouse event,  
-#   else put the current pane into copy mode and send the mouse event.  
-# Nested ifs are not fun.
+# Wheel-up dispatch: mouse mode, then alternate screen, then copy mode, else enter
+# copy mode. Nested if-shells because tmux has no else-if.
 bind -n WheelUpPane if-shell -Ft= "#{mouse_any_flag}" "send-keys -M" "if-shell -Ft= '#{alternate_on}' 'send-keys -t= up' 'if-shell -Ft= \"#{pane_in_mode}\" \"send-keys -M\" \"select-pane -t=; copy-mode -e; send-keys -M\"'"
-# On a wheeldown event, if we're in an alternate screen program, send the down  
-# key, else, just send the mouse event  
 bind -n WheelDownPane if-shell -Ft= "#{alternate_on}" "send-keys -t= down" "select-pane -t= \; send-keys -M"
-# Slow down scroll speed in copy mode (2 lines per wheel click)
 bind -T copy-mode-vi WheelUpPane   select-pane \; send-keys -X -N 2 scroll-up
 bind -T copy-mode-vi WheelDownPane select-pane \; send-keys -X -N 2 scroll-down
 
@@ -27,17 +20,13 @@ set-option -g mode-keys vi
 
 set-option -sg escape-time 10
 
-# Enable clipboard outside tmux
-# Accept OSC 52 escape sequences from applications (OpenCode, nvim, ...) and
-# forward them to the outer terminal. The default "external" silently discards
-# application-originated sequences, which breaks in-app copy.
+# Accept OSC 52 from applications and forward it out; the default "external"
+# silently drops application-originated sequences, which breaks in-app copy.
 set-option -g set-clipboard on
-# OpenCode also emits its OSC 52 wrapped in a tmux DCS passthrough sequence as a
-# fallback; without this tmux discards that too.
+# OpenCode also wraps its OSC 52 in a DCS passthrough, dropped without this.
 set-option -g allow-passthrough on
 
 bind -T copy-mode-vi 'v' send -X begin-selection
-# Prefer the native Wayland tool, fall back to xclip on X11.
 if-shell -b 'test $(uname) = "Linux" && test -n "$WAYLAND_DISPLAY"' 'bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "wl-copy"'
 if-shell -b 'test $(uname) = "Linux" && test -z "$WAYLAND_DISPLAY"' 'bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "xclip -in -selection clipboard"'
 if-shell -b 'test $(uname) = "Darwin"' 'bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "pbcopy"'
@@ -58,7 +47,6 @@ set -ga terminal-features "*:hyperlinks"
 bind-key u run-shell -b "flatpak run io.gitlab.librewolf-community \"$(tmux capture-pane -J -p | grep -oE '(https?):\/\/.*[^>]' | fzf-tmux -d20 --multi --bind alt-a:select-all,alt-d:deselect-all)\""
 
 {{ if eq .chezmoi.os "linux" -}}
-# Define plugins install directory https://github.com/tmux-plugins/tpm/blob/master/docs/changing_plugins_install_dir.md
 set-environment -g -F TMUX_PLUGIN_MANAGER_PATH "${HOME}/.config/tmux/plugins"
 {{ end -}}
 set -g @plugin 'tmux-plugins/tpm'

@@ -2,9 +2,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Copy the Bitwarden items the dotfiles consume into the local `bitwarden` gopass
-# mount (created by run_onchange_00002-setup-gopass.sh.tmpl). Bitwarden stays the
-# source of truth: an edit made in gopass is overwritten by the next change here.
+# Copy the Bitwarden items the dotfiles consume into the `bitwarden` mount.
+# Bitwarden is the source of truth: edits in gopass are overwritten here.
 gopass_bin="$(command -v gopass || true)"
 if [ -z "$gopass_bin" ] && command -v mise > /dev/null; then
     gopass_bin="$(mise which gopass 2> /dev/null || true)"
@@ -14,20 +13,17 @@ if [ -z "$gopass_bin" ]; then
     exit 0
 fi
 
-# Same source as the identity installation: the passphrase comes from Bitwarden
-# so seeding never prompts (see run_onchange_00002-setup-gopass.sh.tmpl).
+# Passphrase from Bitwarden, as in setup-gopass, so seeding never prompts.
 age_keyring_pass="{{ with (index (bitwardenFields "item" "Age - gopass identity") "gopass-keyring-pass") }}{{ .value }}{{ end }}"
 
-# Absent when the Bitwarden field is missing: exporting nothing lets gopass fall
-# back to the OS keyring instead of being handed an empty passphrase.
+# Export nothing when absent, so gopass falls back to the OS keyring.
 if [ -n "$age_keyring_pass" ]; then
     export GOPASS_AGE_PASSWORD="$age_keyring_pass"
 fi
 
 mirror_name="bitwarden"
 
-# Without the mount, `bitwarden/...` would become a plain folder of the git-backed
-# root store and be pushed along with it.
+# Without the mount, `bitwarden/...` is a plain folder of the git-backed store.
 if ! "$gopass_bin" --nosync mounts 2> /dev/null | grep -qF "${mirror_name} ("; then
     printf "\e[1;33m%s\e[1;0m\n" "gopass mount \"${mirror_name}\" missing; skipping store seeding."
     exit 0
@@ -35,12 +31,9 @@ fi
 
 printf "\e[1;34m%s\e[1;0m\n" "Seed the ${mirror_name} gopass mount from Bitwarden..."
 
-# Usage: seed_mirror_entry <entry> <password> [<key> <value>]...
-# The password is the first line and each pair becomes a `key: value` line, read
-# back with `gopass show <entry> <key>`.
-#
-# An empty value usually means a renamed or mistyped Bitwarden item, and writing
-# it would clobber a working entry. An unchanged entry is not rewritten.
+# seed_mirror_entry <entry> <password> [<key> <value>]…: password first line,
+# then `key: value` lines. An empty value (a renamed or mistyped Bitwarden item)
+# is refused rather than clobbering the stored entry; unchanged entries are left.
 seed_mirror_entry() {
     local entry="${mirror_name}/$1" password="$2" content current
     shift 2

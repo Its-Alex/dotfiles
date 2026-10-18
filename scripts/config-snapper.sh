@@ -14,15 +14,13 @@ fi
 
 
 if ! snapper list-configs | awk 'NR>2 {print $1}' | grep -qx root; then
-    # Snapper refuses to create a config if the name is still listed in
-    # SNAPPER_CONFIGS, even when /etc/snapper/configs/root no longer exists.
-    # Drop the stale entry so create-config can repopulate it.
+    # Snapper refuses to create a config while the name is still listed in
+    # SNAPPER_CONFIGS, even with the config file gone: drop the stale entry.
     if [[ -f /etc/conf.d/snapper ]] && ! [[ -f /etc/snapper/configs/root ]]; then
         sed -i '/^SNAPPER_CONFIGS=/c\SNAPPER_CONFIGS=""' /etc/conf.d/snapper
     fi
 
-    # snapper create-config wants to create /.snapshots itself, so clear
-    # whatever is currently there (leftover mount, plain dir, or subvolume).
+    # create-config creates /.snapshots itself, so clear whatever is there.
     if mountpoint -q /.snapshots; then
         umount /.snapshots
     fi
@@ -34,9 +32,8 @@ if ! snapper list-configs | awk 'NR>2 {print $1}' | grep -qx root; then
         fi
     fi
 
-    # Create snapper config. This also creates /.snapshots as a subvolume
-    # nested in the currently mounted root subvolume (e.g. @), so no fstab
-    # entry is needed.
+    # Also creates /.snapshots as a subvolume nested in the mounted root (e.g. @),
+    # so no fstab entry is needed.
     snapper -c root create-config /
 fi
 

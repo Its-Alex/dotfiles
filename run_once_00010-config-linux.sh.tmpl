@@ -38,7 +38,7 @@ fi
 if [[ ! -d "/usr/share/icons/Twilight-cursors" ]]; then
     printf "\e[1;34m%s\e[1;0m\n" "Setup Twilight cursors"
     rm -rf /tmp/Twilight-Cursors
-    # Fork with SVG cursors for GNOME 51+, until https://github.com/yeyushengfan258/Twilight-Cursors/pull/2 is merged
+    # Fork with SVG cursors until yeyushengfan258/Twilight-Cursors#2 merges
     git clone --branch gnome-51-svg-cursors git@github.com:Its-Alex/Twilight-Cursors.git /tmp/Twilight-Cursors
     (
         cd  /tmp/Twilight-Cursors
@@ -49,8 +49,7 @@ fi
 
 printf "\e[1;34m%s\e[1;0m\n" "Installing extensions…"
 if [[ -f "{{ .chezmoi.sourceDir }}/gnome-extensions.txt" ]]; then
-    # The filesystem backend avoids the interactive confirmation dialog of the
-    # DBus one, which cannot be answered from an unattended apply.
+    # --filesystem avoids gext's DBus dialog, which an unattended apply cannot answer.
     mapfile -t gnome_extension_uuids < <(grep -v '^[[:space:]]*$' "{{ .chezmoi.sourceDir }}/gnome-extensions.txt")
     gext --filesystem install "${gnome_extension_uuids[@]}" || printf "\e[1;31m%s\e[1;0m\n" "gext failed to install some extensions."
 else

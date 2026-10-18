@@ -8,9 +8,8 @@ docs/
 gnome-extensions.txt
 gnome-shell-extensions.dconf
 
-# Lock/state files rewritten by their own tool on every run, causing drift
-# between two machines (see chezmoi apply "has changed since chezmoi last
-# wrote it" warnings). Not managed by chezmoi.
+# Rewritten by their own tool on every run, so they drift between machines and
+# trigger chezmoi's "changed since chezmoi wrote it" warnings. Not managed.
 .cc-safety-net/rules/rule.lock
 .config/mise/mise.lock
 .config/nvim/lazy-lock.json

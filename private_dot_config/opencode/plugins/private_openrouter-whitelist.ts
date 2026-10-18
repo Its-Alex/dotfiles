@@ -1,13 +1,10 @@
-// Limits the OpenRouter model picker to an allowlist. Replaces the V1
-// `provider.openrouter.whitelist` config field, which OpenCode 2 ignores
-// (https://opencode.ai/v2/docs/migrate-v1/#accepted-but-unsupported-fields);
-// V2 policies only filter whole providers, not models, so this is done with a
-// model transform (https://opencode.ai/v2/docs/build/plugins#models).
+// OpenRouter model allowlist. Replaces the V1 `provider.openrouter.whitelist`,
+// which V2 ignores (opencode.ai/v2/docs/migrate-v1/#accepted-but-unsupported-fields);
+// V2 policies filter whole providers, so this uses a model transform
+// (opencode.ai/v2/docs/build/plugins#models).
 //
-// OpenCode V2-only: the V1 loader finds no `server()` entry and skips it.
-// Plain object export on purpose — `Plugin.define` would require
-// `@opencode/plugin` to be resolvable at runtime, which this directory does
-// not guarantee.
+// V2-only (the V1 loader finds no `server()` export and skips it), and a plain
+// object export because `Plugin.define` needs `@opencode/plugin` at runtime.
 
 const ALLOWED_OPENROUTER_MODELS = new Set([
   "anthropic/claude-3-haiku",
