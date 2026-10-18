@@ -1,11 +1,9 @@
 #!/bin/sh
 
-# exit immediately if bw is already in $PATH
 type bw >/dev/null 2>&1 && exit
 
 case "$(uname -s)" in
 Linux)
-    # Check os-release in standard locations
     _os_id=""
     if [ -f /etc/os-release ]; then
         _os_id="$(. /etc/os-release && echo "$ID")"

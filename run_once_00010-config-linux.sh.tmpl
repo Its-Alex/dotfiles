@@ -9,7 +9,6 @@ if [[ ! -d ${HOME}/.config/tmux/plugins/tpm/ ]]; then
 fi
 
 if ! command -v mise > /dev/null; then
-    # Install https://github.com/jdx/mise
     printf "\e[1;34m%s\e[1;0m\n" "Install mise"
     sudo curl -Lo /usr/local/bin/mise https://mise.jdx.dev/mise-latest-linux-x64
     sudo chmod +x /usr/local/bin/mise
@@ -33,10 +32,9 @@ fi
 if [[ ! -d "${HOME}/.oh-my-zsh" ]]; then
     printf "\e[1;34m%s\e[1;0m\n" "Setup ohmyzsh"
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-    sudo -k chsh -s "$(which zsh)" "$USER" # Change default shell to zsh
+    sudo -k chsh -s "$(which zsh)" "$USER"
 fi
 
-# Install Twilight-cursors
 if [[ ! -d "/usr/share/icons/Twilight-cursors" ]]; then
     printf "\e[1;34m%s\e[1;0m\n" "Setup Twilight cursors"
     rm -rf /tmp/Twilight-Cursors
@@ -66,31 +64,22 @@ else
 fi
 printf "\e[1;34m%s\e[1;0m\n" "Reboot your computer to enable new gnome shell extensions!"
 
-# Setup gnome settings
 if command -v gsettings > /dev/null; then
     printf "\e[1;34m%s\e[1;0m\n" "Setup Gnome settings"
 
-    # Set background image
     gsettings set org.gnome.desktop.background picture-uri "file://${HOME}/Pictures/space_bg.jpg"
     gsettings set org.gnome.desktop.background picture-uri-dark "file://${HOME}/Pictures/space_bg.jpg"
-    # Set keyboard
     gsettings set org.gnome.desktop.input-sources sources "[('xkb', 'us+qwerty-fr')]"
-    # Set eyesight break reminder
     gsettings set org.gnome.desktop.break-reminders selected-breaks "[]"
-    # Define touchpad to traditional scrolling
     gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
-    # Enable Nightlight
     gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true
     # Enable location services (sunrise/sunset for Night Theme Switcher)
     gsettings set org.gnome.system.location enabled true
-    # Disable hot corners
     gsettings set org.gnome.desktop.interface enable-hot-corners false
-    # Set gnome shell theme
     gsettings set org.gnome.desktop.interface gtk-theme "Numix-Frost"
     gsettings set org.gnome.desktop.interface icon-theme Numix-Square
     gsettings set org.gnome.desktop.interface cursor-theme "Twilight-cursors"
 fi
 
-# Enable git lfs
 git lfs install
 {{ end -}}

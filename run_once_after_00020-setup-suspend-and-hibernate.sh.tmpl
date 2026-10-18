@@ -2,7 +2,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Relaunch script with root
 if [ "$(id -u)" -ne 0 ]; then
   exec sudo bash "$0" "$@"
 fi
@@ -79,9 +78,7 @@ if ! swapon --show=NAME --noheadings | grep -qx /swap/swapfile; then
 fi
 
 printf "\e[1;34m%s\e[1;0m\n" "Setup systemd logind and sleepd configuration for suspend then hibernated..."
-# Create folders if no exist
 mkdir -p /etc/systemd/logind.conf.d /etc/systemd/sleep.conf.d
-# Add configuration for lid switch
 if ! cmp -s <(echo '[Login]
 HandleLidSwitch=suspend-then-hibernate
 HandleLidSwitchExternalPower=suspend-then-hibernate
@@ -94,7 +91,6 @@ HandleLidSwitchExternalPower=suspend-then-hibernate
 HandleLidSwitchDocked=ignore
 EOF
 fi
-# Add configuration for sleep
 if ! cmp -s <(echo '[Sleep]
 HibernateDelaySec=600
 ') /etc/systemd/sleep.conf.d/10-hibernate-delay.conf 2>/dev/null; then

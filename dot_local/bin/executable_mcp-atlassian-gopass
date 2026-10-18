@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
-#
-# Launches the Atlassian MCP server with its credentials resolved from gopass at
-# start-up, so no token is ever written to an on-disk config file. The entries
-# are seeded from Bitwarden by run_onchange_00004-seed-gopass.sh.tmpl.
 set -euo pipefail
 
-# Usage: gopass_get <entry> [<key>] — the password line when no key is given.
 gopass_get() {
     if [ "$#" -eq 1 ]; then
         gopass show --password "$1" 2>/dev/null || true

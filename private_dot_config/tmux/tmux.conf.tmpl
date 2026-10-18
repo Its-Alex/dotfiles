@@ -1,13 +1,11 @@
 set-option -g default-shell /usr/bin/zsh
 
-# Define terminal option
 set -as terminal-overrides ",xterm-ghostty*:Tc,xterm-256color:Tc"
 set-option -g default-terminal "tmux-256color"
 
 set-option -g destroy-unattached off
 set-option -g detach-on-destroy on
 
-# Enable mouse
 set-option -g mouse on
 # Basically, on a wheelup event:  
 #   if mouse is enabled, send the mouse event,  
@@ -23,9 +21,7 @@ bind -n WheelDownPane if-shell -Ft= "#{alternate_on}" "send-keys -t= down" "sele
 bind -T copy-mode-vi WheelUpPane   select-pane \; send-keys -X -N 2 scroll-up
 bind -T copy-mode-vi WheelDownPane select-pane \; send-keys -X -N 2 scroll-down
 
-# Define prefix
 set-option -g prefix C-b
-# Enable vim mode
 set-option -g status-keys vi
 set-option -g mode-keys vi
 
@@ -46,7 +42,6 @@ if-shell -b 'test $(uname) = "Linux" && test -n "$WAYLAND_DISPLAY"' 'bind -T cop
 if-shell -b 'test $(uname) = "Linux" && test -z "$WAYLAND_DISPLAY"' 'bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "xclip -in -selection clipboard"'
 if-shell -b 'test $(uname) = "Darwin"' 'bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "pbcopy"'
 
-# Activity/Notification
 set-option -g bell-action any
 set-option -g activity-action other
 set-option -g silence-action other
@@ -60,14 +55,12 @@ set-option -g focus-events on
 
 set -ga terminal-features "*:hyperlinks"
 
-# URL Launcher
 bind-key u run-shell -b "flatpak run io.gitlab.librewolf-community \"$(tmux capture-pane -J -p | grep -oE '(https?):\/\/.*[^>]' | fzf-tmux -d20 --multi --bind alt-a:select-all,alt-d:deselect-all)\""
 
 {{ if eq .chezmoi.os "linux" -}}
 # Define plugins install directory https://github.com/tmux-plugins/tpm/blob/master/docs/changing_plugins_install_dir.md
 set-environment -g -F TMUX_PLUGIN_MANAGER_PATH "${HOME}/.config/tmux/plugins"
 {{ end -}}
-# Define plugins
 set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-sensible'
 

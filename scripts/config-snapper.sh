@@ -40,7 +40,6 @@ if ! snapper list-configs | awk 'NR>2 {print $1}' | grep -qx root; then
     snapper -c root create-config /
 fi
 
-# Configuration snapper configuration
 sed -i '/^TIMELINE_LIMIT_HOURLY/c\TIMELINE_LIMIT_HOURLY="1"' /etc/snapper/configs/root
 sed -i '/^TIMELINE_LIMIT_DAILY/c\TIMELINE_LIMIT_DAILY="2"' /etc/snapper/configs/root
 sed -i '/^TIMELINE_LIMIT_WEEKLY/c\TIMELINE_LIMIT_WEEKLY="1"' /etc/snapper/configs/root
@@ -48,11 +47,9 @@ sed -i '/^TIMELINE_LIMIT_MONTHLY/c\TIMELINE_LIMIT_MONTHLY="1"' /etc/snapper/conf
 sed -i '/^TIMELINE_LIMIT_QUARTERLY/c\TIMELINE_LIMIT_QUARTERLY="0"' /etc/snapper/configs/root
 sed -i '/^TIMELINE_LIMIT_YEARLY/c\TIMELINE_LIMIT_YEARLY="0"' /etc/snapper/configs/root
 
-# Enable snapper
 systemctl enable --now snapper-timeline.timer
 systemctl enable --now snapper-cleanup.timer
 
-# Make backup each day at 10 and 20
 mkdir -p /etc/systemd/system/snapper-timeline.timer.d/
 cat <<EOT > /etc/systemd/system/snapper-timeline.timer.d/override.conf
 [Timer]
@@ -62,7 +59,6 @@ OnCalendar=*-*-* 20:00:00 Europe/Paris
 EOT
 
 if [[ -d /boot/grub/ ]]; then
-    # Enable grub-btrfs
     systemctl enable --now grub-btrfsd
     # Enable booting into read-only snapshots https://wiki.archlinux.org/title/Snapper#Booting_into_read-only_snapshots
     if ! grep -q "HOOKS=.*grub-btrfs-overlayfs" /etc/mkinitcpio.conf; then

@@ -1,5 +1,4 @@
 return {
-    -- add dracula
     { "Mofiqul/dracula.nvim" },
     {
         'nvim-lualine/lualine.nvim',

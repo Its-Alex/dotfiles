@@ -22,7 +22,7 @@ printf "\e[1;34m%s\e[1;0m\n" "Install system programs.."
 packages_list=(
     # System
     gnupg
-    libsecret # Provides secret-tool, used to store API tokens in the GNOME keyring
+    libsecret
     flatpak
     unzip
     tar
@@ -43,7 +43,7 @@ packages_list=(
     ## Theme
     numix-square-icon-theme-git # Gnome icons
     flat-remix-gnome # Gnome theme
-    numix-frost-themes # Legacy app
+    numix-frost-themes
     # Netbird
     netbird
     # IDE
@@ -81,7 +81,6 @@ packages_list=(
 )
 yay -S --noconfirm --needed "${packages_list[@]}"
 
-# Setup podman
 printf "\e[1;34m%s\e[1;0m\n" "Setup podman..."
 sudo tee /etc/containers/registries.conf.d/10-unqualified-search-registries.conf > /dev/null <<'EOF'
 unqualified-search-registries = ["docker.io"]
@@ -131,7 +130,6 @@ flatpak override --user --device=all io.gitlab.librewolf-community
 printf "\e[1;34m%s\e[1;0m\n" "Disable Xbox Wireless Adapter for Windows"
 # Device Xbox Wireless Adapter for Windows was always appearing as Wifi Key
 echo 'ACTION=="add", ATTR{idVendor}=="045e", ATTR{idProduct}=="02fe", ATTR{authorized}="0"' | sudo tee "/etc/udev/rules.d/99-disable-xbox-adapter.rules" > /dev/null
-# Reload udev rules
 sudo udevadm control --reload-rules
 sudo udevadm trigger
 

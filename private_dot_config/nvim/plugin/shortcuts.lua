@@ -1,10 +1,8 @@
--- Telescope
 vim.keymap.set('n', '<leader>ff', function() require('telescope.builtin').find_files() end, { desc = 'Find Files' })
 vim.keymap.set('n', '<leader>fg', function() require('telescope.builtin').live_grep() end, { desc = 'Live Grep' })
 vim.keymap.set('n', '<leader>fb', function() require('telescope.builtin').buffers() end, { desc = 'Buffers' })
 vim.keymap.set('n', '<leader>fh', function() require('telescope.builtin').help_tags() end, { desc = 'Help Tags' })
 
--- Buffer navigation (LazyVim style)
 vim.keymap.set('n', '<S-h>', '<cmd>bprevious<cr>', { desc = 'Prev Buffer' })
 vim.keymap.set('n', '<S-l>', '<cmd>bnext<cr>', { desc = 'Next Buffer' })
 vim.keymap.set('n', '[b', '<cmd>bprevious<cr>', { desc = 'Prev Buffer' })
@@ -12,7 +10,6 @@ vim.keymap.set('n', ']b', '<cmd>bnext<cr>', { desc = 'Next Buffer' })
 vim.keymap.set('n', '<leader>bd', '<cmd>bdelete<cr>', { desc = 'Delete Buffer' })
 vim.keymap.set('n', '<leader>bD', '<cmd>bdelete!<cr>', { desc = 'Delete Buffer (force)' })
 
--- Window navigation
 vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Move to Left Split' })
 vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Move to Bottom Split' })
 vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Move to Top Split' })
