@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+managed_settings=$(cat <<'JSON'
+{
+  "coworkUserFilesPath": "/home/alex/Claude",
+  "preferences": {
+    "coworkBrowserToolsEnabled": true,
+    "coworkPreferredBrowser": "built_in",
+    "coworkScheduledTasksEnabled": true,
+    "coworkWebSearchEnabled": true,
+    "coworkHipaaRestricted": false,
+    "orgWorkAcrossAppsDisabled": false,
+    "ccdScheduledTasksEnabled": true,
+    "bypassPermissionsGateByAccount": {
+      "22a1f92c-227b-4074-9cc8-85a7a9a92512": true
+    },
+    "coworkModelAutoFallbackByAccount": {
+      "22a1f92c-227b-4074-9cc8-85a7a9a92512": true
+    },
+    "remoteToolsDeviceName": "{{ .chezmoi.hostname }}",
+    "epitaxyPrefs": {
+      "epitaxy-folder-permission-mode.22a1f92c-227b-4074-9cc8-85a7a9a92512": {
+        "/home/alex/Documents/arolya": "auto",
+        "/home/alex/Documents/relex/arolya": "auto",
+        "/home/alex/.local/share/chezmoi": "auto"
+      }
+    }
+  }
+}
+JSON
+)
+
+current_settings=$(cat)
+[ -n "$current_settings" ] || current_settings='{}'
+
+jq --argjson managed "$managed_settings" '. * $managed' <<<"$current_settings"
