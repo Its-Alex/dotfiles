@@ -21,3 +21,9 @@
     path = ~/.config/git/config-relex
 [includeIf "gitdir:~/.local/share/opencode/worktree/64da607e5a4c9b6f2d5716e8bd3fa941ec0144d2/"]
     path = ~/.config/git/config-relex
+[credential "https://github.com"]
+	helper = 
+	helper = !/home/alex/.local/share/mise/installs/gh/2.101.0/gh_2.101.0_linux_amd64/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/home/alex/.local/share/mise/installs/gh/2.101.0/gh_2.101.0_linux_amd64/bin/gh auth git-credential
