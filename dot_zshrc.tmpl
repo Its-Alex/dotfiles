@@ -35,6 +35,16 @@ plugins=(
     terraform
     opentofu
 )
+#  gopass completion in the oh-my-zsh cache, which oh-my-zsh adds to fpath
+#  before compinit runs. Regenerated when gopass is newer than the cached file.
+if [[ $- == *i* ]] && command -v gopass > /dev/null 2>&1; then
+    _gopass_completion="${ZSH}/cache/completions/_gopass"
+    if [[ ! -s "$_gopass_completion" || "$(command -v gopass)" -nt "$_gopass_completion" ]]; then
+        mkdir -p "${_gopass_completion:h}"
+        gopass completion zsh >| "$_gopass_completion"
+    fi
+    unset _gopass_completion
+fi
 #  Set update all 15 days
 export UPDATE_ZSH_DAYS=15
 #  shellcheck source=/dev/null # Load oh_my_zsh
