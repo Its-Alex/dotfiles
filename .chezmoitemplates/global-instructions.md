@@ -28,7 +28,18 @@ No preamble, no explanation of these rules. Just answer directly in the active l
 
 - Use explicit, descriptive names over short cryptic ones — clarity beats brevity in identifiers.
 - Never include ticket numbers (e.g. JIRA/Linear IDs like `ABC-123`) in code (comments, strings, identifiers). Ticket numbers belong in commit messages, branch names, and PR titles/descriptions — not in the code itself.
-- Let the code document itself. Comment only what the code cannot express: a non-obvious constraint, a surprising behaviour, or a decision a reader would otherwise "fix" wrongly. Never restate what the code already says.
+
+## Comments
+
+- Default to no comment. The name, the value or the call usually says it already: write nothing.
+- A comment must earn its line, and only for one of these — each also names the failure a reader would cause without it:
+  - an external constraint (tool, OS, library) that makes the code look wrong: a silent failure, a required order, a flag that must not be passed, a directive that is ignored;
+  - an invariant a reader must not "fix" — security, data loss, idempotency;
+  - a machine-read directive (lint or schema pragma);
+  - "generated — re-run, do not edit" at the top of a generated file.
+- Delete on sight: restated names and titles, section labels (`# Helpers`), doc links, change history, prose justifying a choice the code already shows, usage docs for a function that reads plainly, commented-out code.
+- One line, two at most. If it needs more, the detail goes in `docs/` and the comment becomes a one-line pointer — or nothing.
+- Unsure whether to keep one? Cut it. A missing comment costs a question; a redundant one costs every reader after.
 
 ## Referencing and links
 
