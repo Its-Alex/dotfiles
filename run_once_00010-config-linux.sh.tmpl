@@ -105,7 +105,8 @@ if command -v gsettings > /dev/null; then
     printf "\e[1;34m%s\e[1;0m\n" "Setup Gnome settings"
 
     # Set background image
-    gsettings set org.gnome.desktop.background picture-uri "file:///home/alex/.local/share/backgrounds/2025-08-14-10-38-53-space_bg.jpg"
+    gsettings set org.gnome.desktop.background picture-uri "file://${HOME}/Pictures/space_bg.jpg"
+    gsettings set org.gnome.desktop.background picture-uri-dark "file://${HOME}/Pictures/space_bg.jpg"
     # Set keyboard
     gsettings set org.gnome.desktop.input-sources sources "[('xkb', 'us+qwerty-fr')]"
     # Set eyesight break reminder
