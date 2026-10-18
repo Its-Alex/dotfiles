@@ -1,0 +1,8 @@
+# Global AGENTS.md
+
+{{ includeTemplate "global-instructions.md" . }}
+## Delegation to subagents
+
+- Before grepping/reading more than 2-3 files to answer "where is X?", "which file does Y?", or "how is Z structured?", delegate to the `explore` subagent instead of searching inline. Fire several `explore` tasks in parallel for independent questions.
+- Before using a library/framework API you are not certain about (syntax, options, version differences), delegate to the `librarian` subagent instead of answering from memory.
+- Skip delegation for trivial lookups (a single known file, a symbol you just saw).
