@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Profile settings that differ from OpenChamber's defaults. Per-surface keys
+# (themes, sidebar view) are only written under surfaces.desktop: the base
+# value is what other surfaces fall back to. updatedAt is left untouched so
+# the app keeps treating its own timestamps as authoritative.
+managed_preferences=$(cat <<'JSON'
+{
+  "version": 1,
+  "fields": {
+    "favoriteModels": {
+      "value": [
+        {
+          "providerID": "openrouter",
+          "modelID": "anthropic/claude-sonnet-5.5"
+        },
+        {
+          "providerID": "openrouter",
+          "modelID": "anthropic/claude-opus-5.5"
+        },
+        {
+          "providerID": "openrouter",
+          "modelID": "anthropic/claude-fable-5"
+        },
+        {
+          "providerID": "openrouter",
+          "modelID": "anthropic/claude-sonnet-5"
+        },
+        {
+          "providerID": "opencode-go",
+          "modelID": "deepseek-v4.1-flash"
+        }
+      ]
+    },
+    "defaultModel": {
+      "value": "opencode-go/deepseek-v4.1-flash"
+    },
+    "sidebarWorktreeSortOrder": {
+      "value": "recent"
+    },
+    "expandReasoningWhileStreaming": {
+      "value": true
+    },
+    "toolJsonViewMode": {
+      "value": "raw"
+    },
+    "lightThemeId": {
+      "surfaces": {
+        "desktop": {
+          "value": "dracula-light"
+        }
+      }
+    },
+    "darkThemeId": {
+      "surfaces": {
+        "desktop": {
+          "value": "dracula-dark"
+        }
+      }
+    },
+    "sidebarViewMode": {
+      "surfaces": {
+        "desktop": {
+          "value": "projects"
+        }
+      }
+    }
+  }
+}
+JSON
+)
+
+current_preferences=$(cat)
+[ -n "${current_preferences//[[:space:]]/}" ] || current_preferences='{}'
+
+jq --argjson managed "$managed_preferences" '. * $managed' <<<"$current_preferences"

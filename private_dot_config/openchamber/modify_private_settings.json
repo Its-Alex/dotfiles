@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Instance-scope settings only: they live in this file alone. Profile settings
+# live in preferences.json, which wins on read; the copy the app mirrors here
+# is only for older builds, so it is not managed.
+#
+# privateRelay.enabled is read when the app starts; relayUrl is left as stored.
+#
+# Removed keys are ones no current build reads or writes, so the app never
+# brings them back. The profile copy the app mirrors into this file is not
+# listed: it is rewritten on every save.
+removed_keys='["sidebarSessionGroupingMode"]'
+
+managed_settings=$(cat <<'JSON'
+{
+  "openInAppId": "ghostty",
+  "agentNotifyToolEnabled": true,
+  "privateRelay": {
+    "enabled": false
+  }
+}
+JSON
+)
+
+current_settings=$(cat)
+[ -n "${current_settings//[[:space:]]/}" ] || current_settings='{}'
+
+jq --argjson managed "$managed_settings" --argjson removed "$removed_keys" \
+  '(. * $managed) | delpaths($removed | map([.]))' <<<"$current_settings"
