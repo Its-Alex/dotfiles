@@ -2,40 +2,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# GNOME Shell version (major.minor) to fetch compatible builds
-SHELL_VER="$(gnome-shell --version | awk '{print $3}' | cut -d. -f1,2)"
-
-# Function to install extensions from extensions.gnome.org
-install_gnome_extension_from_uuid() {
-    local uuid="$1"
-    local info dl url tmp
-    if gnome-extensions info "$uuid" >/dev/null 2>&1; then
-        printf "\e[1;0m%s\n" "$uuid already installed, skipping."
-        return 0
-    fi
-    info="$(curl -fsSL "https://extensions.gnome.org/extension-info/?uuid=${uuid}&shell_version=${SHELL_VER}" || true)"
-    if [[ -z "$info" || "$info" == "Not Found" ]]; then
-        printf "\e[1;31m%s\e[1;0m\n" "$uuid not available for GNOME $SHELL_VER, skipping."
-        return 0
-    fi
-    dl="$(printf "%s" "$info" | jq -r '.download_url // empty')"
-    if [[ -z "$dl" || "$dl" == "null" ]]; then
-        printf "\e[1;31m%s\e[1;0m\n" "$uuid no download_url found, skipping."
-        return 0
-    fi
-    url="https://extensions.gnome.org${dl}"
-    tmp="$(mktemp --suffix=.zip)"
-    if ! curl -fsSL "$url" -o "$tmp"; then
-        printf "\e[1;31m%s\e[1;0m\n" "$uuid download failed, skipping."
-        rm -f "$tmp"
-        return 0
-    fi
-    if ! gnome-extensions install --force "$tmp"; then
-        printf "\e[1;31m%s\e[1;0m\n" "$uuid install failed."
-    fi
-    rm -f "$tmp"
-}
-
 if [[ ! -d ${HOME}/.config/tmux/plugins/tpm/ ]]; then
     printf "\e[1;34m%s\e[1;0m\n" "Clone tmux tpm"
     mkdir -p "${HOME}/.config/tmux/plugins/"
@@ -85,10 +51,10 @@ fi
 
 printf "\e[1;34m%s\e[1;0m\n" "Installing extensions…"
 if [[ -f "{{ .chezmoi.sourceDir }}/gnome-extensions.txt" ]]; then
-    while IFS= read -r uuid; do
-        [[ -z "$uuid" ]] && continue
-        install_gnome_extension_from_uuid "$uuid"
-    done < "{{ .chezmoi.sourceDir }}/gnome-extensions.txt"
+    # The filesystem backend avoids the interactive confirmation dialog of the
+    # DBus one, which cannot be answered from an unattended apply.
+    mapfile -t gnome_extension_uuids < <(grep -v '^[[:space:]]*$' "{{ .chezmoi.sourceDir }}/gnome-extensions.txt")
+    gext --filesystem install "${gnome_extension_uuids[@]}" || printf "\e[1;31m%s\e[1;0m\n" "gext failed to install some extensions."
 else
     printf "\e[1;31m%s\e[1;0m\n" "Missing file: {{ .chezmoi.sourceDir }}/gnome-extensions.txt"
 fi
