@@ -8,23 +8,23 @@ fi
 
 printf "\e[1;34m%s\e[1;0m\n" "Configure Claude Code MCP servers (user scope)..."
 
-# The MCP servers read their credentials from the GNOME keyring at start-up
-# (see the keyring-backed wrappers in dot_local/bin), so Claude Code never
-# persists any token into ~/.claude.json.
+# The MCP servers read their credentials from gopass at start-up (see the
+# gopass-backed wrappers in dot_local/bin), so Claude Code never persists any
+# token into ~/.claude.json.
 claude mcp remove mcp-atlassian --scope user 2>&1 || true
 claude mcp add --scope user \
     --transport stdio \
-    mcp-atlassian -- mcp-atlassian-keyring
+    mcp-atlassian -- mcp-atlassian-gopass
 
 claude mcp remove linear --scope user 2>&1 || true
 claude mcp add --scope user \
     --transport stdio \
-    linear -- mcp-remote-linear-keyring
+    linear -- mcp-remote-linear-gopass
 
 claude mcp remove terraform --scope user 2>&1 || true
 claude mcp add --scope user \
     --transport stdio \
-    terraform -- mcp-terraform-keyring
+    terraform -- mcp-terraform-gopass
 
 printf "\e[1;34m%s\e[1;0m\n" "Install CC Safety Net for Claude Code..."
 

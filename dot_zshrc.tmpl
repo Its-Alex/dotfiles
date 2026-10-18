@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 
-# Ambient secrets are read from the GNOME keyring, which is encrypted at rest
-# and unlocked with the login session. It is seeded from Bitwarden by
-# run_onchange_00002-seed-gnome-keyring.sh, so no token is written in cleartext.
+# Ambient secrets are read from gopass (the global store), which is age-encrypted
+# at rest and versioned in git. It is seeded from Bitwarden by
+# run_onchange_00004-seed-gopass.sh, so no token is written in cleartext.
 # The Atlassian and Linear tokens are deliberately NOT exported here: the
-# keyring-backed wrappers in ~/.local/bin read them on demand, so they never
+# gopass-backed wrappers in ~/.local/bin read them on demand, so they never
 # enter the shell environment or any unrelated child process.
-_keyring_export() {
+# The timeout bounds a locked store, so shell start-up can never block on it.
+_gopass_export() {
     local name="$1" value
-    value="$(secret-tool lookup service dotfiles key "$name" 2>/dev/null)" || return 0
+    value="$(timeout 3 gopass show --password "dotfiles/$name" 2>/dev/null)" || return 0
     [ -n "$value" ] && export "$name=$value"
     return 0
 }
@@ -61,9 +62,10 @@ export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/gcr/ssh
 {{- end }}
 # Use podman with docker compose
 export DOCKER_HOST=unix:///run/user/1000/podman/podman.sock
-if command -v secret-tool >/dev/null 2>&1; then
+# Interactive shells only: a non-interactive shell must never trigger pinentry.
+if [[ $- == *i* ]] && command -v gopass >/dev/null 2>&1; then
     # Gitlab (used by CLI tools such as glab)
-    _keyring_export GITLAB_PERSONAL_ACCESS_TOKEN
+    _gopass_export GITLAB_PERSONAL_ACCESS_TOKEN
 fi
 
 # Environment variable - Languages

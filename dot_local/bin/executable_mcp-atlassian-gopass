@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+#
+# Launches the Atlassian MCP server with its credentials resolved from gopass at
+# start-up, so no token is ever written to an on-disk config file. The store is
+# seeded from Bitwarden by run_onchange_00004-seed-gopass.sh.tmpl.
+set -euo pipefail
+
+gopass_get() {
+    gopass show --password "dotfiles/$1" 2>/dev/null || true
+}
+
+export CONFLUENCE_URL="$(gopass_get CONFLUENCE_URL)"
+export CONFLUENCE_USERNAME="$(gopass_get CONFLUENCE_USERNAME)"
+export CONFLUENCE_API_TOKEN="$(gopass_get CONFLUENCE_API_TOKEN)"
+export JIRA_URL="$(gopass_get JIRA_URL)"
+export JIRA_USERNAME="$(gopass_get JIRA_USERNAME)"
+export JIRA_API_TOKEN="$(gopass_get JIRA_API_TOKEN)"
+
+exec mise exec -- mcp-atlassian "$@"

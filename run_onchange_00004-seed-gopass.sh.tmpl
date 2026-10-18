@@ -1,0 +1,56 @@
+{{ if and (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "true") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "1") -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Seed the global gopass store with the API tokens read from Bitwarden. The
+# store is age-encrypted and versioned in git, so the tokens are never written
+# in cleartext on disk (unlike baking them into ~/.zshrc).
+gopass_bin="$(command -v gopass || true)"
+if [ -z "$gopass_bin" ] && command -v mise > /dev/null; then
+    gopass_bin="$(mise which gopass 2> /dev/null || true)"
+fi
+if [ -z "$gopass_bin" ]; then
+    printf "\e[1;33m%s\e[1;0m\n" "gopass not found; skipping store seeding."
+    exit 0
+fi
+
+# Same source as the identity installation: the passphrase comes from Bitwarden
+# so seeding never prompts (see run_onchange_00002-setup-gopass.sh.tmpl).
+age_keyring_pass="{{ with (index (bitwardenFields "item" "Age - gopass identity") "gopass-keyring-pass") }}{{ .value }}{{ end }}"
+
+# Absent when the Bitwarden field is missing: exporting nothing lets gopass fall
+# back to the OS keyring instead of being handed an empty passphrase.
+if [ -n "$age_keyring_pass" ]; then
+    export GOPASS_AGE_PASSWORD="$age_keyring_pass"
+fi
+
+printf "\e[1;34m%s\e[1;0m\n" "Seed the gopass store with API tokens from Bitwarden..."
+
+# An empty value usually means a renamed or mistyped Bitwarden item, and writing
+# it would clobber a working token. Separately, age encryption is
+# non-deterministic, so rewriting an unchanged value still changes the
+# ciphertext and adds a commit (plus a push) on every machine that clones the
+# store — so write only on a difference.
+seed_store_entry() {
+    local name="$1" value="$2" current
+    if [ -z "$value" ]; then
+        printf "\e[1;33m%s\e[1;0m\n" "Bitwarden value for dotfiles/${name} is empty; leaving the stored entry untouched."
+        return 0
+    fi
+    current="$("$gopass_bin" show --password "dotfiles/${name}" 2> /dev/null || true)"
+    [ "$current" = "$value" ] && return 0
+    printf '%s' "$value" | "$gopass_bin" insert --force "dotfiles/${name}"
+}
+
+seed_store_entry GITLAB_PERSONAL_ACCESS_TOKEN "{{ (bitwarden "item" "Gitlab - API Token").login.password }}"
+seed_store_entry LINEAR_API_KEY "{{ (bitwarden "item" "Linear - API Key").login.password }}"
+seed_store_entry TFE_TOKEN "{{ (bitwarden "item" "Terraform - API Token").login.password }}"
+seed_store_entry CONFLUENCE_URL "{{ (bitwardenFields "item" "Confluence - API Token").space_url.value }}"
+seed_store_entry CONFLUENCE_USERNAME "{{ (bitwarden "item" "Confluence - API Token").login.username }}"
+seed_store_entry CONFLUENCE_API_TOKEN "{{ (bitwarden "item" "Confluence - API Token").login.password }}"
+seed_store_entry JIRA_URL "{{ (bitwardenFields "item" "Jira - API Token ").space_url.value }}"
+seed_store_entry JIRA_USERNAME "{{ (bitwarden "item" "Jira - API Token ").login.username }}"
+seed_store_entry JIRA_API_TOKEN "{{ (bitwarden "item" "Jira - API Token ").login.password }}"
+
+printf "\e[1;32m%s\e[1;0m\n" "gopass store seeded."
+{{ end -}}

@@ -23,19 +23,19 @@
       "mcp-atlassian": {
         "type": "local",
         "command": [
-          "{{ .chezmoi.homeDir }}/.local/bin/mcp-atlassian-keyring"
+          "{{ .chezmoi.homeDir }}/.local/bin/mcp-atlassian-gopass"
         ]
       },
       "linear": {
         "type": "local",
         "command": [
-          "{{ .chezmoi.homeDir }}/.local/bin/mcp-remote-linear-keyring"
+          "{{ .chezmoi.homeDir }}/.local/bin/mcp-remote-linear-gopass"
         ]
       },
       "terraform": {
         "type": "local",
         "command": [
-          "{{ .chezmoi.homeDir }}/.local/bin/mcp-terraform-keyring"
+          "{{ .chezmoi.homeDir }}/.local/bin/mcp-terraform-gopass"
         ]
       }
 {{- end }}

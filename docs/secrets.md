@@ -1,17 +1,16 @@
 # Secret management
 
 Why this repository sources secrets from Bitwarden and delivers them at runtime
-through the GNOME keyring (libsecret), instead of reading a file-based password
-manager directly.
+through gopass, instead of reading a file-based password manager directly.
 
 ## Decision
 
 - **Source of truth:** Bitwarden, read through chezmoi's `bitwarden` template
-  functions and seeded into the keyring at `chezmoi apply` time.
-- **Runtime delivery:** GNOME keyring via libsecret (`secret-tool`).
-- **Alternatives considered, not used here:** `gopass`/`pass` (GPG-backed file
-  stores; gopass is used by a separate infrastructure repository, not by these
-  dotfiles) and `age` (no auto-unlock path; only worth it when dropping GPG).
+  functions and seeded into gopass at `chezmoi apply` time.
+- **Runtime delivery:** gopass, an age-encrypted, git-backed file store.
+- **Kept on libsecret:** the GPG passphrase (pinentry's own store) and whatever
+  GNOME applications manage for themselves. The chezmoi-managed path no longer
+  calls `secret-tool`.
 
 ## Context
 
@@ -20,67 +19,71 @@ manager directly.
   Code MCP servers (Confluence/Jira/Linear/Terraform), and jj commit signing (GPG).
 - Requirements: nothing in cleartext at rest, and no repeated passphrase prompts.
 
-## Why the keyring for delivery
+## Why gopass for delivery
 
-- Encrypted at rest; unlocked automatically at login (PAM unlocks `login.keyring`).
-- No prompt and no external dependency at read time.
-- Fast: measured ~9 ms per lookup.
-- Already holds adjacent credentials: SSH keys (`gcr-ssh-agent` →
-  `user.keystore`), the GPG passphrase, and portal application secrets.
+- Encrypted at rest (age) and versioned in git, so every change is auditable and
+  recoverable.
+- Portable: a single static binary on Linux, macOS and Windows, independent of a
+  desktop session or D-Bus.
+- Fast enough once the age agent holds the unlocked identity: ~12 ms per read,
+  against ~575 ms when the identity is re-derived on every call.
+- One store for the whole system, shared with the shell, the editors and any
+  script that can call `gopass show`.
 
 ## Measured performance
 
 | Command | Per call |
 | --- | --- |
 | `secret-tool lookup` | ~9 ms |
-| `gopass show` | ~274 ms |
-| raw `gpg --decrypt` | ~215 ms |
-| `/bin/true` baseline | ~0.6 ms |
+| `gopass show` (age agent warm) | ~12 ms |
+| `gopass show` (agentless) | ~575 ms |
 
-A GPG file store is roughly 30x slower per read: each lookup spawns a process
-chain and performs asymmetric decryption, and the ~215 ms `gpg` cost dominates.
-That cost is inherent to GPG, so swapping gopass for `pass` does not help — same
-crypto, same floor. It is acceptable for a cold path (seeding, editing, syncing)
-and unacceptable for a hot path (shell start-up, per-command lookups), which is
-why delivery goes through the keyring.
+## Stores
 
-## Alternatives considered (file stores)
+- **Global store** — `~/.local/share/gopass/stores/root`, backed by the private
+  `Its-Alex/password-store` repository. Holds everything this repository seeds
+  (`dotfiles/*`) as well as personal secrets.
+- **Repository-scoped store** — `~/Documents/personal-infra-as-code/passwords`,
+  selected with a `GOPASS_CONFIG_KEY_0`/`_VALUE_0` override in that
+  repository's `.env.sh`. Holds the infrastructure credentials its
+  Ansible/OpenTofu code consumes.
 
-This repository does not read a GPG file store for its secrets; Bitwarden is the
-source. The file-store options were still evaluated:
+`mounts.path` takes priority over the pass-compatible `PASSWORD_STORE_DIR`, so
+the repository-scoped store is selected by overriding `mounts.path` with
+`GOPASS_CONFIG_KEY_0`/`_VALUE_0` (which outranks every config file) rather than
+with `PASSWORD_STORE_DIR`. The `GOPASS_CONFIG` file-path variable is not
+honoured by gopass 1.17.2 and must not be used for this.
 
-- **gopass vs pass:** the same category. Both are GPG-encrypted files under git
-  with an identical security model and the same speed floor, and gopass is
-  pass-store compatible. gopass is already used by a separate infrastructure
-  repository (`~/Documents/personal-infra-as-code`), not by these dotfiles, so
-  there is no reason to introduce `pass` as well.
-- **age:** faster (X25519 + ChaCha20, single process, no agent), but it has no
-  equivalent auto-unlock and adds an identity key to manage. It only wins if the
-  goal is to eliminate GPG entirely.
+## Passphrase handling
+
+- Chezmoi-managed calls pass `GOPASS_AGE_PASSWORD` (read from Bitwarden), so an
+  apply never prompts.
+- Interactive use relies on `age.usekeychain` (the passphrase cached in the OS
+  keyring) and on the age agent, which keeps the identity unlocked in memory.
 
 ## How it is wired in this repository
 
-- `run_onchange_00002-seed-gnome-keyring.sh.tmpl` seeds the keyring from Bitwarden
-  at `chezmoi apply` time, under `service dotfiles` with `key` set to the
-  environment variable name. It is guarded by `CHEZMOI_PASSWORD_MANAGER_DISABLED`.
+- `run_onchange_00002-setup-gopass.sh.tmpl` installs the age identity, points
+  `mounts.path` at the global store and clones it from the private repository.
+  It is guarded by `CHEZMOI_PASSWORD_MANAGER_DISABLED`.
+- `run_onchange_00004-seed-gopass.sh.tmpl` seeds `dotfiles/*` from Bitwarden.
 - `dot_zshrc.tmpl` exports only ambient secrets (`GITLAB_PERSONAL_ACCESS_TOKEN`)
-  from the keyring.
-- `dot_local/bin/executable_mcp-atlassian-keyring` and
-  `dot_local/bin/executable_mcp-remote-linear-keyring` read the MCP tokens from
-  the keyring on demand and `exec` the server, so those tokens never enter the
-  shell environment. `dot_local/bin/executable_mcp-terraform-keyring` does the
-  same for the Terraform MCP server (`TFE_TOKEN`, run through Docker).
-- `private_dot_config/opencode/opencode.json.tmpl` and the Claude Code MCP config
-  point at those wrappers.
-- The GPG passphrase is stored by `pinentry-gnome3` under `org.gnupg.Passphrase`;
-  it is not managed by this repository.
+  from gopass.
+- `dot_local/bin/executable_mcp-atlassian-gopass`,
+  `dot_local/bin/executable_mcp-remote-linear-gopass` and
+  `dot_local/bin/executable_mcp-terraform-gopass` read the MCP tokens from
+  gopass on demand and `exec` the server, so those tokens never enter the shell
+  environment. `private_dot_config/opencode/opencode.json.tmpl` and the Claude
+  Code MCP config point at those wrappers.
+- `run_onchange_00005-setup-gpg.sh.tmpl` still uses `secret-tool`: the GPG
+  passphrase belongs to pinentry, not to gopass.
 
 ## Security model
 
-- Everything is encrypted at rest (keyring database, Bitwarden vault, `.gpg`
-  files).
+- Everything is encrypted at rest (gopass store, Bitwarden vault, keyring
+  database, `.gpg` files).
 - The boundary protects against offline and at-rest theft and accidental commits
   — **not** against malware running as the same user. Any such process can query
-  the keyring or invoke `gpg`; with the GPG passphrase cached, it can also decrypt
-  anything encrypted to that key (such as the separate gopass store). Root can
-  read everything regardless and is out of scope.
+  gopass or the keyring; with the GPG passphrase cached, it can also decrypt
+  anything encrypted to that key. Root can read everything regardless and is out
+  of scope.

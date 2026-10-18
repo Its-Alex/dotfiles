@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+#
+# Launches the Terraform MCP server with its HCP Terraform token resolved from
+# gopass at start-up, so no token is ever written to an on-disk config file. The
+# store is seeded from Bitwarden by run_onchange_00004-seed-gopass.sh.tmpl.
+set -euo pipefail
+
+TFE_TOKEN="$(gopass show --password "dotfiles/TFE_TOKEN" 2>/dev/null || true)"
+if [[ -n "${TFE_TOKEN}" ]]; then
+    export TFE_TOKEN
+fi
+
+exec mise exec -- terraform-mcp-server stdio "$@"

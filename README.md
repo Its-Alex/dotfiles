@@ -102,8 +102,8 @@ Today I mainly use two computer:
 
 Repository-only documentation lives in [`docs/`](./docs): the rationale and design
 notes behind configuration decisions, for example
-[`docs/secrets.md`](./docs/secrets.md) on why secrets are delivered through the
-GNOME keyring.
+[`docs/secrets.md`](./docs/secrets.md) on why secrets are delivered through
+gopass.
 
 `docs/` is listed in [`.chezmoiignore`](./.chezmoiignore) and is never deployed,
 like the other repository-only files (`README.md`, `AGENTS.md`, `scripts/`, ...).
