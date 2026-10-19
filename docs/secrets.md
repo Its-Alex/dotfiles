@@ -17,7 +17,7 @@ through gopass, instead of reading a file-based password manager directly.
 
 - Host: Arch Linux + GNOME; dotfiles managed by chezmoi.
 - Secrets are consumed at runtime by the shell (GitLab), the opencode and Claude
-  Code MCP servers (Confluence/Jira/Linear/Terraform), and jj commit signing (GPG).
+  Code MCP servers (Confluence/Jira/Linear/Terraform/Slack), and jj commit signing (GPG).
 - Requirements: nothing in cleartext at rest, and no repeated passphrase prompts.
 
 ## Why gopass for delivery
@@ -63,6 +63,7 @@ the first line and extra fields are `key: value` lines:
 | `bitwarden/terraform/api-token` | password |
 | `bitwarden/atlassian/confluence` | password, `url`, `username` |
 | `bitwarden/atlassian/jira` | password, `url`, `username` |
+| `bitwarden/slack/xoxc-xoxd` | password (xoxc token), `xoxd` |
 
 Read the password with `gopass show --password <entry>` and a field with
 `gopass show <entry> <key>`.
@@ -93,7 +94,8 @@ only when `~/.config/gopass/config` does not exist
 - `dot_zshrc.tmpl` exports only ambient secrets (`GITLAB_PERSONAL_ACCESS_TOKEN`)
   from gopass.
 - `dot_local/bin/executable_mcp-atlassian-gopass`,
-  `dot_local/bin/executable_mcp-remote-linear-gopass` and
+  `dot_local/bin/executable_mcp-remote-linear-gopass`,
+  `dot_local/bin/executable_mcp-slack-gopass` and
   `dot_local/bin/executable_mcp-terraform-gopass` read the MCP tokens from
   gopass on demand and `exec` the server, so those tokens never enter the shell
   environment. `private_dot_config/opencode/opencode.json.tmpl` and the Claude

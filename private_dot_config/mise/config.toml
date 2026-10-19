@@ -15,3 +15,4 @@ pipx = 'latest'
 "npm:mcp-remote" = 'latest'
 "pipx:mcp-atlassian" = "latest"
 "go:github.com/hashicorp/terraform-mcp-server/cmd/terraform-mcp-server" = "latest"
+"go:github.com/korotovsky/slack-mcp-server/cmd/slack-mcp-server" = "latest"

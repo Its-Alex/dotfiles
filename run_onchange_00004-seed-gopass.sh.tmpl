@@ -64,6 +64,8 @@ seed_mirror_entry atlassian/confluence "{{ (bitwarden "item" "Confluence - API T
 seed_mirror_entry atlassian/jira "{{ (bitwarden "item" "Jira - API Token ").login.password }}" \
     url "{{ (bitwardenFields "item" "Jira - API Token ").space_url.value }}" \
     username "{{ (bitwarden "item" "Jira - API Token ").login.username }}"
+seed_mirror_entry slack/xoxc-xoxd "{{ (bitwardenFields "item" "Slack - XOXC/XOXD").SLACK_MCP_XOXC_TOKEN.value }}" \
+    xoxd "{{ (bitwardenFields "item" "Slack - XOXC/XOXD").SLACK_MCP_XOXD_TOKEN.value }}"
 
 printf "\e[1;32m%s\e[1;0m\n" "${mirror_name} gopass mount seeded."
 {{ end -}}

@@ -37,6 +37,12 @@
         "command": [
           "{{ .chezmoi.homeDir }}/.local/bin/mcp-terraform-gopass"
         ]
+      },
+      "slack": {
+        "type": "local",
+        "command": [
+          "{{ .chezmoi.homeDir }}/.local/bin/mcp-slack-gopass"
+        ]
       }
 {{- end }}
     }

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export SLACK_MCP_XOXC_TOKEN="$(gopass show --password bitwarden/slack/xoxc-xoxd 2>/dev/null || true)"
+export SLACK_MCP_XOXD_TOKEN="$(gopass show bitwarden/slack/xoxc-xoxd xoxd 2>/dev/null || true)"
+export SLACK_MCP_ADD_MESSAGE_TOOL=true
+
+# Must match the browser the tokens come from; Slack revokes the session on a mismatched fingerprint.
+export SLACK_MCP_USER_AGENT="Mozilla/5.0 (X11; Linux x86_64; rv:158.0) Gecko/20100101 Firefox/158.0"
+export SLACK_MCP_CUSTOM_TLS=true
+
+# The boot sweep saturates Slack's per-method limit; make refreshes rare and bound any thrash.
+export SLACK_MCP_CACHE_TTL=168h
+export SLACK_MCP_MIN_REFRESH_INTERVAL=900s
+
+exec mise exec -- slack-mcp-server --transport stdio "$@"
