@@ -23,7 +23,7 @@
     path = ~/.config/git/config-relex
 [credential "https://github.com"]
 	helper = 
-	helper = !/home/alex/.local/share/mise/installs/gh/2.101.0/gh_2.101.0_linux_amd64/bin/gh auth git-credential
+	helper = !mise exec -- gh auth git-credential
 [credential "https://gist.github.com"]
 	helper = 
-	helper = !/home/alex/.local/share/mise/installs/gh/2.101.0/gh_2.101.0_linux_amd64/bin/gh auth git-credential
+	helper = !mise exec -- gh auth git-credential
