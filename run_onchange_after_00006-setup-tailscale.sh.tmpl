@@ -1,0 +1,33 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ ! -x /usr/bin/tailscale ]]; then
+    exit 0
+fi
+
+# Neither the daemon nor the applet unit means anything without systemd as init.
+if [[ ! -d /run/systemd/system ]]; then
+    exit 0
+fi
+
+# The Arch package does not enable the daemon, and the client is useless without it.
+sudo systemctl enable --now tailscaled.service
+
+# Without an operator every tailscale command needs sudo.
+sudo /usr/bin/tailscale set --operator="$USER"
+
+# No user manager to enable units in (a fresh host reached over plain SSH), or no
+# tray host on the session bus, which on GNOME is the AppIndicator extension.
+if [[ ! -S ${XDG_RUNTIME_DIR:-/run/user/$UID}/systemd/private ]] ||
+    ! busctl --user status org.kde.StatusNotifierWatcher >/dev/null 2>&1; then
+    echo "No systemd user manager or tray host: skipping the Tailscale systray." >&2
+    exit 0
+fi
+
+# Installs ~/.config/systemd/user/tailscale-systray.service; enabling is below.
+/usr/bin/tailscale configure systray --enable-startup=systemd
+
+systemctl --user daemon-reload
+systemctl --user enable --now tailscale-systray.service
+{{ end -}}
