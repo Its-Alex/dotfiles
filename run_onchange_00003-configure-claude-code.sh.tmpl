@@ -25,6 +25,12 @@ claude mcp add --scope user \
     --transport stdio \
     terraform -- mcp-terraform-gopass
 
+# Remote MCP server: authenticates through its own OAuth flow, so no wrapper.
+claude mcp remove granola --scope user 2>&1 || true
+claude mcp add --scope user \
+    --transport http \
+    granola https://mcp.granola.ai/mcp
+
 printf "\e[1;34m%s\e[1;0m\n" "Install CC Safety Net for Claude Code..."
 
 mise exec -- npx -y cc-safety-net@latest install --claude-code
