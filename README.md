@@ -103,7 +103,8 @@ Today I mainly use two computer:
 Repository-only documentation lives in [`docs/`](./docs): the rationale and design
 notes behind configuration decisions, for example
 [`docs/secrets.md`](./docs/secrets.md) on why secrets are delivered through
-gopass.
+gopass, and [`docs/scripts.md`](./docs/scripts.md) on how the `run_*` scripts in
+[`.chezmoiscripts/linux/`](./.chezmoiscripts/linux) are named and ordered.
 
 `docs/` is listed in [`.chezmoiignore`](./.chezmoiignore) and is never deployed,
 like the other repository-only files (`README.md`, `AGENTS.md`, `scripts/`, ...).
