@@ -85,11 +85,11 @@ only when `~/.config/gopass/config` does not exist
 
 ## How it is wired in this repository
 
-- `run_onchange_00002-setup-gopass.sh.tmpl` installs the age identity, points
+- `.chezmoiscripts/linux/run_onchange_040-setup-gopass.sh.tmpl` installs the age identity, points
   `mounts.path` at the global store (cloning it from the private repository, or
   creating it on the first machine) and creates the local `bitwarden` mount. It
   is guarded by `CHEZMOI_PASSWORD_MANAGER_DISABLED`.
-- `run_onchange_00004-seed-gopass.sh.tmpl` seeds the `bitwarden` mount. It skips
+- `.chezmoiscripts/linux/run_onchange_041-seed-gopass.sh.tmpl` seeds the `bitwarden` mount. It skips
   an empty Bitwarden value and leaves an unchanged entry alone.
 - `dot_zshrc.tmpl` exports only ambient secrets (`GITLAB_PERSONAL_ACCESS_TOKEN`)
   from gopass.
@@ -100,7 +100,7 @@ only when `~/.config/gopass/config` does not exist
   gopass on demand and `exec` the server, so those tokens never enter the shell
   environment. `private_dot_config/opencode/opencode.json.tmpl` and the Claude
   Code MCP config point at those wrappers.
-- `run_onchange_00005-setup-gpg.sh.tmpl` still uses `secret-tool`: the GPG
+- `.chezmoiscripts/linux/run_onchange_042-setup-gpg.sh.tmpl` still uses `secret-tool`: the GPG
   passphrase belongs to pinentry, not to gopass.
 
 ## Security model
