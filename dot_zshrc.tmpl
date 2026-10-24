@@ -57,7 +57,9 @@ export GPG_TTY
 {{ if (and (eq .chezmoi.osRelease.id "arch") (ne .chezmoi.os "darwin")) -}}
 export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/gcr/ssh
 {{- end }}
-export DOCKER_HOST=unix:///run/user/1000/podman/podman.sock
+if [ -S "${XDG_RUNTIME_DIR:-/run/user/$UID}/podman/podman.sock" ]; then
+    export DOCKER_HOST="unix://${XDG_RUNTIME_DIR:-/run/user/$UID}/podman/podman.sock"
+fi
 # Interactive shells only: a non-interactive shell must never trigger pinentry.
 if [[ $- == *i* ]] && command -v gopass >/dev/null 2>&1; then
     # Gitlab (used by CLI tools such as glab)
@@ -75,7 +77,7 @@ export ANDROID_SDK_ROOT="/usr/local/share/android-sdk"
 export PATH=$ANDROID_SDK_ROOT:$PATH
 export HOMEBREW_INSTALL_CLEANUP=1
 {{ else if eq .chezmoi.os "linux" -}} 
-export PATH=$PATH:/home/alex/.local/bin
+export PATH=$PATH:$HOME/.local/bin
 export ANDROID_SDK_ROOT=/opt/android-sdk
 export PATH="${ANDROID_SDK_ROOT}/platform-tools:$PATH"
 export PATH="${ANDROID_SDK_ROOT}/tools:$PATH"
