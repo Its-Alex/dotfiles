@@ -22,4 +22,5 @@ host = [
   "systemd-resolvconf",
   "podman", "podman-docker", "docker-compose",
   "qemu-full", "guestfs-tools", "linux-headers",
+  "incus", # System containers and VMs; incus-apply (not packaged) comes from 012-host-system
 ]

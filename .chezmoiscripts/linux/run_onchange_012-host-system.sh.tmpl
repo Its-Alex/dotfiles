@@ -78,4 +78,34 @@ sudo systemctl enable --now earlyoom
 # Setup systemd-resolved with NetworkManager
 sudo systemctl enable --now systemd-resolved.service
 sudo ln -sf ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+
+printf "\e[1;34m%s\e[1;0m\n" "Setup Incus..."
+# incus.service is socket-activated (it Wants incus.socket), so the socket is
+# the unit to enable: incusd then starts on the first client connection.
+sudo systemctl enable --now incus.socket
+if ! id -nG "$USER" | grep -qw incus-admin; then
+    sudo usermod -aG incus-admin "$USER"
+    printf "\e[1;33m%s\e[1;0m\n" "Added $USER to incus-admin: log out and back in before running incus without sudo."
+fi
+
+# incus-apply has no AUR package, so install the pinned upstream release binary
+# and verify it against the .sha256 published with that release.
+incus_apply_version=v0.1.1
+case "$(uname -m)" in
+    x86_64) incus_apply_sha256=3f998b478529603f18a7631a4bc31e7fff49ca717275a366b4db408775d33e87 ;;
+    aarch64) incus_apply_sha256=dc38edef51a1939c4230bf03099902c98c813e582950676c30d5ce5565969752 ;;
+    *) incus_apply_sha256="" ;;
+esac
+if [[ -z "$incus_apply_sha256" ]]; then
+    printf "\e[1;33m%s\e[1;0m\n" "No incus-apply build for $(uname -m), skipping."
+elif [[ ! -x /usr/local/bin/incus-apply ]] || ! /usr/local/bin/incus-apply --version | grep -qF "$incus_apply_version"; then
+    printf "\e[1;34m%s\e[1;0m\n" "Install incus-apply $incus_apply_version..."
+    incus_apply_asset="incus-apply-$(uname)-$(uname -m)"
+    incus_apply_tmp=$(mktemp -d)
+    curl -fsSL -o "$incus_apply_tmp/$incus_apply_asset" \
+        "https://github.com/abiosoft/incus-apply/releases/download/${incus_apply_version}/${incus_apply_asset}"
+    (cd "$incus_apply_tmp" && echo "$incus_apply_sha256  $incus_apply_asset" | sha256sum -c -)
+    sudo install -m 0755 "$incus_apply_tmp/$incus_apply_asset" /usr/local/bin/incus-apply
+    rm -rf "$incus_apply_tmp"
+fi
 {{ end -}}
