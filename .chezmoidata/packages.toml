@@ -7,7 +7,7 @@ core = [
   "netcat", "q-dns-bin", "tailscale", # q-dns-bin: https://github.com/natesales/q, replaces drill from ldns
   "vim", "nvim", "tree-sitter-cli", "tmux", "tmuxinator", "zsh",
   "extra/opencode", # OpenCode 2; replaced AUR opencode-bin (v1)
-  "claude-code", "rtk", "jujutsu",
+  "claude-code", "rtk-bin", "jujutsu",
 ]
 desktop = [
   "flatpak", "os-prober", "fwupd", "netbird", "xkb-qwerty-fr",
