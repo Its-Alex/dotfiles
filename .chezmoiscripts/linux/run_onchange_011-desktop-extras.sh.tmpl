@@ -1,4 +1,4 @@
-{{ if eq .chezmoi.osRelease.id "arch" -}}
+{{ if and (eq .chezmoi.osRelease.id "arch") (eq .role "desktop") -}}
 #!/usr/bin/env bash
 set -euo pipefail
 
