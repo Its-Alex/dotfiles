@@ -12,11 +12,8 @@ Linux)
     fi
     if [ "$_os_id" = "arch" ]; then
         sudo pacman -S --noconfirm --needed bitwarden-cli
-        # An unattended apply (cloud-init, cron) has no tty: a login prompt
-        # there would hang it forever.
-        if [ -t 0 ] && [ "$CHEZMOI_PASSWORD_MANAGER_DISABLED" != "true" ] && [ "$CHEZMOI_PASSWORD_MANAGER_DISABLED" != "1" ]; then
-            bw login
-        fi
+        # Never log in from here: this hook runs before every apply, and an
+        # unattended one would hang on the master password prompt.
     else
         echo "unsupported distribution"
     fi
