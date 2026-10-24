@@ -228,7 +228,7 @@ fi
 printf '\n%s %s is up.\n\n' "$kind" "$name"
 if $with_secrets; then
     printf 'Secrets were provisioned and locked at first boot. Verify with:\n'
-    printf '  incus exec %s -- su - alex -c %s\n' "$name" "'gopass ls bitwarden'"
+    printf '  incus exec %s -- su - alex -c %s\n' "$name" "'mise exec -- gopass ls bitwarden'"
     printf '  incus exec %s -- su - alex -c %s\n' "$name" "'bw status'"
     printf '\nThe master password transited through host incus config and instance metadata\n'
     printf 'during first boot; root on either side could read it then.\n'
