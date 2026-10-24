@@ -111,10 +111,11 @@ ASKPASS
     # The store is published once and shared by every machine: clone it or fail.
     # Creating one here would fork it with unrelated history. A non-zero exit also
     # keeps chezmoi from recording this run_onchange_ script as done, so the next
-    # apply retries the clone. Without a terminal on stdin gopass takes the git
-    # name and email from the deployed git config instead of asking.
+    # apply retries the clone. gopass only stops asking for the git name and email
+    # (defaults: the deployed git config) when stdin is not a character device, so
+    # a pipe, not /dev/null.
     printf "\e[1;34m%s\e[1;0m\n" "Clone the global password store from ${store_remote}..."
-    if ! "$gopass_bin" clone --crypto age --path "$store_path" "$store_remote" < /dev/null; then
+    if ! : | "$gopass_bin" clone --crypto age --path "$store_path" "$store_remote"; then
         # Only this failed clone created the directory: a leftover would block the retry.
         if [ "$store_was_absent" = true ]; then
             rm -rf -- "$store_path"
