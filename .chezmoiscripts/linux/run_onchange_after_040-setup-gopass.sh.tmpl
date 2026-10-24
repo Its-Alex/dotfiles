@@ -62,6 +62,13 @@ fi
 store_path="${XDG_DATA_HOME:-$HOME/.local/share}/gopass/stores/root"
 store_remote="git@github.com:Its-Alex/password-store.git"
 
+# gopass makes its first commit during init, and gpgsign=true then needs the
+# passphrase: a machine that has never applied has no keyring to supply it, so
+# that bookkeeping commit stays unsigned. Interactive commits still sign.
+export GIT_CONFIG_COUNT=1
+export GIT_CONFIG_KEY_0=commit.gpgsign
+export GIT_CONFIG_VALUE_0=false
+
 # mounts.path creates the directory, so a directory proves nothing: the recipients
 # file that clone/init writes is what marks an initialized store.
 if [ ! -f "$store_path/.age-recipients" ] && [ ! -f "$store_path/.gpg-id" ]; then
