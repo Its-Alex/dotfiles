@@ -25,3 +25,14 @@ Pictures
 # Rootless podman inside an Incus container fails with its btrfs driver forced.
 .config/containers
 {{- end }}
+
+{{ if not (includeTemplate "bw-authenticated" .) }}
+# These render empty without a Bitwarden session. Ignored, the deployed keys
+# stay as they are instead of being emptied as drift.
+.ssh/itsalex
+.ssh/itsalex-old
+.ssh/itsalex.pub
+.ssh/itsalex-old.pub
+.ssh/relex
+.ssh/relex.pub
+{{ end }}
