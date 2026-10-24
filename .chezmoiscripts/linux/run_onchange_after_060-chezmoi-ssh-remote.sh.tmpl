@@ -2,8 +2,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# run_onchange, not run_once: the key this needs is only deployed after
-# `bw login && chezmoi apply`, which run_once would never retry for.
+# The key is only deployed after `bw login && chezmoi apply`: this line changes
+# then, so the skip recorded by a secretless apply is retried.
+# bitwarden session: {{ if includeTemplate "bw-authenticated" . }}yes{{ else }}no{{ end }}
 repo="${HOME}/.local/share/chezmoi"
 key="${HOME}/.ssh/itsalex"
 remote="git@github.com:Its-Alex/dotfiles.git"

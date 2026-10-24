@@ -2,6 +2,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Changes on `bw login`, so the skip recorded by a secretless apply is retried.
+# bitwarden session: {{ if includeTemplate "bw-authenticated" . }}yes{{ else }}no{{ end }}
+
 # Every MCP wrapper registered below reads its token from gopass, so without the
 # seeded mount they would fail at start-up.
 store_path="${XDG_DATA_HOME:-$HOME/.local/share}/gopass/stores/bitwarden"
