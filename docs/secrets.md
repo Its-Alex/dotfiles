@@ -105,8 +105,9 @@ only when `~/.config/gopass/config` does not exist
   gopass on demand and `exec` the server, so those tokens never enter the shell
   environment. `private_dot_config/opencode/opencode.json.tmpl` and the Claude
   Code MCP config point at those wrappers.
-- `.chezmoiscripts/linux/run_onchange_after_042-setup-gpg.sh.tmpl` still uses `secret-tool`: the GPG
-  passphrase belongs to pinentry, not to gopass.
+- `.chezmoiscripts/linux/run_onchange_after_035-setup-gpg.sh.tmpl` still uses `secret-tool`: the GPG
+  passphrase belongs to pinentry, not to gopass. It runs before the gopass setup because git signs
+  commits (`gpgsign = true`) and the store's first commit happens during `gopass init`.
 
 ## Security model
 
