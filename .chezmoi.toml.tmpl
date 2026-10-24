@@ -1,3 +1,12 @@
+{{- $roleChoices := list "desktop" "headless" -}}
+{{- $role := env "CHEZMOI_ROLE" -}}
+{{- if $role -}}
+{{-   if not (has $role $roleChoices) }}{{ fail (printf "CHEZMOI_ROLE=%q: must be one of %v" $role $roleChoices) }}{{ end -}}
+{{- else -}}
+{{-   $role = promptChoiceOnce . "role" "Machine role" $roleChoices -}}
+{{- end }}
+[data]
+    role = {{ $role | quote }}
 [bitwarden]
     unlock = "auto"
 [hooks.read-source-state.pre]
