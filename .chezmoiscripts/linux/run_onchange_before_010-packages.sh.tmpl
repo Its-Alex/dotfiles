@@ -20,8 +20,13 @@ fi
 
 printf "\e[1;34m%s\e[1;0m\n" "Install system programs.."
 packages_list=(
-{{- range concat .packages.arch.core .packages.arch.desktop .packages.arch.host }}
+{{- range .packages.arch.core }}
     {{ . }}
+{{- end }}
+{{- if eq .role "desktop" }}
+{{-   range concat .packages.arch.desktop .packages.arch.host }}
+    {{ . }}
+{{-   end }}
 {{- end }}
 )
 yay -S --noconfirm --needed "${packages_list[@]}"

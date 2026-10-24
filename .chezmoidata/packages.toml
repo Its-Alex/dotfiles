@@ -1,4 +1,4 @@
-# Groups are categorisation only: every group installs on every machine.
+# desktop and host install only when role = "desktop"; core installs everywhere.
 
 [packages.arch]
 core = [
