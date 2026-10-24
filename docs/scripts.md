@@ -46,6 +46,10 @@ Order inside a phase is the alphabetical order of the script's target path, whic
 is why the numeric prefix matters: `.chezmoiscripts/linux/010-...` runs before
 `.chezmoiscripts/linux/020-...`.
 
+Two phase choices are deliberate, not oversights: `01x` is `before` (packages must
+exist before the dotfiles that reference them are deployed) and `04x` is `after`
+(the password store is only touched once the SSH keys are on disk).
+
 ## State
 
 - `run_once_` scripts are keyed by the SHA256 of their **rendered content**, so
