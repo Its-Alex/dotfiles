@@ -1,0 +1,23 @@
+kind: profile
+name: opencode
+description: opencode instances - tun for tailscaled in a container, nesting off
+config:
+  security.nesting: "false"
+devices:
+  tun:
+    type: unix-char
+    path: /dev/net/tun
+---
+# Rendered by scripts/create-opencode-instance.sh; __VM__ makes a raw apply fail planning.
+kind: instance
+name: __NAME__
+image: images:archlinux/cloud
+vm: __VM__
+profiles:
+  - default
+  - opencode
+config:
+  limits.memory: "8GiB"
+  limits.cpu: "4"
+  security.secureboot: "false"   # the Arch cloud image cannot boot under secure boot
+  cloud-init.user-data: __USER_DATA__

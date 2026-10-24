@@ -1,0 +1,60 @@
+#cloud-config
+# Portable on purpose: nothing Incus-specific here, the same file works on Proxmox.
+users:
+  - name: alex
+    groups: [wheel]
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+    shell: /bin/bash
+    lock_passwd: true
+    ssh_authorized_keys: []
+
+write_files:
+  - path: /usr/local/share/chezmoi-bootstrap.sh
+    owner: root:root
+    permissions: '0755'
+    content: |
+      #!/bin/sh
+      set -eu
+
+      if [ -f /run/bw-bootstrap.env ]; then
+          set -a
+          . /run/bw-bootstrap.env
+          set +a
+          bw login --apikey
+          BW_SESSION="$(bw unlock --passwordenv BW_PASSWORD --raw)"
+          export BW_SESSION
+      fi
+
+      CHEZMOI_ROLE=headless sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin" init --apply https://github.com/Its-Alex/dotfiles.git
+
+      if [ -f /run/bw-bootstrap.env ]; then
+          bw lock
+          shred -u /run/bw-bootstrap.env
+      fi
+
+runcmd:
+  - |
+    set -eu
+
+    # cloud-init's package module runs before the network is up and never retries.
+    # bw and curl must exist before chezmoi init: the secret parts need a session,
+    # and the apply that installs the core packages only runs after it.
+    attempt=0
+    until pacman -Sy --needed --noconfirm git curl sudo openssh bitwarden-cli; do
+      attempt=$((attempt + 1))
+      if [ "$attempt" -ge 5 ]; then
+        echo "package install still failing after $attempt attempts" >&2
+        exit 1
+      fi
+      sleep 10
+    done
+
+    ssh-keygen -A
+    systemctl enable --now sshd
+
+    if [ -f /run/bw-bootstrap.env ]; then
+      # Root-owned in the instance config, and the bootstrap below runs as alex.
+      chown alex: /run/bw-bootstrap.env
+      chmod 0600 /run/bw-bootstrap.env
+    fi
+    su -l alex -c 'sh /usr/local/share/chezmoi-bootstrap.sh'
