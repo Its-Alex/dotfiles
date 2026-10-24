@@ -2,18 +2,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ ! -d ${HOME}/.config/tmux/plugins/tpm/ ]]; then
-    printf "\e[1;34m%s\e[1;0m\n" "Clone tmux tpm"
-    mkdir -p "${HOME}/.config/tmux/plugins/"
-    git clone https://github.com/tmux-plugins/tpm "${HOME}/.config/tmux/plugins/tpm/"
-fi
-
-if ! command -v mise > /dev/null; then
-    printf "\e[1;34m%s\e[1;0m\n" "Install mise"
-    sudo curl -Lo /usr/local/bin/mise https://mise.jdx.dev/mise-latest-linux-x64
-    sudo chmod +x /usr/local/bin/mise
-fi
-
 if [[ -d /boot/grub/ ]]; then
     printf "\e[1;34m%s\e[1;0m\n" "Grub update to detect others systems"
     sudo sed -i '/^#\?GRUB_DISABLE_OS_PROBER=/c\GRUB_DISABLE_OS_PROBER=false' /etc/default/grub
@@ -27,12 +15,6 @@ if [[ -f /etc/bluetooth/main.conf ]]; then
     else
         printf '\n[Policy]\nAutoEnable=false\n' | sudo tee -a /etc/bluetooth/main.conf > /dev/null
     fi
-fi
-
-if [[ ! -d "${HOME}/.oh-my-zsh" ]]; then
-    printf "\e[1;34m%s\e[1;0m\n" "Setup ohmyzsh"
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-    sudo -k chsh -s "$(which zsh)" "$USER"
 fi
 
 if [[ ! -d "/usr/share/icons/Twilight-cursors" ]]; then
@@ -79,6 +61,4 @@ if command -v gsettings > /dev/null; then
     gsettings set org.gnome.desktop.interface icon-theme Numix-Square
     gsettings set org.gnome.desktop.interface cursor-theme "Twilight-cursors"
 fi
-
-git lfs install
 {{ end -}}
