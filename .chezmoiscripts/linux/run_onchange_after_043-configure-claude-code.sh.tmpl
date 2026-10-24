@@ -1,6 +1,14 @@
-{{ if and (eq .chezmoi.os "linux") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "true") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "1") -}}
+{{ if eq .chezmoi.os "linux" -}}
 #!/usr/bin/env bash
 set -euo pipefail
+
+# Every MCP wrapper registered below reads its token from gopass, so without the
+# seeded mount they would fail at start-up.
+store_path="${XDG_DATA_HOME:-$HOME/.local/share}/gopass/stores/bitwarden"
+if [ ! -d "$store_path" ]; then
+    printf "\e[1;33m%s\e[1;0m\n" "gopass store \"bitwarden\" missing; skipping Claude Code MCP configuration."
+    exit 0
+fi
 
 if ! command -v claude > /dev/null; then
     exit 0
