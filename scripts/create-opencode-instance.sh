@@ -209,8 +209,10 @@ done
 [[ $cloud_init_status == "done" ]] || die "cloud-init is '$cloud_init_status' in $name, inspect it with: incus exec $name -- cloud-init status --long"
 
 if $with_secrets; then
+    # incus-apply treats cloud-init.user-data as create-only, so re-applying the
+    # secretless document would leave the credentials in place.
     printf 'Scrubbing the credentials from the instance config...\n'
-    apply_document false
+    scrub_credentials
 
     deployed_user_data=$(incus config get "$name" cloud-init.user-data)
     for value in "$BW_CLIENTID" "$BW_CLIENTSECRET" "$BW_PASSWORD"; do
