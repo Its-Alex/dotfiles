@@ -20,6 +20,22 @@ To update your current configuration:
 $ chezmoi apply
 ```
 
+### Machine role
+
+Each machine records a role, `desktop` or `headless`. It is asked once at
+`chezmoi init` and persisted in `~/.config/chezmoi/chezmoi.toml`. Set
+`CHEZMOI_ROLE` to answer without prompting:
+
+```sh-session
+$ CHEZMOI_ROLE=headless sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply https://github.com/Its-Alex/dotfiles.git
+```
+
+`CHEZMOI_ROLE` is read only while `chezmoi init` renders the config template;
+the value persists in the config file and plain `apply`/`update` ignore the
+variable. Re-run `chezmoi init` with the variable set to change a machine's
+role, the variable wins over the persisted answer. Any other value aborts the
+init with the list of allowed roles.
+
 ## Install from scratch
 
 To install from scratch I use [QEMU Archlinux](https://github.com/Its-Alex/qemu-archlinux),
