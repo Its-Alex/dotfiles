@@ -1,3 +1,4 @@
+{{- $dataHome := default (joinPath .chezmoi.homeDir ".local/share") (env "XDG_DATA_HOME") -}}
 {
   "$schema": "https://opencode.ai/config.json",
   "plugins": [
@@ -23,7 +24,7 @@
       "grep_app": {
         "type": "remote",
         "url": "https://mcp.grep.app"
-      }{{- if and (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "true") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "1") }},
+      }{{- if stat (joinPath $dataHome "gopass/stores/bitwarden") }},
       "mcp-atlassian": {
         "type": "local",
         "command": [
