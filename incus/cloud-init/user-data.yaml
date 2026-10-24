@@ -29,7 +29,6 @@ write_files:
 
       if [ -f /run/bw-bootstrap.env ]; then
           bw lock
-          shred -u /run/bw-bootstrap.env
       fi
 
 runcmd:
@@ -57,4 +56,11 @@ runcmd:
       chown alex: /run/bw-bootstrap.env
       chmod 0600 /run/bw-bootstrap.env
     fi
-    su -l alex -c 'sh /usr/local/share/chezmoi-bootstrap.sh'
+    # Root erases the credentials, failed bootstrap included: alex owns the file
+    # but cannot unlink it from the root-owned /run.
+    bootstrap_status=0
+    su -l alex -c 'sh /usr/local/share/chezmoi-bootstrap.sh' || bootstrap_status=$?
+    if [ -f /run/bw-bootstrap.env ]; then
+      shred -u /run/bw-bootstrap.env
+    fi
+    exit "$bootstrap_status"
