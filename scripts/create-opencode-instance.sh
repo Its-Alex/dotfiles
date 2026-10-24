@@ -5,7 +5,29 @@ repo_root=$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 document=$repo_root/incus/opencode.yaml
 user_data_source=$repo_root/incus/cloud-init/user-data.yaml
 work_dir=$(mktemp -d)
-trap 'rm -rf -- "$work_dir"' EXIT
+credentials_sent=false
+
+# cloud-init only reads user-data on first boot, so dropping it is safe however
+# that boot went; leaving it would keep the credentials in `incus config show`.
+scrub_credentials() {
+    local deployed_user_data value
+    deployed_user_data=$(incus config get "$name" cloud-init.user-data 2>/dev/null) || return 0
+    for value in "$BW_CLIENTID" "$BW_CLIENTSECRET" "$BW_PASSWORD"; do
+        if [[ $deployed_user_data == *"$value"* ]]; then
+            incus config unset "$name" cloud-init.user-data
+            printf 'Removed the credentials from the incus config of %s.\n' "$name" >&2
+            return 0
+        fi
+    done
+}
+
+cleanup() {
+    rm -rf -- "$work_dir"
+    if [[ $credentials_sent == true ]]; then
+        scrub_credentials
+    fi
+}
+trap cleanup EXIT
 
 die() {
     printf 'error: %s\n' "$*" >&2
@@ -148,6 +170,9 @@ apply_document() {
 
 kind=$([[ $vm == true ]] && echo VM || echo container)
 printf 'Applying %s %s...\n' "$kind" "$name"
+if $with_secrets; then
+    credentials_sent=true
+fi
 if ! apply_document "$with_secrets"; then
     die "incus-apply failed, inspect the guest with: incus exec $name -- cloud-init status --long"
 fi
