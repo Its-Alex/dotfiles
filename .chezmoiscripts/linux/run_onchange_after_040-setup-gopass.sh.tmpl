@@ -48,8 +48,13 @@ else
     printf "\e[1;32m%s\e[1;0m\n" "age identity installed."
 fi
 
-# Both stay on: keyring for interactive use, agent to keep it unlocked.
-"$gopass_bin" config age.usekeychain true > /dev/null
+# The keyring caches the passphrase across commands; without one gopass warns on
+# every call, so only ask for it when org.freedesktop.secrets is reachable.
+if [ -n "${DBUS_SESSION_BUS_ADDRESS:-}" ] && busctl --user --quiet status org.freedesktop.secrets > /dev/null 2>&1; then
+    "$gopass_bin" config age.usekeychain true > /dev/null
+else
+    "$gopass_bin" config age.usekeychain false > /dev/null
+fi
 "$gopass_bin" config age.agent-enabled true > /dev/null
 
 # The global store, backed by the private password-store repo. A repo-scoped
