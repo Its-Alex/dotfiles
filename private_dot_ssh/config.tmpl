@@ -1,9 +1,4 @@
-{{ if eq .chezmoi.os "darwin" -}}
-Include /Users/itsalex/Documents/realtime-helm-package/deployment/ssh-config
-{{ else -}}
-Include /home/alex/Documents/realtime-helm-package/deployment/ssh-config
-{{ end -}}
-
+Include {{ .chezmoi.homeDir }}/Documents/realtime-helm-package/deployment/ssh-config
 Host itsalex
     ForwardAgent yes
     Hostname infra01.netbird.cloud
