@@ -1,0 +1,31 @@
+{{ if eq .chezmoi.osRelease.id "arch" -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Enable pacman color
+sudo sed -i '/^#Color/c\Color' /etc/pacman.conf
+
+printf "\e[1;34m%s\e[1;0m\n" "Install Git..."
+sudo pacman -S --noconfirm --needed git git-lfs base-devel
+
+if ! command -v yay > /dev/null; then
+    printf "\e[1;34m%s\e[1;0m\n" "Install Yay..."
+    git clone https://aur.archlinux.org/yay.git /tmp/yay
+    (
+        cd /tmp/yay || exit 1
+        makepkg -si --noconfirm --needed
+    )
+    rm -rf /tmp/yay
+fi
+
+printf "\e[1;34m%s\e[1;0m\n" "Install system programs.."
+packages_list=(
+{{- range concat .packages.arch.core .packages.arch.desktop .packages.arch.host }}
+    {{ . }}
+{{- end }}
+)
+yay -S --noconfirm --needed "${packages_list[@]}"
+
+# Since rtk 0.52.0, --opencode also sets up Claude Code (rtk-ai/rtk#3463).
+rtk init -g --opencode --auto-patch
+{{ end -}}

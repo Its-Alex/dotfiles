@@ -2,30 +2,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Enable pacman color
-sudo sed -i '/^#Color/c\Color' /etc/pacman.conf
-
-printf "\e[1;34m%s\e[1;0m\n" "Install Git..."
-sudo pacman -S --noconfirm --needed git git-lfs base-devel
-
-if ! command -v yay > /dev/null; then
-    printf "\e[1;34m%s\e[1;0m\n" "Install Yay..."
-    git clone https://aur.archlinux.org/yay.git /tmp/yay
-    (
-        cd /tmp/yay || exit 1
-        makepkg -si --noconfirm --needed
-    )
-    rm -rf /tmp/yay
-fi
-
-printf "\e[1;34m%s\e[1;0m\n" "Install system programs.."
-packages_list=(
-{{- range concat .packages.arch.core .packages.arch.desktop .packages.arch.host }}
-    {{ . }}
-{{- end }}
-)
-yay -S --noconfirm --needed "${packages_list[@]}"
-
 printf "\e[1;34m%s\e[1;0m\n" "Setup podman..."
 sudo tee /etc/containers/registries.conf.d/10-unqualified-search-registries.conf > /dev/null <<'EOF'
 unqualified-search-registries = ["docker.io"]
@@ -40,40 +16,6 @@ driver = "btrfs"
 EOF
 # Enable podman socket for docker compose
 systemctl --user enable --now podman.socket
-
-# Since rtk 0.52.0, --opencode also sets up Claude Code (rtk-ai/rtk#3463).
-rtk init -g --opencode --auto-patch
-
-flatpak_flathub_apps_list=(
-    io.gitlab.librewolf-community
-    org.signal.Signal
-    com.slack.Slack
-    com.discordapp.Discord
-    md.obsidian.Obsidian
-    org.videolan.VLC
-    com.mattjakeman.ExtensionManager # Gnome extension manager
-    com.obsproject.Studio
-)
-printf "\e[1;34m%s\e[1;0m\n" "Install flatpak programs.."
-flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-flatpak -y install --user flathub "${flatpak_flathub_apps_list[@]}"
-
-# Adwaita for Signal and Slack, which glitch on the Numix theme (signal#7633).
-flatpak override --user --env=GTK_THEME=Adwaita org.signal.Signal
-flatpak override --user --env=GTK_THEME=Adwaita com.slack.Slack
-
-# Otherwise Signal errors on the password store.
-flatpak override --user --env=SIGNAL_PASSWORD_STORE=gnome-libsecret org.signal.Signal
-
-printf "\e[1;34m%s\e[1;0m\n" "Setup flatpak programs.."
-# Allow Librewolf to access all devices (e.g. webcam)
-flatpak override --user --device=all io.gitlab.librewolf-community
-
-printf "\e[1;34m%s\e[1;0m\n" "Disable Xbox Wireless Adapter for Windows"
-# Otherwise the adapter enumerates as a Wifi Key.
-echo 'ACTION=="add", ATTR{idVendor}=="045e", ATTR{idProduct}=="02fe", ATTR{authorized}="0"' | sudo tee "/etc/udev/rules.d/99-disable-xbox-adapter.rules" > /dev/null
-sudo udevadm control --reload-rules
-sudo udevadm trigger
 
 # systemd-oomd kills on PSI pressure, earlyoom on low memory as a backstop.
 printf "\e[1;34m%s\e[1;0m\n" "Setup userspace OOMKiller (systemd-oomd + earlyoom)..."
