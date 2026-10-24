@@ -83,9 +83,11 @@ if [ ! -f "$store_path/.age-recipients" ] && [ ! -f "$store_path/.gpg-id" ]; the
     # Creating one here would fork it with unrelated history. A non-zero exit also
     # keeps chezmoi from recording this run_onchange_ script as done, so the next
     # apply retries the clone. BatchMode keeps an unattended apply from hanging.
+    # Without a terminal on stdin gopass takes the git name and email from the
+    # deployed git config instead of asking.
     printf "\e[1;34m%s\e[1;0m\n" "Clone the global password store from ${store_remote}..."
     if ! GIT_TERMINAL_PROMPT=0 GIT_SSH_COMMAND='ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new' \
-        "$gopass_bin" clone --crypto age --path "$store_path" "$store_remote"; then
+        "$gopass_bin" clone --crypto age --path "$store_path" "$store_remote" < /dev/null; then
         # Only this failed clone created the directory: a leftover would block the retry.
         if [ "$store_was_absent" = true ]; then
             rm -rf -- "$store_path"
