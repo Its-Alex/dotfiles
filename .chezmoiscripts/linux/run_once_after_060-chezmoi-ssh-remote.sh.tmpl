@@ -1,9 +1,0 @@
-{{ if and (eq .chezmoi.os "linux") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "true") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "1") -}}
-#!/usr/bin/env bash
-set -euo pipefail
-
-(
-    cd "${HOME}/.local/share/chezmoi"
-    git remote set-url origin git@github.com:Its-Alex/dotfiles.git
-)
-{{ end -}}
