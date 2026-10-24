@@ -1,6 +1,6 @@
 #!/bin/sh
 
-type bw >/dev/null 2>&1 && exit
+type bw >/dev/null 2>&1 && exit 0
 
 case "$(uname -s)" in
 Linux)
@@ -12,7 +12,9 @@ Linux)
     fi
     if [ "$_os_id" = "arch" ]; then
         sudo pacman -S --noconfirm --needed bitwarden-cli
-        if [ "$CHEZMOI_PASSWORD_MANAGER_DISABLED" != "true" ] && [ "$CHEZMOI_PASSWORD_MANAGER_DISABLED" != "1" ]; then
+        # An unattended apply (cloud-init, cron) has no tty: a login prompt
+        # there would hang it forever.
+        if [ -t 0 ] && [ "$CHEZMOI_PASSWORD_MANAGER_DISABLED" != "true" ] && [ "$CHEZMOI_PASSWORD_MANAGER_DISABLED" != "1" ]; then
             bw login
         fi
     else
@@ -21,6 +23,7 @@ Linux)
     ;;
 *)
     echo "unsupported OS"
-    exit 1
     ;;
 esac
+
+exit 0
