@@ -21,6 +21,13 @@ if ! command -v secret-tool > /dev/null; then
     exit 0
 fi
 
+# secret-tool talks to org.freedesktop.secrets over the session bus, which a
+# container or a VM with no login session does not have.
+if [ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ] || ! busctl --user --quiet status org.freedesktop.secrets > /dev/null 2>&1; then
+    printf "\e[1;33m%s\e[1;0m\n" "No session keyring (headless); skipping GPG passphrase seeding."
+    exit 0
+fi
+
 printf "\e[1;34m%s\e[1;0m\n" "Seed GPG passphrases into the keyring..."
 
 # pinentry looks up keygrip "n/<keygrip>" under org.gnupg.Passphrase; keygrips are
@@ -35,10 +42,13 @@ seed_gpg_passphrase() {
         return 0
     fi
     while IFS= read -r keygrip; do
-        printf '%s' "$passphrase" | secret-tool store --label="GnuPG: n/$keygrip" \
+        if ! printf '%s' "$passphrase" | secret-tool store --label="GnuPG: n/$keygrip" \
             xdg:schema org.gnupg.Passphrase \
             stored-by "GnuPG Pinentry" \
-            keygrip "n/$keygrip"
+            keygrip "n/$keygrip"; then
+            printf "\e[1;33m%s\e[1;0m\n" "secret-tool refused the keyring; skipping GPG passphrase seeding."
+            return 0
+        fi
     done < <(gpg --with-colons --with-keygrip --list-secret-keys "$key" 2> /dev/null | awk -F: '/^grp:/ { print $10 }')
 }
 
