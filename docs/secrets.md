@@ -85,12 +85,14 @@ only when `~/.config/gopass/config` does not exist
 
 ## How it is wired in this repository
 
-- `.chezmoiscripts/linux/run_onchange_040-setup-gopass.sh.tmpl` installs the age identity, points
+- `.chezmoiscripts/linux/run_onchange_after_040-setup-gopass.sh.tmpl` installs the age identity, points
   `mounts.path` at the global store (cloning it from the private repository, or
   creating it on the first machine) and creates the local `bitwarden` mount. It
   is guarded by `CHEZMOI_PASSWORD_MANAGER_DISABLED`.
-- `.chezmoiscripts/linux/run_onchange_041-seed-gopass.sh.tmpl` seeds the `bitwarden` mount. It skips
+- `.chezmoiscripts/linux/run_onchange_after_041-seed-gopass.sh.tmpl` seeds the `bitwarden` mount. It skips
   an empty Bitwarden value and leaves an unchanged entry alone.
+- `04x` runs in the `after` phase: target files (the SSH keys above all) are
+  deployed before the store is touched.
 - `dot_zshrc.tmpl` exports only ambient secrets (`GITLAB_PERSONAL_ACCESS_TOKEN`)
   from gopass.
 - `dot_local/bin/executable_mcp-atlassian-gopass`,
@@ -100,7 +102,7 @@ only when `~/.config/gopass/config` does not exist
   gopass on demand and `exec` the server, so those tokens never enter the shell
   environment. `private_dot_config/opencode/opencode.json.tmpl` and the Claude
   Code MCP config point at those wrappers.
-- `.chezmoiscripts/linux/run_onchange_042-setup-gpg.sh.tmpl` still uses `secret-tool`: the GPG
+- `.chezmoiscripts/linux/run_onchange_after_042-setup-gpg.sh.tmpl` still uses `secret-tool`: the GPG
   passphrase belongs to pinentry, not to gopass.
 
 ## Security model
