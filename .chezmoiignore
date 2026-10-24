@@ -5,6 +5,7 @@ archlinux-gnome-install.sh
 mise.toml
 scripts/
 docs/
+incus/
 gnome-extensions.txt
 gnome-shell-extensions.dconf
 
@@ -14,3 +15,13 @@ gnome-shell-extensions.dconf
 .config/mise/mise.lock
 .config/nvim/lazy-lock.json
 .config/opencode/tui.json
+
+{{- if ne .role "desktop" }}
+# GUI payloads: nothing here has a consumer without a graphical session.
+.config/ghostty
+.config/Claude
+Pictures
+.var
+# Rootless podman inside an Incus container fails with its btrfs driver forced.
+.config/containers
+{{- end }}
