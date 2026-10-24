@@ -1,0 +1,25 @@
+# Groups are categorisation only: every group installs on every machine.
+
+[packages.arch]
+core = [
+  "git", "git-lfs", "base-devel",
+  "gnupg", "libsecret", "unzip", "tar", "fzf", "jq",
+  "netcat", "q-dns-bin", "tailscale", # q-dns-bin: https://github.com/natesales/q, replaces drill from ldns
+  "vim", "nvim", "tree-sitter-cli", "tmux", "tmuxinator", "zsh",
+  "extra/opencode", # OpenCode 2; replaced AUR opencode-bin (v1)
+  "claude-code", "rtk", "jujutsu",
+]
+desktop = [
+  "flatpak", "os-prober", "fwupd", "netbird", "xkb-qwerty-fr",
+  "ttf-fira-code", "ttf-firacode-nerd",
+  "numix-square-icon-theme-git", "flat-remix-gnome", "numix-frost-themes", # Gnome icons and theme
+  "ghostty", "visual-studio-code-bin", "claude-desktop",
+  "extra/nethogs", "extra/wireless_tools", "extra/iotop-c", "amdgpu_top",
+  "gnome-extensions-cli", # Provides gext, installs the extensions listed in gnome-extensions.txt
+]
+host = [
+  "earlyoom", # Raw %-memory/swap OOM backstop, complements PSI-pressure-based systemd-oomd
+  "systemd-resolvconf",
+  "podman", "podman-docker", "docker-compose",
+  "qemu-full", "guestfs-tools", "linux-headers",
+]
