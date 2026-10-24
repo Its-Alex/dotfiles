@@ -87,8 +87,11 @@ only when `~/.config/gopass/config` does not exist
 
 - `.chezmoiscripts/linux/run_onchange_after_040-setup-gopass.sh.tmpl` installs the age identity, points
   `mounts.path` at the global store (cloning it from the private repository, or
-  creating it on the first machine) and creates the local `bitwarden` mount. It
-  is guarded by `CHEZMOI_PASSWORD_MANAGER_DISABLED`.
+  creating it on the first machine) and creates the local `bitwarden` mount. Its
+  Bitwarden-sourced body only renders with a live session
+  (`.chezmoitemplates/bw-authenticated`); without one it prints the
+  `bw login && chezmoi apply` hint, so `bw login` enables the whole secret path
+  and `bw logout` disables it again.
 - `.chezmoiscripts/linux/run_onchange_after_041-seed-gopass.sh.tmpl` seeds the `bitwarden` mount. It skips
   an empty Bitwarden value and leaves an unchanged entry alone.
 - `04x` runs in the `after` phase: target files (the SSH keys above all) are
