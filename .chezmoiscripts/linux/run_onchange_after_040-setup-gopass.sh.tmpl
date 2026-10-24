@@ -1,4 +1,4 @@
-{{ if and (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "true") (ne (env "CHEZMOI_PASSWORD_MANAGER_DISABLED") "1") -}}
+{{ if includeTemplate "bw-authenticated" . -}}
 #!/usr/bin/env bash
 set -euo pipefail
 
@@ -92,4 +92,10 @@ elif ! "$gopass_bin" --nosync mounts 2> /dev/null | grep -qF "${mirror_name} (";
 fi
 
 printf "\e[1;32m%s\e[1;0m\n" "gopass configured."
+{{ else -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+printf "\e[1;33m%s\e[1;0m\n" "No Bitwarden session; skipping gopass setup. Run: bw login && chezmoi apply"
+exit 0
 {{ end -}}
