@@ -186,3 +186,20 @@ required. It is safe to re-run. Notes:
     $ curl -s https://secure.eicar.org/eicar.com -o ~/Downloads/eicar.com
     $ cat ~/Downloads/eicar.com   # expect: Operation not permitted
     ```
+
+### Incus
+
+`012-host-system` installs [Incus](https://linuxcontainers.org/incus/), enables
+`incus.socket`, adds the user to `incus-admin`, and installs
+[`incus-apply`](https://incus-apply.abiosoft.com/) (no AUR package, so the pinned
+upstream release binary goes to `/usr/local/bin`). Two steps stay manual:
+
+- Log out and back in after the first apply: group membership only reaches a new
+  session.
+- Initialise the daemon once. It creates the default storage pool and the
+  `incusbr0` bridge, and is left out of the script so the storage backend is not
+  guessed:
+
+    ```sh-session
+    $ incus admin init --minimal
+    ```
