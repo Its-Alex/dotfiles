@@ -56,9 +56,13 @@ fi
 # store overrides mounts.path with GOPASS_CONFIG_KEY_0/_VALUE_0 instead.
 store_path="${XDG_DATA_HOME:-$HOME/.local/share}/gopass/stores/root"
 store_remote="git@github.com:Its-Alex/password-store.git"
-"$gopass_bin" config mounts.path "$store_path" > /dev/null
 
-if [ ! -d "$store_path" ]; then
+# mounts.path creates the directory, so a directory proves nothing: the recipients
+# file that clone/init writes is what marks an initialized store.
+if [ ! -f "$store_path/.age-recipients" ] && [ ! -f "$store_path/.gpg-id" ]; then
+    if [ -d "$store_path" ] && [ -z "$(ls -A "$store_path")" ]; then
+        rmdir "$store_path"
+    fi
     # BatchMode + accept-new so an unattended apply cannot hang on SSH.
     if [ -n "$(GIT_TERMINAL_PROMPT=0 GIT_SSH_COMMAND='ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new' \
         git ls-remote --heads "$store_remote" 2> /dev/null)" ]; then
@@ -75,6 +79,9 @@ if [ ! -d "$store_path" ]; then
         printf "\e[1;33m%s\e[1;0m\n" "Publish it once with: gopass git push -u origin $(git -C "$store_path" symbolic-ref --short HEAD)"
     fi
 fi
+
+# After the store exists: mounts.path on its own just creates the directory.
+"$gopass_bin" config mounts.path "$store_path" > /dev/null
 
 # The Bitwarden mirror is a separate, git-less mount: Bitwarden is the source and
 # the seed script rebuilds it, so pushing would only expose work credentials.
