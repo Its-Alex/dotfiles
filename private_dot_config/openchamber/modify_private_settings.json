@@ -22,5 +22,7 @@ JSON
 current_settings=$(cat)
 [ -n "${current_settings//[[:space:]]/}" ] || current_settings='{}'
 
-jq --argjson managed "$managed_settings" --argjson removed "$removed_keys" \
+# -j: the app writes these files with no trailing newline, and a jq-added one
+# would show up in every chezmoi diff.
+jq -j --argjson managed "$managed_settings" --argjson removed "$removed_keys" \
   '(. * $managed) | delpaths($removed | map([.]))' <<<"$current_settings"

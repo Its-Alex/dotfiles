@@ -66,4 +66,6 @@ JSON
 current_preferences=$(cat)
 [ -n "${current_preferences//[[:space:]]/}" ] || current_preferences='{}'
 
-jq --argjson managed "$managed_preferences" '. * $managed' <<<"$current_preferences"
+# -j: the app writes these files with no trailing newline, and a jq-added one
+# would show up in every chezmoi diff.
+jq -j --argjson managed "$managed_preferences" '. * $managed' <<<"$current_preferences"
