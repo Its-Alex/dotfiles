@@ -54,7 +54,7 @@ export EDITOR='nvim'
 export FZF_DEFAULT_OPTS="--tmux"
 GPG_TTY=$(tty)
 export GPG_TTY
-{{ if (and (eq .chezmoi.osRelease.id "arch") (ne .chezmoi.os "darwin")) -}}
+{{ if (and (eq .chezmoi.osRelease.id "arch") (ne .chezmoi.os "darwin") (eq .role "desktop")) -}}
 export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/gcr/ssh
 {{- end }}
 if [ -S "${XDG_RUNTIME_DIR:-/run/user/$UID}/podman/podman.sock" ]; then
@@ -76,11 +76,13 @@ export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export ANDROID_SDK_ROOT="/usr/local/share/android-sdk"
 export PATH=$ANDROID_SDK_ROOT:$PATH
 export HOMEBREW_INSTALL_CLEANUP=1
-{{ else if eq .chezmoi.os "linux" -}} 
+{{ else if eq .chezmoi.os "linux" -}}
 export PATH=$PATH:$HOME/.local/bin
+{{- if eq .role "desktop" }}
 export ANDROID_SDK_ROOT=/opt/android-sdk
 export PATH="${ANDROID_SDK_ROOT}/platform-tools:$PATH"
 export PATH="${ANDROID_SDK_ROOT}/tools:$PATH"
+{{- end }}
 {{- end }}
 
 if [ -x "$(command -v mise)" ]; then
