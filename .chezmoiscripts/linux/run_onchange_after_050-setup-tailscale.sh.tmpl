@@ -17,6 +17,7 @@ sudo systemctl enable --now tailscaled.service
 # Without an operator every tailscale command needs sudo.
 sudo /usr/bin/tailscale set --operator="$USER"
 
+{{ if eq .role "desktop" -}}
 # No user manager to enable units in (a fresh host reached over plain SSH), or no
 # tray host on the session bus, which on GNOME is the AppIndicator extension.
 if [[ ! -S ${XDG_RUNTIME_DIR:-/run/user/$UID}/systemd/private ]] ||
@@ -30,4 +31,5 @@ fi
 
 systemctl --user daemon-reload
 systemctl --user enable --now tailscale-systray.service
+{{ end -}}
 {{ end -}}
