@@ -79,22 +79,50 @@ if [ ! -f "$store_path/.age-recipients" ] && [ ! -f "$store_path/.gpg-id" ]; the
     if [ ! -e "$store_path" ]; then
         store_was_absent=true
     fi
+    # BatchMode keeps an unattended apply from hanging on SSH.
+    export GIT_TERMINAL_PROMPT=0
+    export GIT_SSH_COMMAND='ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new'
+
+    # No agent holds the key on a fresh machine: load it into a throwaway agent with
+    # the passphrase from Bitwarden, for this clone only. The askpass helper reads
+    # the passphrase from its environment, so it never reaches the disk.
+    ssh_key="$HOME/.ssh/itsalex"
+    ssh_key_passphrase="$(printf '%s' "{{ dig "login" "password" "" (bitwarden "item" "cc6b586b-67e2-47de-b512-b2a300fa609d") | b64enc }}" | base64 -d)"
+    if ! git ls-remote --heads "$store_remote" > /dev/null 2>&1 \
+        && [ -f "$ssh_key" ] && [ -n "$ssh_key_passphrase" ]; then
+        askpass_dir="$(mktemp -d)"
+        eval "$(ssh-agent -s)" > /dev/null
+        trap 'ssh-agent -k > /dev/null 2>&1; rm -rf -- "$askpass_dir"' EXIT
+        # ssh-add re-asks after a wrong passphrase until an answer fails: answer once.
+        cat > "$askpass_dir/askpass" << 'ASKPASS'
+#!/bin/sh
+[ -e "$0.used" ] && exit 1
+: > "$0.used"
+printf '%s\n' "$SSH_KEY_PASSPHRASE"
+ASKPASS
+        chmod 700 "$askpass_dir/askpass"
+        if ! SSH_KEY_PASSPHRASE="$ssh_key_passphrase" SSH_ASKPASS="$askpass_dir/askpass" SSH_ASKPASS_REQUIRE=force \
+            ssh-add "$ssh_key" < /dev/null > /dev/null 2>&1; then
+            printf "\e[1;33m%s\e[1;0m\n" "The Bitwarden passphrase did not unlock ${ssh_key}."
+        fi
+    fi
+    unset ssh_key_passphrase
+
     # The store is published once and shared by every machine: clone it or fail.
     # Creating one here would fork it with unrelated history. A non-zero exit also
     # keeps chezmoi from recording this run_onchange_ script as done, so the next
-    # apply retries the clone. BatchMode keeps an unattended apply from hanging.
-    # Without a terminal on stdin gopass takes the git name and email from the
-    # deployed git config instead of asking.
+    # apply retries the clone. Without a terminal on stdin gopass takes the git
+    # name and email from the deployed git config instead of asking.
     printf "\e[1;34m%s\e[1;0m\n" "Clone the global password store from ${store_remote}..."
-    if ! GIT_TERMINAL_PROMPT=0 GIT_SSH_COMMAND='ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new' \
-        "$gopass_bin" clone --crypto age --path "$store_path" "$store_remote" < /dev/null; then
+    if ! "$gopass_bin" clone --crypto age --path "$store_path" "$store_remote" < /dev/null; then
         # Only this failed clone created the directory: a leftover would block the retry.
         if [ "$store_was_absent" = true ]; then
             rm -rf -- "$store_path"
         fi
-        printf "\e[1;31m%s\e[1;0m\n" "Cannot clone ${store_remote} without a prompt. Load the SSH key (ssh-add ~/.ssh/itsalex), check the network, then re-run chezmoi apply."
+        printf "\e[1;31m%s\e[1;0m\n" "Cannot clone ${store_remote}. Check the network and that ${ssh_key} is unlocked by its Bitwarden item's password (or load it with ssh-add), then re-run chezmoi apply."
         exit 1
     fi
+    unset GIT_TERMINAL_PROMPT GIT_SSH_COMMAND
 fi
 
 # After the store exists: mounts.path on its own just creates the directory.
