@@ -57,13 +57,6 @@ managed_preferences=$(cat <<'JSON'
           "value": "dracula-dark"
         }
       }
-    },
-    "sidebarViewMode": {
-      "surfaces": {
-        "desktop": {
-          "value": "projects"
-        }
-      }
     }
   }
 }

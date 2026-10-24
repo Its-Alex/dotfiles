@@ -13,7 +13,7 @@ managed_settings=$(cat <<'JSON'
   "openInAppId": "ghostty",
   "agentNotifyToolEnabled": true,
   "privateRelay": {
-    "enabled": false
+    "enabled": true
   }
 }
 JSON
