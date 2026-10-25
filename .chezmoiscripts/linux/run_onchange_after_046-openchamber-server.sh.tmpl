@@ -1,0 +1,38 @@
+{{ if and (eq .chezmoi.osRelease.id "arch") (eq .role "headless") -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Not read here: `run_onchange_` keys on this content, so editing either config
+# restarts the daemon that is already running.
+# mise config hash: {{ include "private_dot_config/mise/config.toml.tmpl" | sha256sum }}
+# pitchfork config hash: {{ include "private_dot_config/pitchfork/config.toml.tmpl" | sha256sum }}
+
+{{ includeTemplate "user-bus" . }}
+
+# The daemon reads this at every start, and OpenChamber refuses a non-loopback
+# bind without a password. Generated on the instance: no secret in this repo.
+secret_dir="$HOME/.local/state/openchamber"
+secret_file="$secret_dir/ui-password"
+mkdir -p "$secret_dir"
+chmod 700 "$secret_dir"
+if [ ! -s "$secret_file" ]; then
+    printf "\e[1;34m%s\e[1;0m\n" "Generate the OpenChamber UI password..."
+    (umask 077 && openssl rand -hex 24 > "$secret_file")
+fi
+
+pitchfork_bin="$(command -v pitchfork || mise which pitchfork 2> /dev/null || true)"
+if [ -z "$pitchfork_bin" ]; then
+    printf "\e[1;33m%s\e[1;0m\n" "pitchfork not installed; the OpenChamber server starts at the next boot."
+    exit 0
+fi
+
+# boot_start only fires when the supervisor starts, and a fresh apply has the
+# unit from 045 but nothing running it.
+systemctl --user start pitchfork 2> /dev/null || true
+
+printf "\e[1;34m%s\e[1;0m\n" "Restart the OpenChamber server..."
+# restart, not start: start leaves an already-running daemon on its old command.
+if ! "$pitchfork_bin" restart openchamber; then
+    printf "\e[1;33m%s\e[1;0m\n" "The OpenChamber server did not restart; it is registered at boot (boot_start)."
+fi
+{{ end -}}

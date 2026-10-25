@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# mise config hash: {{ include "private_dot_config/mise/config.toml" | sha256sum }}
+# mise config hash: {{ include "private_dot_config/mise/config.toml.tmpl" | sha256sum }}
 
 if ! command -v mise > /dev/null; then
     printf "\e[1;33m%s\e[1;0m\n" "mise not installed; skipping the tool install."

@@ -1,5 +1,5 @@
-# User-level agents on the headless instance. Not deployed on the desktop, which
-# keeps gcr and the GNOME keyring.
+# User-level daemons on the headless instance. Not deployed on the desktop, which
+# keeps gcr, the GNOME keyring and the OpenChamber app.
 #
 # No gopass age agent here: gopass starts one on demand when
 # age.agent-enabled is set, so a daemon would only take over a socket gopass
@@ -9,5 +9,22 @@
 # rm: the socket lives on /home and survives a reboot, and bind fails over the
 # leftover file.
 run = "rm -f $SSH_AUTH_SOCK && exec ssh-agent -D -a $SSH_AUTH_SOCK"
+env = { SSH_AUTH_SOCK = "{{ includeTemplate "pitchfork-ssh-agent-socket" . }}" }
+boot_start = true
+
+[daemons.openchamber]
+# The UI password gates the API too, not only the browser routes: bound to
+# 0.0.0.0 without one, `openchamber serve` refuses to start. Generated once on
+# the instance (see 046) so no secret lands in this repository.
+#
+# export rather than a bare assignment: `VAR=… exec cmd` relies on the shell
+# exporting it, which is not POSIX.
+run = "export OPENCHAMBER_UI_PASSWORD=$(cat {{ .chezmoi.homeDir }}/.local/state/openchamber/ui-password) && exec openchamber serve --port 3000 --host 0.0.0.0 --foreground"
+# mise: a boot-time supervisor inherits no shell, so the mise shims that carry
+# node and openchamber are not on PATH without it.
+mise = true
+ready_port = 3000
+retry = 3
+depends = ["ssh-agent"]
 env = { SSH_AUTH_SOCK = "{{ includeTemplate "pitchfork-ssh-agent-socket" . }}" }
 boot_start = true

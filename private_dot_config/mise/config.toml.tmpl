@@ -17,3 +17,10 @@ pipx = 'latest'
 "pipx:mcp-atlassian" = "latest"
 "go:github.com/hashicorp/terraform-mcp-server/cmd/terraform-mcp-server" = "latest"
 "go:github.com/korotovsky/slack-mcp-server/cmd/slack-mcp-server" = "latest"
+{{- if eq .role "headless" }}
+
+# The Electron AppImage is the desktop half of OpenChamber and owns the app; the
+# CLI is the server half and shares ~/.config/openchamber, so it stays off the
+# desktop. `openchamber update` is never used: it installs outside mise.
+"npm:@openchamber/web" = "latest"
+{{- end }}
