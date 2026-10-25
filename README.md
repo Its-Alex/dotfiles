@@ -221,3 +221,41 @@ The `opencode` profile leaves `security.nesting` unset, so each kind gets its
 default: a VM can nest (`/dev/kvm`, `svm`/`vmx` in `/proc/cpuinfo`), a
 `--container` instance cannot, and podman or incus inside such a container needs
 `security.nesting=true` set on it explicitly.
+
+### OpenChamber
+
+The desktop keeps OpenChamber Desktop, the Electron AppImage at
+`/opt/openchamber/OpenChamber.AppImage`. A headless machine installs the other
+half instead: the [`@openchamber/web`](https://www.npmjs.com/package/@openchamber/web)
+CLI, the server the desktop app bundles, installed through mise and serving on
+port 3000. It is supervised by pitchfork next to ssh-agent:
+
+```sh-session
+$ pitchfork status global/openchamber
+```
+
+`boot_start` plus linger (both from the pitchfork setup) is what brings it back
+after a reboot, not the chezmoi apply.
+
+Reaching it:
+
+- Bind address `0.0.0.0`, so any tailnet device can open
+  `http://<instance>:3000`. The browser asks for the password kept in
+  `~/.local/state/openchamber/ui-password` on the instance; it is generated there
+  on the first apply and never enters this repository.
+- To add it to OpenChamber Desktop as a remote instance, generate a pairing link
+  on the instance and import it at Settings → Remote Instances → Other OpenChamber
+  servers → Import Link:
+
+    ```sh-session
+    $ openchamber connect-url --port 3000 --server http://<instance>:3000 --qr
+    ```
+
+    The link carries a one-time pairing secret; each device then holds its own
+    token, revocable from the server's Remote Instances settings.
+
+Upgrading is `mise upgrade` on the instance, then `pitchfork restart
+global/openchamber` (or a reboot: `boot_start` re-resolves the tool at every
+start). `latest` in mise is not a rolling update — `mise install` keeps the
+version it already has until an explicit `mise upgrade` — so the server only moves
+when you move it. `openchamber update` is not used, it would install outside mise.
