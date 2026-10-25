@@ -1,0 +1,11 @@
+# cloud-init and `incus exec … su -` start no logind session, so user units have
+# no bus to talk to; lingering creates one, and these exports point systemctl at it.
+if [ -z "${XDG_RUNTIME_DIR:-}" ] || [ ! -d "$XDG_RUNTIME_DIR" ]; then
+    loginctl enable-linger "$USER" 2> /dev/null || sudo loginctl enable-linger "$USER"
+    export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+    export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
+    for _ in {1..50}; do
+        [ -S "${XDG_RUNTIME_DIR}/bus" ] && break
+        sleep 0.2
+    done
+fi

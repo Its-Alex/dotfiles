@@ -51,6 +51,11 @@ runcmd:
     ssh-keygen -A
     systemctl enable --now sshd
 
+    # The bootstrap below runs through `su -l`, which starts no logind session:
+    # without lingering, user units (podman.socket, pitchfork) have no bus and
+    # nothing user-level can start before the first login.
+    loginctl enable-linger alex
+
     if [ -f /run/bw-bootstrap.env ]; then
       # Root-owned in the instance config, and the bootstrap below runs as alex.
       chown alex: /run/bw-bootstrap.env
