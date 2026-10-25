@@ -4,6 +4,8 @@ set -euo pipefail
 repo_root=$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 document=$repo_root/incus/opencode.yaml
 user_data_source=$repo_root/incus/cloud-init/user-data.yaml
+upstream_repo=https://github.com/Its-Alex/dotfiles.git
+repo_mountpoint=/mnt/dotfiles
 work_dir=$(mktemp -d)
 credentials_sent=false
 
@@ -36,7 +38,7 @@ die() {
 
 usage() {
     cat <<'EOF'
-Usage: create-opencode-instance.sh <name> [--container] [--with-secrets] [--dry-run]
+Usage: create-opencode-instance.sh <name> [--container] [--with-secrets] [--repo-mount <dir>] [--dry-run]
 
 Creates or updates the opencode instance <name> through incus-apply. A VM by
 default; --container gives a throwaway test container (no nested incus, no
@@ -46,6 +48,14 @@ in-guest OOM protection).
 environment, hands them to first boot, then scrubs them from the instance
 config. Without it the instance installs everything non-secret, and secrets
 are enabled at first connection with `bw login && chezmoi apply`.
+
+--repo-mount shares <dir> read-only at /mnt/dotfiles and bootstraps chezmoi from
+it instead of the network, so CI builds the commit of the pull request rather
+than the upstream branch. Git's owner check is relaxed for that path only,
+because the mount keeps the host's owner inside the instance.
+
+CHEZMOI_REPO overrides the repository chezmoi clones: the upstream URL by
+default, or /mnt/dotfiles with --repo-mount.
 
 --dry-run prints the incus-apply diff and changes nothing. It refuses
 --with-secrets, because that preview would print the credentials.
@@ -59,22 +69,46 @@ name=''
 vm=true
 with_secrets=false
 dry_run=false
+repo_mount=''
 
-for argument in "$@"; do
-    case $argument in
+while [[ $# -gt 0 ]]; do
+    case $1 in
         --container) vm=false ;;
         --with-secrets) with_secrets=true ;;
         --dry-run) dry_run=true ;;
-        -h|--help) usage; exit 0 ;;        -*) die "unknown option: $argument" ;;
+        --repo-mount)
+            [[ $# -ge 2 ]] || die "--repo-mount needs a directory"
+            repo_mount=$2
+            shift
+            ;;
+        -h|--help) usage; exit 0 ;;
+        -*) die "unknown option: $1" ;;
         *)
             [[ -z $name ]] || die "one instance name at a time"
-            name=$argument
+            name=$1
             ;;
     esac
+    shift
 done
 
 [[ -n $name ]] || { usage >&2; exit 1; }
 [[ $name =~ ^[a-z0-9]([a-z0-9-]*[a-z0-9])?$ ]] || die "invalid instance name: $name"
+
+if [[ -n $repo_mount ]]; then
+    [[ -d $repo_mount ]] || die "--repo-mount needs an existing directory: $repo_mount"
+    repo_mount=$(CDPATH='' cd -- "$repo_mount" && pwd)
+    [[ $repo_mount != *'"'* ]] || die "--repo-mount cannot contain a double quote"
+fi
+
+repo_url=${CHEZMOI_REPO:-}
+if [[ -z $repo_url ]]; then
+    repo_url=$upstream_repo
+    if [[ -n $repo_mount ]]; then
+        repo_url=$repo_mountpoint
+    fi
+fi
+# The URL goes into a single-quoted shell assignment in the user-data.
+[[ $repo_url != *"'"* ]] || die "CHEZMOI_REPO cannot contain a single quote"
 
 command -v incus >/dev/null || die "incus not found"
 command -v incus-apply >/dev/null || die "incus-apply not found"
@@ -83,7 +117,8 @@ incus info >/dev/null 2>&1 || die "incus is not reachable (incus.socket up, user
 [[ -r $document ]] || die "missing $document"
 [[ -r $user_data_source ]] || die "missing $user_data_source"
 grep -q '^write_files:$' "$user_data_source" || die "$user_data_source needs a write_files list for the credential injection"
-for token in __NAME__ __VM__ __USER_DATA__; do
+grep -q '__CHEZMOI_REPO__' "$user_data_source" || die "$user_data_source lost its __CHEZMOI_REPO__ placeholder"
+for token in __NAME__ __VM__ __USER_DATA__ __DEVICES__; do
     grep -q "$token" "$document" || die "$document lost its $token placeholder"
 done
 
@@ -104,18 +139,50 @@ profile_document() {
     awk 'NR == 1 && /^---$/ { next } /^---$/ { exit } { print }' "$document"
 }
 
+insert_write_files_entry() {
+    sed -e "/^write_files:\$/r $1" "$work_dir/user-data.yaml" >"$work_dir/user-data.staged"
+    mv -- "$work_dir/user-data.staged" "$work_dir/user-data.yaml"
+}
+
 render_user_data() {
     local secrets=$1
 
-    INSTANCE_SSH_KEY=$ssh_key awk '
-        BEGIN { key = ENVIRON["INSTANCE_SSH_KEY"] }
+    INSTANCE_SSH_KEY=$ssh_key CHEZMOI_REPO_VALUE=$repo_url awk '
+        BEGIN {
+            key = ENVIRON["INSTANCE_SSH_KEY"]
+            repo = ENVIRON["CHEZMOI_REPO_VALUE"]
+            quote = sprintf("%c", 39)
+        }
         key != "" && /^[[:space:]]+ssh_authorized_keys: \[\]$/ {
             print "    ssh_authorized_keys:"
             print "      - " key
             next
         }
+        /^[[:space:]]*chezmoi_repo=__CHEZMOI_REPO__$/ {
+            prefix = $0
+            sub(/chezmoi_repo=.*/, "", prefix)
+            print prefix "chezmoi_repo=" quote repo quote
+            next
+        }
         { print }
     ' "$user_data_source" >"$work_dir/user-data.yaml"
+
+    if [[ -n $repo_mount ]]; then
+        # The mount keeps the host owner, which the instance does not know: git
+        # sees a foreign owner and refuses to clone without safe.directory. Both
+        # paths: a local clone checks the git directory, other commands the
+        # worktree. The path is read-only and holds the commit under test.
+        {
+            printf '  - path: /etc/gitconfig\n'
+            printf '    owner: root:root\n'
+            printf "    permissions: '0644'\n"
+            printf '    content: |\n'
+            printf '      [safe]\n'
+            printf '          directory = %s\n' "$repo_mountpoint"
+            printf '          directory = %s/.git\n' "$repo_mountpoint"
+        } >"$work_dir/repo-entry.yaml"
+        insert_write_files_entry "$work_dir/repo-entry.yaml"
+    fi
 
     if [[ $secrets == false ]]; then
         return 0
@@ -138,18 +205,29 @@ render_user_data() {
         printf '    content: |\n'
         printf '      %s\n' "$BW_PASSWORD"
     } >"$work_dir/secrets-entry.yaml"
-    sed -e "/^write_files:\$/r $work_dir/secrets-entry.yaml" "$work_dir/user-data.yaml" >"$work_dir/user-data.staged"
-    mv -- "$work_dir/user-data.staged" "$work_dir/user-data.yaml"
+    insert_write_files_entry "$work_dir/secrets-entry.yaml"
 }
 
 render_instance() {
-    awk -v name="$name" -v vm="$vm" -v user_data="$work_dir/user-data.yaml" '
+    awk -v name="$name" -v vm="$vm" -v user_data="$work_dir/user-data.yaml" \
+        -v repo_mount="$repo_mount" -v repo_mountpoint="$repo_mountpoint" '
         NR == 1 && /^---$/ { next }
         /^---$/ { in_instance = 1; next }
         !in_instance { next }
         /^name: __NAME__$/ { print "name: " name; next }
         /^vm: __VM__$/ { print "vm: " vm; next }
         vm == "false" && /^  security\.secureboot: / { next }
+        /^devices: __DEVICES__$/ {
+            if (repo_mount != "") {
+                print "devices:"
+                print "  repo:"
+                print "    type: disk"
+                print "    source: \"" repo_mount "\""
+                print "    path: " repo_mountpoint
+                print "    readonly: \"true\""
+            }
+            next
+        }
         /__USER_DATA__/ {
             print "  cloud-init.user-data: |"
             while ((getline line < user_data) > 0) {
@@ -178,6 +256,7 @@ apply_document() {
 
 kind=$([[ $vm == true ]] && echo VM || echo container)
 printf 'Applying %s %s...\n' "$kind" "$name"
+printf 'Bootstrapping chezmoi from %s\n' "$repo_url"
 if $with_secrets; then
     credentials_sent=true
 fi

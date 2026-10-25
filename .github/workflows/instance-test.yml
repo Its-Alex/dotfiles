@@ -1,0 +1,204 @@
+name: instance-test
+
+# Builds the headless instance from this commit, boots it and asserts the
+# secretless result. A run downloads the Arch image and installs everything from
+# scratch: minutes, not seconds, so it runs only where the recipe can break, plus
+# a weekly cron.
+
+on:
+  pull_request:
+    paths:
+      - '.chezmoidata/**'
+      - '.chezmoiignore'
+      - '.chezmoiscripts/**'
+      - '.chezmoitemplates/**'
+      - '.chezmoi.toml.tmpl'
+      - '.github/workflows/instance-test.yml'
+      - 'incus/**'
+      - 'scripts/**'
+  schedule:
+    - cron: '17 3 * * 1'
+  workflow_dispatch:
+
+concurrency:
+  group: instance-test-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  INSTANCE_NAME: ci-opencode
+  # Pinned with its checksum, as .chezmoiscripts/linux/run_onchange_012-host-system.sh.tmpl
+  # does: the binary is not packaged anywhere.
+  INCUS_APPLY_VERSION: v0.1.1
+  INCUS_APPLY_SHA256: 3f998b478529603f18a7631a4bc31e7fff49ca717275a366b4db408775d33e87
+
+jobs:
+  container:
+    runs-on: ubuntu-24.04
+    # Observed 3-12 min; the headroom absorbs a slow mirror, nothing else.
+    timeout-minutes: 60
+    steps:
+      - name: Check out the commit under test
+        uses: actions/checkout@v4
+        with:
+          # The instance clones this tree, so a shallow checkout would make that
+          # clone shallow too.
+          fetch-depth: 0
+
+      - name: Install incus
+        run: |
+          set -euo pipefail
+          # Universe ships incus 6.0 LTS on 24.04, older than the zabbly builds the
+          # host runs; the recipe only needs stable incus features.
+          sudo apt-get update
+          # Recommends included on purpose: incus declares dnsmasq-base only there,
+          # and without it `incus admin init` cannot create incusbr0.
+          sudo apt-get install --yes incus
+          incus --version
+
+      - name: Install incus-apply
+        run: |
+          set -euo pipefail
+          asset="incus-apply-$(uname)-$(uname -m)"
+          curl -fsSL -o "$RUNNER_TEMP/$asset" \
+              "https://github.com/abiosoft/incus-apply/releases/download/$INCUS_APPLY_VERSION/$asset"
+          printf '%s  %s\n' "$INCUS_APPLY_SHA256" "$RUNNER_TEMP/$asset" | sha256sum --check --strict
+          sudo install -o root -g root -m 0755 "$RUNNER_TEMP/$asset" /usr/local/bin/incus-apply
+          incus-apply --version
+
+      - name: Initialise incus
+        run: |
+          set -euo pipefail
+          # --minimal: a dir pool and the incusbr0 bridge, no questions. Root
+          # drives incus below, so the runner user needs no incus-admin group.
+          sudo incus admin init --minimal
+          sudo incus profile list
+
+      - name: Let guests reach the network
+        run: |
+          set -euo pipefail
+          # The runner ships Docker, which sets the FORWARD policy to DROP and
+          # only accepts its own bridges: without these rules the guest gets an
+          # address but every connection to the mirrors times out.
+          sudo iptables -I FORWARD 1 -i incusbr0 -j ACCEPT
+          sudo iptables -I FORWARD 1 -o incusbr0 -j ACCEPT
+          subnet=$(sudo incus network get incusbr0 ipv4.address)
+          if ! sudo iptables -t nat -C POSTROUTING -s "$subnet" ! -d "$subnet" -j MASQUERADE 2>/dev/null; then
+              sudo iptables -t nat -A POSTROUTING -s "$subnet" ! -d "$subnet" -j MASQUERADE
+          fi
+          # The bridge is 1500 by default and the runner's underlay is smaller, so
+          # large segments vanish and pacman stalls at "less than 1 bytes/sec".
+          egress=$(ip route show default | awk 'NR == 1 { print $5 }')
+          mtu=$(cat "/sys/class/net/$egress/mtu")
+          sudo incus network set incusbr0 bridge.mtu "$mtu"
+          printf 'egress %s mtu %s\n' "$egress" "$mtu"
+          sudo iptables -S FORWARD
+          sudo iptables -t nat -S POSTROUTING
+
+      - name: Create the container and run the secretless bootstrap
+        run: |
+          set -euo pipefail
+          # No --with-secrets: the master password does not belong in CI, so the
+          # --with-secrets path stays a manual test.
+          sudo ./scripts/create-opencode-instance.sh "$INSTANCE_NAME" \
+              --container --repo-mount "$GITHUB_WORKSPACE"
+
+      - name: Assert the instance
+        run: |
+          set -euo pipefail
+
+          name="$INSTANCE_NAME"
+          as_alex() { sudo incus exec "$name" -- su - alex -c "$1"; }
+          fail() { printf '::error::%s\n' "$*"; exit 1; }
+
+          home=$(sudo incus exec "$name" -- getent passwd alex | cut -d: -f6)
+          [[ -n $home ]] || fail 'the alex user has no home directory'
+          chezmoi_bin=$home/.local/bin/chezmoi
+          source_dir=$home/.local/share/chezmoi
+          store=$home/.local/share/gopass/stores/root
+
+          printf '\n== cloud-init ==\n'
+          # cloud-init exits 2 on recoverable errors, and this image has two of its
+          # own (schema warning, ssh host keys), so the exit code says nothing.
+          cloud_init=$(sudo incus exec "$name" -- cloud-init status --format json 2>/dev/null || true)
+          jq -e '.status == "done"' <<<"$cloud_init" >/dev/null || fail "cloud-init is not done: $cloud_init"
+          jq -e '.errors == []' <<<"$cloud_init" >/dev/null || fail "cloud-init errors: $cloud_init"
+
+          printf '\n== source injection ==\n'
+          origin=$(as_alex "git -C $source_dir remote get-url origin")
+          [[ $origin == /mnt/dotfiles ]] || fail "chezmoi cloned '$origin' instead of the mounted checkout"
+          guest_commit=$(as_alex "git -C $source_dir rev-parse HEAD")
+          host_commit=$(git -C "$GITHUB_WORKSPACE" rev-parse HEAD)
+          [[ $guest_commit == "$host_commit" ]] ||
+              fail "the instance runs $guest_commit, the checkout is $host_commit"
+          if sudo incus exec "$name" -- touch /mnt/dotfiles/ci-write; then
+              fail 'the checkout mount is writable inside the instance'
+          fi
+
+          printf '\n== role ==\n'
+          role=$(as_alex "$chezmoi_bin data --format json | jq -r .role")
+          # headless comes from CHEZMOI_ROLE; nothing could have prompted, the
+          # whole run has no tty.
+          [[ $role == headless ]] || fail "role is '$role', expected headless"
+
+          printf '\n== core packages ==\n'
+          as_alex 'opencode --version; zsh --version; tmux -V'
+
+          printf '\n== secret parts skipped ==\n'
+          bw_status=$(as_alex 'bw status' | jq -r .status)
+          [[ $bw_status == unauthenticated ]] || fail "bw status is '$bw_status'"
+          as_alex "test ! -e $store" || fail 'a gopass store exists'
+          sudo incus exec "$name" -- grep -qF 'No Bitwarden session; skipping gopass setup' \
+              /var/log/cloud-init-output.log ||
+              fail "the bootstrap log lacks the 'bw login && chezmoi apply' hint"
+
+          printf '\n== no GUI payload ==\n'
+          as_alex "test ! -e $home/.config/ghostty" || fail 'the ghostty config is deployed'
+          as_alex '! pacman -Q ghostty' || fail 'ghostty is installed'
+
+          printf '\n== convergence ==\n'
+          # run_ scripts run on every apply and only move their runAt time, so
+          # compare the recorded scripts and their content hashes without it.
+          script_state() {
+              as_alex "$chezmoi_bin state dump" |
+                  jq -S '(.scriptState // {}) | map_values(if type == "object" then del(.runAt) else . end)'
+          }
+          state_before=$(script_state)
+          as_alex "$chezmoi_bin apply"
+          state_after=$(script_state)
+          if [[ $state_before != "$state_after" ]]; then
+              diff <(printf '%s\n' "$state_before") <(printf '%s\n' "$state_after") || true
+              fail 'the second apply re-ran a once/onchange script'
+          fi
+          # status always lists the every-apply fixup as a pending run; only file
+          # drift counts here.
+          pending=$(as_alex "$chezmoi_bin status" | grep -v '\.chezmoiscripts/' || true)
+          [[ -z $pending ]] || fail "the second apply left pending changes: $pending"
+
+          printf '\n== failed units ==\n'
+          failed=$(sudo incus exec "$name" -- systemctl --failed --no-legend --plain)
+          [[ -z $failed ]] || fail "failed units: $failed"
+
+          printf '\nAll assertions passed.\n'
+
+      - name: Collect diagnostics
+        if: failure()
+        run: |
+          set -uo pipefail
+          name="$INSTANCE_NAME"
+          sudo incus list || true
+          sudo incus config show "$name" || true
+          sudo incus network show incusbr0 || true
+          sudo sysctl net.ipv4.ip_forward || true
+          sudo iptables -S FORWARD 2>&1 | head -30 || true
+          sudo nft list ruleset 2>&1 | head -60 || true
+          sudo nft list table inet incus 2>&1 | head -40 || true
+          sudo journalctl -u incus --no-pager -n 60 || true
+          sudo incus exec "$name" -- cloud-init status --long || true
+          sudo incus exec "$name" -- cloud-init schema --system 2>&1 | tail -20 || true
+          sudo incus exec "$name" -- tail -n 200 /var/log/cloud-init-output.log || true
+          sudo incus exec "$name" -- ip -br addr || true
+          sudo incus exec "$name" -- ip route || true
+          sudo incus exec "$name" -- systemctl --failed --no-pager || true

@@ -23,3 +23,7 @@ config:
   limits.cpu: "4"
   security.secureboot: "false"   # the Arch cloud image cannot boot under secure boot
   cloud-init.user-data: __USER_DATA__
+# Rendered by scripts/create-opencode-instance.sh: --repo-mount adds the read-only
+# device here, because incus-apply launches the instance and cloud-init needs it
+# on the first boot.
+devices: __DEVICES__
