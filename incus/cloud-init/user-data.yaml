@@ -32,7 +32,10 @@ write_files:
           bw status 2> /dev/null | sed -n 's/.*"status":"\([a-z]*\)".*/bw status: \1/p' >&2
       fi
 
-      CHEZMOI_ROLE=headless sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin" init --apply https://github.com/Its-Alex/dotfiles.git
+      # Rendered by scripts/create-opencode-instance.sh (CHEZMOI_REPO): the upstream
+      # URL by default, /mnt/dotfiles when CI bootstraps the checkout under test.
+      chezmoi_repo=__CHEZMOI_REPO__
+      CHEZMOI_ROLE=headless sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin" init --apply "$chezmoi_repo"
 
       if [ -f /run/bw-bootstrap.env ]; then
           bw lock
