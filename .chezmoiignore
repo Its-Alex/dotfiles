@@ -23,7 +23,7 @@ gnome-shell-extensions.dconf
 Pictures
 .var
 # Rootless podman inside an Incus container fails with its btrfs driver forced.
-.config/containers
+.config/containers/storage.conf.d
 {{- end }}
 
 {{ if not (includeTemplate "bw-authenticated" .) }}

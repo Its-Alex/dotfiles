@@ -1,0 +1,31 @@
+# A fixed percentage does not port across machines, so derive an absolute KiB
+# floor from this host's RAM, clamped at both ends.
+mem_total_kib=$(awk '/^MemTotal:/{print $2}' /proc/meminfo)
+earlyoom_term_kib=$(( mem_total_kib / 10 ))
+earlyoom_term_min_kib=$(( 1024 * 1024 ))     # 1 GiB
+earlyoom_term_max_kib=$(( 4 * 1024 * 1024 )) # 4 GiB
+if (( earlyoom_term_kib < earlyoom_term_min_kib )); then
+    earlyoom_term_kib=$earlyoom_term_min_kib
+fi
+if (( earlyoom_term_kib > earlyoom_term_max_kib )); then
+    earlyoom_term_kib=$earlyoom_term_max_kib
+fi
+earlyoom_kill_kib=$(( earlyoom_term_kib / 2 ))
+earlyoom_kill_min_kib=$(( 512 * 1024 )) # 512 MiB
+if (( earlyoom_kill_kib < earlyoom_kill_min_kib )); then
+    earlyoom_kill_kib=$earlyoom_kill_min_kib
+fi
+
+printf "\e[1;34m%s\e[1;0m\n" "earlyoom thresholds: SIGTERM below $(( earlyoom_term_kib / 1024 ))MiB available, SIGKILL below $(( earlyoom_kill_kib / 1024 ))MiB"
+
+# -M takes KiB and is passed alone: given both -m and -M, earlyoom keeps the
+# lower. -s 100 ignores free swap, which on a large swapfile would mean minutes
+# of thrashing first. --avoid protects session-critical processes.
+sudo tee /etc/default/earlyoom > /dev/null <<EOF
+EARLYOOM_ARGS="-M ${earlyoom_term_kib},${earlyoom_kill_kib} -s 100 -r 3600 --avoid '(^|/)(dbus-daemon|dbus-broker|systemd|systemd-logind|gnome-shell|gnome-session|Xorg|sshd)\$'"
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now systemd-oomd
+sudo systemctl restart systemd-oomd # apply oomd.conf.d override if already running
+sudo systemctl enable --now earlyoom

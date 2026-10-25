@@ -1,0 +1,25 @@
+{{ if and (eq .chezmoi.osRelease.id "arch") (eq .role "headless") -}}
+{{- $inContainer := ne (trim (output "sh" "-c" "systemd-detect-virt --container 2>/dev/null || true")) "none" -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+printf "\e[1;34m%s\e[1;0m\n" "Setup podman..."
+sudo tee /etc/containers/registries.conf.d/10-unqualified-search-registries.conf > /dev/null <<'EOF'
+unqualified-search-registries = ["docker.io"]
+EOF
+# Silent podman-docker message
+sudo touch /etc/containers/nodocker
+# Enable podman socket for docker compose
+systemctl --user enable --now podman.socket
+{{ if not $inContainer }}
+printf "\e[1;34m%s\e[1;0m\n" "Setup Incus..."
+# incus.service is socket-activated (it Wants incus.socket), so the socket is
+# the unit to enable: incusd then starts on the first client connection.
+sudo systemctl enable --now incus.socket
+if ! id -nG "$USER" | grep -qw incus-admin; then
+    sudo usermod -aG incus-admin "$USER"
+    printf "\e[1;33m%s\e[1;0m\n" "Added $USER to incus-admin: log out and back in before running incus without sudo."
+fi
+
+{{ includeTemplate "oomd-config" . }}
+{{ includeTemplate "earlyoom-config" . }}{{ end }}{{ end -}}

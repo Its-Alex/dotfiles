@@ -203,3 +203,21 @@ upstream release binary goes to `/usr/local/bin`). Two steps stay manual:
     ```sh-session
     $ incus admin init --minimal
     ```
+
+#### VMs inside an instance
+
+Nested virtualisation has to be enabled on the host for an Incus instance to
+start VMs of its own:
+
+```sh-session
+$ cat /sys/module/kvm_amd/parameters/nested   # AMD; Intel: kvm_intel
+1
+```
+
+Without it the instance still runs system containers, but `vm: true` instances it
+creates inside fail to boot.
+
+The `opencode` profile leaves `security.nesting` unset, so each kind gets its
+default: a VM can nest (`/dev/kvm`, `svm`/`vmx` in `/proc/cpuinfo`), a
+`--container` instance cannot, and podman or incus inside such a container needs
+`security.nesting=true` set on it explicitly.

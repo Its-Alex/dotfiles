@@ -1,0 +1,25 @@
+# systemd-oomd kills on PSI pressure, earlyoom on low memory as a backstop.
+printf "\e[1;34m%s\e[1;0m\n" "Setup userspace OOMKiller (systemd-oomd + earlyoom)..."
+
+# Only the reaction time needs tuning; the other limits are ratios.
+sudo mkdir -p /etc/systemd/oomd.conf.d
+sudo tee /etc/systemd/oomd.conf.d/10-interactive-desktop.conf > /dev/null <<'EOF'
+[OOM]
+DefaultMemoryPressureDurationSec=20s
+EOF
+
+# Arch leaves cgroups at ManagedOOM*=auto, which oomd does not monitor: opt the
+# user session in (a kill takes one app's cgroup, not the session).
+sudo mkdir -p /etc/systemd/system/user@.service.d
+sudo tee /etc/systemd/system/user@.service.d/10-oomd.conf > /dev/null <<'EOF'
+[Service]
+ManagedOOMMemoryPressure=kill
+ManagedOOMMemoryPressureLimit=50%
+EOF
+
+# Makes the stock 90% SwapUsedLimit effective. Delete for pressure-only kills.
+sudo mkdir -p "/etc/systemd/system/-.slice.d"
+sudo tee "/etc/systemd/system/-.slice.d/10-oomd.conf" > /dev/null <<'EOF'
+[Slice]
+ManagedOOMSwap=kill
+EOF

@@ -1,4 +1,6 @@
-# desktop and host install only when role = "desktop"; core installs everywhere.
+# Grouped by function, not by machine: core installs everywhere, containers on
+# every headless machine, virt and oom on headless machines that are not
+# themselves containers, and desktop+host only when role = "desktop".
 
 [packages.arch]
 core = [
@@ -17,10 +19,16 @@ desktop = [
   "extra/nethogs", "extra/wireless_tools", "extra/iotop-c", "amdgpu_top",
   "gnome-extensions-cli", # Provides gext, installs the extensions listed in gnome-extensions.txt
 ]
-host = [
-  "earlyoom", # Raw %-memory/swap OOM backstop, complements PSI-pressure-based systemd-oomd
-  "systemd-resolvconf",
+containers = [
   "podman", "podman-docker", "docker-compose",
+]
+virt = [
   "qemu-full", "guestfs-tools", "linux-headers",
   "incus", # System containers and VMs; incus-apply (not packaged) comes from 012-host-system
+]
+oom = [
+  "earlyoom", # Raw %-memory/swap OOM backstop, complements PSI-pressure-based systemd-oomd
+]
+host = [
+  "systemd-resolvconf",
 ]

@@ -24,7 +24,16 @@ packages_list=(
     {{ . }}
 {{- end }}
 {{- if eq .role "desktop" }}
-{{-   range concat .packages.arch.desktop .packages.arch.host }}
+{{-   range concat .packages.arch.desktop .packages.arch.oom .packages.arch.host .packages.arch.containers .packages.arch.virt }}
+    {{ . }}
+{{-   end }}
+{{- else }}
+{{-   $inContainer := ne (trim (output "sh" "-c" "systemd-detect-virt --container 2>/dev/null || true")) "none" }}
+{{-   $groups := .packages.arch.containers }}
+{{-   if not $inContainer }}
+{{-     $groups = concat $groups .packages.arch.virt .packages.arch.oom }}
+{{-   end }}
+{{-   range $groups }}
     {{ . }}
 {{-   end }}
 {{- end }}

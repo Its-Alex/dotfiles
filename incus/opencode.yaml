@@ -1,8 +1,10 @@
 kind: profile
 name: opencode
-description: opencode instances - tun for tailscaled in a container, nesting off
-config:
-  security.nesting: "false"
+description: opencode instances - tun for tailscaled in a container
+# security.nesting is unset on purpose: the defaults are the behaviour wanted here.
+# A VM gets nested virtualisation (/dev/kvm, svm/vmx); a container stays without
+# nesting, which is why --container exists as a no-nested-runtimes mode.
+config: {}
 devices:
   tun:
     type: unix-char
