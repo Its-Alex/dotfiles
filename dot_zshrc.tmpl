@@ -57,6 +57,9 @@ export GPG_TTY
 {{ if (and (eq .chezmoi.osRelease.id "arch") (ne .chezmoi.os "darwin") (eq .role "desktop")) -}}
 export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/gcr/ssh
 {{- end }}
+{{- if (and (eq .chezmoi.osRelease.id "arch") (ne .chezmoi.os "darwin") (eq .role "headless")) -}}
+export SSH_AUTH_SOCK="{{ includeTemplate "pitchfork-ssh-agent-socket" . }}"
+{{- end }}
 if [ -S "${XDG_RUNTIME_DIR:-/run/user/$UID}/podman/podman.sock" ]; then
     export DOCKER_HOST="unix://${XDG_RUNTIME_DIR:-/run/user/$UID}/podman/podman.sock"
 fi
