@@ -1,0 +1,13 @@
+# User-level agents on the headless instance. Not deployed on the desktop, which
+# keeps gcr and the GNOME keyring.
+#
+# No gopass age agent here: gopass starts one on demand when
+# age.agent-enabled is set, so a daemon would only take over a socket gopass
+# already manages (docs/backends/age.md).
+
+[daemons.ssh-agent]
+# rm: the socket lives on /home and survives a reboot, and bind fails over the
+# leftover file.
+run = "rm -f $SSH_AUTH_SOCK && exec ssh-agent -D -a $SSH_AUTH_SOCK"
+env = { SSH_AUTH_SOCK = "{{ includeTemplate "pitchfork-ssh-agent-socket" . }}" }
+boot_start = true

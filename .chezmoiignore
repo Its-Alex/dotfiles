@@ -16,6 +16,12 @@ gnome-shell-extensions.dconf
 .config/nvim/lazy-lock.json
 .config/opencode/tui.json
 
+{{- if eq .role "desktop" }}
+# pitchfork supervises user agents on the headless instance only; the desktop
+# uses gcr and the GNOME keyring.
+.config/pitchfork
+{{- end }}
+
 {{- if ne .role "desktop" }}
 # GUI payloads: nothing here has a consumer without a graphical session.
 .config/ghostty
