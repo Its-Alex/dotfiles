@@ -122,13 +122,21 @@ render_user_data() {
     fi
 
     {
+        # %q: the bootstrap sources this file, and a client secret or password
+        # containing $, spaces or quotes would otherwise be silently mangled.
         printf '  - path: /run/bw-bootstrap.env\n'
         printf '    owner: root:root\n'
         printf "    permissions: '0600'\n"
         printf '    content: |\n'
-        printf '      BW_CLIENTID=%s\n' "$BW_CLIENTID"
-        printf '      BW_CLIENTSECRET=%s\n' "$BW_CLIENTSECRET"
-        printf '      BW_PASSWORD=%s\n' "$BW_PASSWORD"
+        printf '      BW_CLIENTID=%q\n' "$BW_CLIENTID"
+        printf '      BW_CLIENTSECRET=%q\n' "$BW_CLIENTSECRET"
+        # The password goes in its own file: --passwordfile removes the shell
+        # from the path entirely, and it never needs to be an env var.
+        printf '  - path: /run/bw-bootstrap.pw\n'
+        printf '    owner: root:root\n'
+        printf "    permissions: '0600'\n"
+        printf '    content: |\n'
+        printf '      %s\n' "$BW_PASSWORD"
     } >"$work_dir/secrets-entry.yaml"
     sed -e "/^write_files:\$/r $work_dir/secrets-entry.yaml" "$work_dir/user-data.yaml" >"$work_dir/user-data.staged"
     mv -- "$work_dir/user-data.staged" "$work_dir/user-data.yaml"
@@ -220,8 +228,8 @@ if $with_secrets; then
             die "credentials are still present in the cloud-init user-data of $name"
         fi
     done
-    if ! incus exec "$name" -- sh -c 'test ! -e /run/bw-bootstrap.env'; then
-        die "/run/bw-bootstrap.env is still present in $name"
+    if ! incus exec "$name" -- sh -c 'test ! -e /run/bw-bootstrap.env -a ! -e /run/bw-bootstrap.pw'; then
+        die "/run/bw-bootstrap.env or /run/bw-bootstrap.pw is still present in $name"
     fi
 fi
 
