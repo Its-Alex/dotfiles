@@ -3,6 +3,9 @@ font-size = 9
 
 theme = dracula
 
+# io_uring waits are accounted as iowait and pollute PSI (ghostty-org/ghostty#3246)
+async-backend = epoll
+
 command = /usr/bin/tmux new-session -A -s main
 
 # Keybindings (tmux handles splits/tabs)
