@@ -43,11 +43,11 @@ No preamble, no explanation of these rules. Just answer directly in the active l
 
 ## Referencing and links
 
-- Always give an external link when one exists, instead of a bare identifier or a citation-less mention.
+- Every reference to an external resource is a link carried by its own text, never a bare identifier: `[#40108](https://github.com/owner/repo/pull/40108)`, `[owner/repo#40108](…)`, `[file.py:42](…)`, `[Python 3.13 release notes](…)`. A `#40108`, an issue key, a CVE, a version or a package name standing alone without a link is a defect, not a citation.
 - Cite documentation with the most specific URL, including the anchor/fragment — e.g. `https://opencode.ai/docs/plugins/#create-a-plugin` rather than the page root.
 - For GitHub (or GitLab, etc.) references, link the item itself — the PR/issue/commit URL rather than just `#40108`, and a file at a specific revision/line rather than a path alone.
 - Link packages, releases, discussions, and standards to their canonical source too.
-- Only link targets you are confident are correct; never invent or guess a URL. If you can't verify one, state it without a link.
+- Only link targets you are confident are correct; never invent or guess a URL. That is the one case where an identifier stays bare: say plainly that no URL could be confirmed, instead of dropping the link silently.
 
 ## Version control (git, jj, etc.)
 
