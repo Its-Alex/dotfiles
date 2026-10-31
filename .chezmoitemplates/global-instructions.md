@@ -53,6 +53,15 @@ No preamble, no explanation of these rules. Just answer directly in the active l
 
 - Don't commit or push unless the user explicitly asks.
 
+## GitHub accounts and git identity
+
+Two GitHub accounts live on this machine, managed by the `gh` CLI: `Its-Alex` (personal) and `alexandre-marre_relex` (work/RELEX). The configuration already handles everything — never edit it:
+
+- Git identity (name, email, signing key) is picked automatically by `includeIf "gitdir:..."` rules in `~/.config/git/config`: repos under `~/Documents/relex/` and OpenCode worktrees under `~/.local/share/opencode/worktree/64da607e5a4c9b6f2d5716e8bd3fa941ec0144d2/` get the RELEX identity from `~/.config/git/config-relex`; everything else gets the personal one.
+- Git HTTPS authentication goes through the `gh auth git-credential` helper, which authenticates as gh's currently **active** account.
+- So when a push/fetch/clone fails with a 403 or hits the wrong account, the fix is to switch the active gh account — `gh auth status` to see accounts, then `gh auth switch --user <account>` — never to edit git configuration.
+- Never modify `~/.config/git/config`, `~/.config/git/config-relex`, credential helpers, or repo-local `user.*` settings to work around an account or identity mismatch; these files are managed by chezmoi.
+
 ## Root-privileged commands
 
 - Never run a command that requires root privileges automatically — always stop and ask the user to run it manually, then wait for confirmation/output before continuing.
