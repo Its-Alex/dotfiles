@@ -2,18 +2,26 @@
 set -euo pipefail
 
 gopass_get() {
+    local out
     if [ "$#" -eq 1 ]; then
-        gopass show --password "$1" 2>/dev/null || true
+        out="$(gopass show --password "$1")"
     else
-        gopass show "$1" "$2" 2>/dev/null || true
+        out="$(gopass show "$1" "$2")"
     fi
+    if [ -z "$out" ]; then
+        echo "mcp-atlassian-gopass: empty secret for '$*' (gopass age agent down? check: gopass age agent status)" >&2
+        exit 1
+    fi
+    printf '%s' "$out"
 }
 
-export CONFLUENCE_URL="$(gopass_get bitwarden/atlassian/confluence url)"
-export CONFLUENCE_USERNAME="$(gopass_get bitwarden/atlassian/confluence username)"
-export CONFLUENCE_API_TOKEN="$(gopass_get bitwarden/atlassian/confluence)"
-export JIRA_URL="$(gopass_get bitwarden/atlassian/jira url)"
-export JIRA_USERNAME="$(gopass_get bitwarden/atlassian/jira username)"
-export JIRA_API_TOKEN="$(gopass_get bitwarden/atlassian/jira)"
+CONFLUENCE_URL="$(gopass_get bitwarden/atlassian/confluence url)"
+CONFLUENCE_USERNAME="$(gopass_get bitwarden/atlassian/confluence username)"
+CONFLUENCE_API_TOKEN="$(gopass_get bitwarden/atlassian/confluence)"
+JIRA_URL="$(gopass_get bitwarden/atlassian/jira url)"
+JIRA_USERNAME="$(gopass_get bitwarden/atlassian/jira username)"
+JIRA_API_TOKEN="$(gopass_get bitwarden/atlassian/jira)"
+export CONFLUENCE_URL CONFLUENCE_USERNAME CONFLUENCE_API_TOKEN
+export JIRA_URL JIRA_USERNAME JIRA_API_TOKEN
 
 exec mise exec -- mcp-atlassian "$@"

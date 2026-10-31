@@ -1,9 +1,16 @@
 # User-level daemons on the headless instance. Not deployed on the desktop, which
-# keeps gcr, the GNOME keyring and the OpenChamber app.
-#
-# No gopass age agent here: gopass starts one on demand when
-# age.agent-enabled is set, so a daemon would only take over a socket gopass
-# already manages (docs/backends/age.md).
+# keeps gcr, the GNOME keyring and the OpenChamber app; there the age agent runs
+# as a systemd user unit (.config/systemd/user/gopass-age-agent.service).
+
+[daemons.gopass-age-agent]
+# Not left to gopass's on-demand spawn: that ties the agent to whichever process
+# first needed it (an MCP wrapper's tree), and a SIGKILL'd agent leaves a socket
+# no successor can bind — silently, since the spawner discards the agent's
+# stderr. The rm clears that leftover. Starts locked: the first gopass call
+# (over ssh, or an apply carrying GOPASS_AGE_PASSWORD) loads the identity.
+run = "rm -f ${XDG_RUNTIME_DIR:-$HOME/.run}/gopass/gopass-age-agent.sock && exec gopass age agent start"
+mise = true
+boot_start = true
 
 [daemons.ssh-agent]
 # rm: the socket lives on /home and survives a reboot, and bind fails over the

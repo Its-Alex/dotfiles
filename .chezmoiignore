@@ -30,6 +30,8 @@ Pictures
 .var
 # Rootless podman inside an Incus container fails with its btrfs driver forced.
 .config/containers/storage.conf.d
+# pitchfork supervises the age agent on the instance; the unit is desktop-only.
+.config/systemd/user/gopass-age-agent.service
 {{- end }}
 
 {{ if not (includeTemplate "bw-authenticated" .) }}

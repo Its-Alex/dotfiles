@@ -1,0 +1,15 @@
+{{ if eq .role "desktop" -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+# gopass-age-agent.service hash: {{ include "private_dot_config/systemd/user/gopass-age-agent.service" | sha256sum }}
+
+printf "\e[1;34m%s\e[1;0m\n" "Enable the gopass age agent service..."
+systemctl --user daemon-reload
+systemctl --user enable gopass-age-agent.service
+
+# A restart empties the agent's identity cache; the next interactive
+# `gopass show` reloads it (gopass callers without a TTY fail until then).
+systemctl --user restart gopass-age-agent.service
+printf "\e[1;32m%s\e[1;0m\n" "gopass age agent running (locked until the next interactive gopass show)."
+{{ end -}}

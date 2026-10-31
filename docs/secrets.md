@@ -80,8 +80,16 @@ only when `~/.config/gopass/config` does not exist
 
 - Chezmoi-managed calls pass `GOPASS_AGE_PASSWORD` (read from Bitwarden), so an
   apply never prompts.
-- Interactive use relies on `age.usekeychain` (the passphrase cached in the OS
-  keyring) and on the age agent, which keeps the identity unlocked in memory.
+- Everything else relies on the age agent, which keeps the identity unlocked in
+  memory and is supervised: a systemd user unit on the desktop, a pitchfork
+  daemon on the headless instance. `age.agent-timeout = 0` keeps it unlocked
+  until the agent restarts; after a restart the first interactive `gopass show`
+  reloads the identity (one prompt per boot).
+- `age.usekeychain` stays off: concurrent reads (several MCP servers starting
+  at once) drop the Secret Service D-Bus connection ("Remote peer
+  disconnected"), and gopass's on-demand agent spawn cannot be relied on either
+  — a SIGKILL'd agent leaves a socket behind that no successor can bind, and
+  the spawner discards the agent's stderr, so it degrades silently.
 
 ## How it is wired in this repository
 
@@ -94,6 +102,11 @@ only when `~/.config/gopass/config` does not exist
   and `bw logout` disables it again.
 - `.chezmoiscripts/linux/run_onchange_after_041-seed-gopass.sh.tmpl` seeds the `bitwarden` mount. It skips
   an empty Bitwarden value and leaves an unchanged entry alone.
+- `.chezmoiscripts/linux/run_onchange_after_042-gopass-age-agent.sh.tmpl` (desktop only) enables and
+  restarts `gopass-age-agent.service`
+  (`private_dot_config/systemd/user/gopass-age-agent.service`); the headless
+  instance runs the agent as a pitchfork daemon instead
+  (`private_dot_config/pitchfork/config.toml.tmpl`).
 - `04x` runs in the `after` phase: target files (the SSH keys above all) are
   deployed before the store is touched.
 - `dot_zshrc.tmpl` exports only ambient secrets (`GITLAB_PERSONAL_ACCESS_TOKEN`)

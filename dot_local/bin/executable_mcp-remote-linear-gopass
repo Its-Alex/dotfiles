@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-LINEAR_API_KEY="$(gopass show --password bitwarden/linear/api-key 2>/dev/null || true)"
+LINEAR_API_KEY="$(gopass show --password bitwarden/linear/api-key)"
+if [[ -z "${LINEAR_API_KEY}" ]]; then
+    echo "mcp-remote-linear-gopass: empty secret (gopass age agent down? check: gopass age agent status)" >&2
+    exit 1
+fi
 export LINEAR_API_KEY
 
 exec mise exec -- mcp-remote https://mcp.linear.app/mcp \

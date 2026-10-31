@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-TFE_TOKEN="$(gopass show --password bitwarden/terraform/api-token 2>/dev/null || true)"
-if [[ -n "${TFE_TOKEN}" ]]; then
-    export TFE_TOKEN
+TFE_TOKEN="$(gopass show --password bitwarden/terraform/api-token)"
+if [[ -z "${TFE_TOKEN}" ]]; then
+    echo "mcp-terraform-gopass: empty secret (gopass age agent down? check: gopass age agent status)" >&2
+    exit 1
 fi
+export TFE_TOKEN
 
 exec mise exec -- terraform-mcp-server stdio "$@"

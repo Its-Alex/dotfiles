@@ -5,9 +5,9 @@ set -euo pipefail
 # gopass refuses a plaintext identity file, so the key goes through
 # `gopass age identities add` (two positional args, hence non-interactive).
 #
-# Applies never prompt: the passphrase travels in GOPASS_AGE_PASSWORD. An
-# interactive shell uses the keyring (age.usekeychain) plus the age agent, which
-# is ~12 ms per read against ~575 ms when re-derived.
+# Applies never prompt: the passphrase travels in GOPASS_AGE_PASSWORD. Everything
+# else goes through the supervised age agent, which is ~12 ms per read against
+# ~575 ms when re-derived.
 #
 # Settings via `gopass config`, not a managed file: gopass rewrites its config
 # itself, which would report drift on every apply.
@@ -48,13 +48,11 @@ else
     printf "\e[1;32m%s\e[1;0m\n" "age identity installed."
 fi
 
-# The keyring caches the passphrase across commands; without one gopass warns on
-# every call, so only ask for it when org.freedesktop.secrets is reachable.
-if [ -n "${DBUS_SESSION_BUS_ADDRESS:-}" ] && busctl --user --quiet status org.freedesktop.secrets > /dev/null 2>&1; then
-    "$gopass_bin" config age.usekeychain true > /dev/null
-else
-    "$gopass_bin" config age.usekeychain false > /dev/null
-fi
+# No keyring: concurrent reads (several MCP servers starting at once) drop the
+# Secret Service D-Bus connection ("Remote peer disconnected"), and the
+# supervised agent (042 on desktop, pitchfork on the instance) keeps identities
+# unlocked anyway. Cost: one interactive `gopass show` after an agent restart.
+"$gopass_bin" config age.usekeychain false > /dev/null
 "$gopass_bin" config age.agent-enabled true > /dev/null
 
 # The global store, backed by the private password-store repo. A repo-scoped

@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-export SLACK_MCP_XOXC_TOKEN="$(gopass show --password bitwarden/slack/xoxc-xoxd 2>/dev/null || true)"
-export SLACK_MCP_XOXD_TOKEN="$(gopass show bitwarden/slack/xoxc-xoxd xoxd 2>/dev/null || true)"
+export SLACK_MCP_XOXC_TOKEN="$(gopass show --password bitwarden/slack/xoxc-xoxd)"
+export SLACK_MCP_XOXD_TOKEN="$(gopass show bitwarden/slack/xoxc-xoxd xoxd)"
+if [[ -z "${SLACK_MCP_XOXC_TOKEN}" || -z "${SLACK_MCP_XOXD_TOKEN}" ]]; then
+    echo "mcp-slack-gopass: empty secret (gopass age agent down? check: gopass age agent status)" >&2
+    exit 1
+fi
 export SLACK_MCP_ADD_MESSAGE_TOOL=true
 
 # Must match the browser the tokens come from; Slack revokes the session on a mismatched fingerprint.

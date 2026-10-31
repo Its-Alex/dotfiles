@@ -1,0 +1,14 @@
+[Unit]
+Description=gopass age agent
+
+[Service]
+Type=simple
+# A SIGKILL'd agent leaves its socket behind and every later bind fails
+# silently (the on-demand spawn discards the agent's stderr).
+ExecStartPre=/usr/bin/rm -f %t/gopass/gopass-age-agent.sock
+ExecStart=%h/.local/share/mise/shims/gopass age agent start
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=default.target
