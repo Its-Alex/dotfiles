@@ -2,15 +2,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# The key is only deployed after `bw login && chezmoi apply`: this line changes
+# The key is only deployed after `rbw login && chezmoi apply`: this line changes
 # then, so the skip recorded by a secretless apply is retried.
-# bitwarden session: {{ if includeTemplate "bw-authenticated" . }}yes{{ else }}no{{ end }}
+# bitwarden session: {{ if includeTemplate "rbw-authenticated" . }}yes{{ else }}no{{ end }}
 repo="${HOME}/.local/share/chezmoi"
 key="${HOME}/.ssh/itsalex"
 remote="git@github.com:Its-Alex/dotfiles.git"
 
 if [ ! -s "$key" ]; then
-    printf "\e[1;33m%s\e[1;0m\n" "~/.ssh/itsalex is not deployed; skipping the origin switch. Run: bw login && chezmoi apply"
+    printf "\e[1;33m%s\e[1;0m\n" "~/.ssh/itsalex is not deployed; skipping the origin switch. Run: rbw login && chezmoi apply"
     exit 0
 fi
 

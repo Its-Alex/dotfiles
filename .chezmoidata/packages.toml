@@ -5,7 +5,7 @@
 [packages.arch]
 core = [
   "git", "git-lfs", "base-devel",
-  "gnupg", "libsecret", "bitwarden-cli", "unzip", "tar", "fzf", "jq",
+  "gnupg", "libsecret", "rbw", "unzip", "tar", "fzf", "jq",
   "netcat", "q-dns-bin", "tailscale", # q-dns-bin: https://github.com/natesales/q, replaces drill from ldns
   "vim", "nvim", "tree-sitter-cli", "tmux", "tmuxinator", "zsh",
   "extra/opencode", # OpenCode 2; replaced AUR opencode-bin (v1)

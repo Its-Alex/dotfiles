@@ -5,9 +5,16 @@
 {{- else -}}
 {{-   $role = promptChoiceOnce . "role" "Machine role" $roleChoices -}}
 {{- end }}
+{{- $bitwardenEmail := env "BW_EMAIL" -}}
+{{- if and (not $bitwardenEmail) stdinIsATTY -}}
+{{-   $bitwardenEmail = promptStringOnce . "bitwardenEmail" "Bitwarden account email" -}}
+{{- end }}
 [data]
     role = {{ $role | quote }}
-[bitwarden]
-    unlock = "auto"
+{{- /* Omitted when empty (unattended secretless init), so a later interactive
+       `chezmoi init` still prompts instead of keeping "" forever. */}}
+{{- if $bitwardenEmail }}
+    bitwardenEmail = {{ $bitwardenEmail | quote }}
+{{- end }}
 [hooks.read-source-state.pre]
     command = ".local/share/chezmoi/.install-password-manager.sh"

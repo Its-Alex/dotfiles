@@ -36,6 +36,28 @@ variable. Re-run `chezmoi init` with the variable set to change a machine's
 role, the variable wins over the persisted answer. Any other value aborts the
 init with the list of allowed roles.
 
+### Bitwarden account email
+
+`chezmoi init` also asks once for the Bitwarden account email, persisted the
+same way and never committed (this repository is public). `BW_EMAIL` answers
+without prompting, like `CHEZMOI_ROLE` for the role. On a terminal-less init
+with no `BW_EMAIL` the question is skipped and no email is recorded; the next
+interactive `chezmoi init` asks again.
+
+### Secrets
+
+Secrets (SSH/GPG keys, API tokens) come from Bitwarden through
+[rbw](https://github.com/doy/rbw), which the pre-apply hook installs. While rbw
+is not logged in, an apply simply skips every secret-dependent part. Enable
+them with:
+
+```sh-session
+$ rbw login && chezmoi apply
+```
+
+`rbw logout` returns the machine to secretless applies. See
+[`docs/secrets.md`](./docs/secrets.md) for the design.
+
 ## Install from scratch
 
 To install from scratch I use [QEMU Archlinux](https://github.com/Its-Alex/qemu-archlinux),
@@ -61,12 +83,12 @@ $ echo 'archlinux ALL=(ALL) NOPASSWD: ALL' | sudo tee /etc/sudoers.d/90-archlinu
 Finally I can launch:
 
 ```shell
-$ CHEZMOI_PASSWORD_MANAGER_DISABLED=true sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply https://github.com/Its-Alex/dotfiles.git
+$ sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply https://github.com/Its-Alex/dotfiles.git
 ```
 
-To install dotfiles. The variable `CHEZMOI_PASSWORD_MANAGER_DISABLED` allow me
-to perform a full installation without connecting myself because I don't want
-to automate this part.
+To install dotfiles. Everything secret-dependent is skipped as long as rbw is
+not logged in (see [Secrets](#secrets)), so this performs a full installation
+without connecting to Bitwarden.
 
 ## Configurations
 

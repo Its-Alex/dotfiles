@@ -44,10 +44,11 @@ Creates or updates the opencode instance <name> through incus-apply. A VM by
 default; --container gives a throwaway test container (no nested incus, no
 in-guest OOM protection).
 
---with-secrets reads BW_CLIENTID, BW_CLIENTSECRET and BW_PASSWORD from the
-environment, hands them to first boot, then scrubs them from the instance
-config. Without it the instance installs everything non-secret, and secrets
-are enabled at first connection with `bw login && chezmoi apply`.
+--with-secrets reads BW_EMAIL, BW_CLIENTID, BW_CLIENTSECRET (the personal API
+key) and BW_PASSWORD from the environment, asking for any that is empty, hands
+them to first boot, where rbw logs in unattended, then scrubs them from the
+instance config. Without it the instance installs everything non-secret, and
+secrets are enabled at first connection with `rbw login && chezmoi apply`.
 
 --repo-mount shares <dir> read-only at /mnt/dotfiles and bootstraps chezmoi from
 it instead of the network, so CI builds the commit of the pull request rather
@@ -124,8 +125,17 @@ done
 
 if $with_secrets; then
     $dry_run && die "--dry-run cannot be combined with --with-secrets: the preview would print the credentials"
-    for variable in BW_CLIENTID BW_CLIENTSECRET BW_PASSWORD; do
-        [[ -n ${!variable:-} ]] || die "$variable must be set in the environment with --with-secrets"
+    for variable in BW_EMAIL BW_CLIENTID BW_CLIENTSECRET BW_PASSWORD; do
+        if [[ -z ${!variable:-} ]]; then
+            [[ -t 0 ]] || die "$variable must be set in the environment with --with-secrets"
+            if [[ $variable == BW_EMAIL ]]; then
+                read -rp "$variable: " "${variable?}"
+            else
+                read -rsp "$variable: " "${variable?}"
+                printf '\n'
+            fi
+            [[ -n ${!variable} ]] || die "$variable cannot be empty"
+        fi
         [[ ${!variable} != *$'\n'* ]] || die "$variable must be a single line"
     done
 fi
@@ -195,10 +205,11 @@ render_user_data() {
         printf '    owner: root:root\n'
         printf "    permissions: '0600'\n"
         printf '    content: |\n'
+        printf '      BW_EMAIL=%q\n' "$BW_EMAIL"
         printf '      BW_CLIENTID=%q\n' "$BW_CLIENTID"
         printf '      BW_CLIENTSECRET=%q\n' "$BW_CLIENTSECRET"
-        # The password goes in its own file: --passwordfile removes the shell
-        # from the path entirely, and it never needs to be an env var.
+        # The password goes in its own file, read as is by the bootstrap pinentry:
+        # it never goes through a shell or an env var.
         printf '  - path: /run/bw-bootstrap.pw\n'
         printf '    owner: root:root\n'
         printf "    permissions: '0600'\n"
@@ -316,7 +327,7 @@ printf '\n%s %s is up.\n\n' "$kind" "$name"
 if $with_secrets; then
     printf 'Secrets were provisioned and locked at first boot. Verify with:\n'
     printf '  incus exec %s -- su - alex -c %s\n' "$name" "'mise exec -- gopass ls bitwarden'"
-    printf '  incus exec %s -- su - alex -c %s\n' "$name" "'bw status'"
+    printf '  incus exec %s -- su - alex -c %s\n' "$name" "'rbw sync'"
     printf '\nThe master password transited through host incus config and instance metadata\n'
     printf 'during first boot; root on either side could read it then.\n'
     printf '\nThen:\n'
@@ -328,9 +339,9 @@ else
     printf '  incus exec %s -- su - alex    # on the host; exit comes back here\n' "$name"
     # shellcheck disable=SC2016  # literal text for the user's shell, not ours
     printf '  export PATH=$HOME/.local/bin:$PATH\n'
-    printf '  bw login && chezmoi apply     # age identity, store clone, mirror seed, SSH/GPG keys\n'
+    printf '  rbw login && chezmoi apply    # age identity, store clone, mirror seed, SSH/GPG keys\n'
     printf '  sudo tailscale up             # prints the auth URL\n'
-    printf '  bw logout                     # optional: fully unattended applies afterwards\n'
+    printf '  rbw logout                    # optional: fully unattended applies afterwards\n'
 fi
 if [[ $vm == false ]]; then
     printf '\nContainer mode: podman needs security.nesting=true, and there is no\n'

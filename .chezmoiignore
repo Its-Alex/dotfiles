@@ -34,7 +34,7 @@ Pictures
 .config/systemd/user/gopass-age-agent.service
 {{- end }}
 
-{{ if not (includeTemplate "bw-authenticated" .) }}
+{{ if not (includeTemplate "rbw-authenticated" .) }}
 # These render empty without a Bitwarden session. Ignored, the deployed keys
 # stay as they are instead of being emptied as drift.
 .ssh/itsalex

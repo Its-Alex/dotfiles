@@ -1,0 +1,9 @@
+{{- /* Logged in, not unlocked: a locked agent prompts through pinentry instead of skipping the secrets. */ -}}
+{{- if lookPath "rbw" -}}
+{{-   $profileDir := "rbw" -}}
+{{-   with env "RBW_PROFILE" }}{{ $profileDir = printf "rbw-%s" . }}{{ end -}}
+{{-   $cacheDir := env "XDG_CACHE_HOME" | default (joinPath .chezmoi.homeDir ".cache") -}}
+{{-   range glob (joinPath $cacheDir $profileDir "*.json") -}}
+{{-     if (include . | fromJson).access_token }}true{{ break }}{{ end -}}
+{{-   end -}}
+{{- end -}}

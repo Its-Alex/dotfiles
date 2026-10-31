@@ -9,6 +9,36 @@ users:
     ssh_authorized_keys: []
 
 write_files:
+  - path: /usr/local/share/rbw-bootstrap-pinentry
+    owner: root:root
+    permissions: '0755'
+    content: |
+      #!/bin/sh
+      # rbw's pinentry during the unattended first boot, answering from the files
+      # create-opencode-instance.sh writes. rbw counts the OK lines: one for the
+      # greeting, one per command before GETPIN.
+      set -eu
+      . /run/bw-bootstrap.env
+      echo "OK Pleased to meet you"
+      prompt=""
+      while IFS= read -r line; do
+          case "$line" in
+              GETPIN) break ;;
+              "SETPROMPT "*) prompt="${line#SETPROMPT }" ;;
+          esac
+          echo OK
+      done
+      case "$prompt" in
+          "API key client__id") pin="$BW_CLIENTID" ;;
+          "API key client__secret") pin="$BW_CLIENTSECRET" ;;
+          "Master Password") IFS= read -r pin < /run/bw-bootstrap.pw ;;
+          *)
+              echo "ERR 83886179 no unattended answer for $prompt"
+              exit 0
+              ;;
+      esac
+      printf 'D %s\nOK\n' "$(printf '%s' "$pin" | sed 's/%/%25/g')"
+
   - path: /usr/local/share/chezmoi-bootstrap.sh
     owner: root:root
     permissions: '0755'
@@ -17,19 +47,27 @@ write_files:
       set -eu
 
       if [ -f /run/bw-bootstrap.env ]; then
-          set -a
           . /run/bw-bootstrap.env
-          set +a
-          bw login --apikey
-          BW_SESSION="$(bw unlock --passwordfile /run/bw-bootstrap.pw --raw)"
-          if [ -z "$BW_SESSION" ]; then
-              echo "bw unlock produced no session; the vault stays locked" >&2
+          # chezmoi init reads it too (.chezmoi.toml.tmpl), for the rbw email data.
+          export BW_EMAIL
+          rbw config set email "$BW_EMAIL"
+          # Reset on any exit: the answers are shredded after this script, and the
+          # reset also stops the agent, which locks the vault as before.
+          trap 'rbw config unset pinentry' EXIT
+          rbw config set pinentry /usr/local/share/rbw-bootstrap-pinentry
+          # The official server refuses a password login from an unknown device
+          # until its API key has registered it.
+          rbw register
+          if ! rbw login; then
+              echo "rbw login failed (two-step login cannot be answered unattended); run rbw login && chezmoi apply on first connection" >&2
               exit 1
           fi
-          export BW_SESSION
-          # Unlocked or not, never the session: this line is the diagnosis when a
-          # template later fails on Bitwarden.
-          bw status 2> /dev/null | sed -n 's/.*"status":"\([a-z]*\)".*/bw status: \1/p' >&2
+          if rbw unlocked; then
+              echo "rbw: unlocked" >&2
+          else
+              echo "rbw: logged in but still locked; aborting" >&2
+              exit 1
+          fi
       fi
 
       # Rendered by scripts/create-opencode-instance.sh (CHEZMOI_REPO): the upstream
@@ -37,19 +75,15 @@ write_files:
       chezmoi_repo=__CHEZMOI_REPO__
       CHEZMOI_ROLE=headless sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin" init --apply "$chezmoi_repo"
 
-      if [ -f /run/bw-bootstrap.env ]; then
-          bw lock
-      fi
-
 runcmd:
   - |
     set -eu
 
     # cloud-init's package module runs before the network is up and never retries.
-    # bw and curl must exist before chezmoi init: the secret parts need a session,
+    # rbw and curl must exist before chezmoi init: the secret parts need a session,
     # and the apply that installs the core packages only runs after it.
     attempt=0
-    until pacman -Sy --needed --noconfirm git curl sudo openssh bitwarden-cli; do
+    until pacman -Sy --needed --noconfirm git curl sudo openssh rbw; do
       attempt=$((attempt + 1))
       if [ "$attempt" -ge 5 ]; then
         echo "package install still failing after $attempt attempts" >&2

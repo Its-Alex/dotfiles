@@ -1,4 +1,4 @@
-{{ if includeTemplate "bw-authenticated" . -}}
+{{ if includeTemplate "rbw-authenticated" . -}}
 #!/usr/bin/env bash
 set -euo pipefail
 
@@ -14,7 +14,7 @@ if [ -z "$gopass_bin" ]; then
 fi
 
 # Passphrase from Bitwarden, as in setup-gopass, so seeding never prompts.
-age_keyring_pass="{{ with (index (bitwardenFields "item" "Age - gopass identity") "gopass-keyring-pass") }}{{ .value }}{{ end }}"
+age_keyring_pass="{{ with (index (rbwFields "Age - gopass identity") "gopass-keyring-pass") }}{{ .value }}{{ end }}"
 
 # Export nothing when absent, so gopass falls back to the OS keyring.
 if [ -n "$age_keyring_pass" ]; then
@@ -55,17 +55,17 @@ seed_mirror_entry() {
     printf '%s' "$content" | "$gopass_bin" --nosync insert --force "$entry"
 }
 
-seed_mirror_entry gitlab/api-token "{{ (bitwarden "item" "Gitlab - API Token").login.password }}"
-seed_mirror_entry linear/api-key "{{ (bitwarden "item" "Linear - API Key").login.password }}"
-seed_mirror_entry terraform/api-token "{{ (bitwarden "item" "Terraform - API Token").login.password }}"
-seed_mirror_entry atlassian/confluence "{{ (bitwarden "item" "Confluence - API Token").login.password }}" \
-    url "{{ (bitwardenFields "item" "Confluence - API Token").space_url.value }}" \
-    username "{{ (bitwarden "item" "Confluence - API Token").login.username }}"
-seed_mirror_entry atlassian/jira "{{ (bitwarden "item" "Jira - API Token ").login.password }}" \
-    url "{{ (bitwardenFields "item" "Jira - API Token ").space_url.value }}" \
-    username "{{ (bitwarden "item" "Jira - API Token ").login.username }}"
-seed_mirror_entry slack/xoxc-xoxd "{{ (bitwardenFields "item" "Slack - XOXC/XOXD").SLACK_MCP_XOXC_TOKEN.value }}" \
-    xoxd "{{ (bitwardenFields "item" "Slack - XOXC/XOXD").SLACK_MCP_XOXD_TOKEN.value }}"
+seed_mirror_entry gitlab/api-token "{{ (rbw "Gitlab - API Token").data.password }}"
+seed_mirror_entry linear/api-key "{{ (rbw "Linear - API Key").data.password }}"
+seed_mirror_entry terraform/api-token "{{ (rbw "Terraform - API Token").data.password }}"
+seed_mirror_entry atlassian/confluence "{{ (rbw "Confluence - API Token").data.password }}" \
+    url "{{ (rbwFields "Confluence - API Token").space_url.value }}" \
+    username "{{ (rbw "Confluence - API Token").data.username }}"
+seed_mirror_entry atlassian/jira "{{ (rbw "Jira - API Token").data.password }}" \
+    url "{{ (rbwFields "Jira - API Token").space_url.value }}" \
+    username "{{ (rbw "Jira - API Token").data.username }}"
+seed_mirror_entry slack/xoxc-xoxd "{{ (rbwFields "Slack - XOXC/XOXD").SLACK_MCP_XOXC_TOKEN.value }}" \
+    xoxd "{{ (rbwFields "Slack - XOXC/XOXD").SLACK_MCP_XOXD_TOKEN.value }}"
 
 printf "\e[1;32m%s\e[1;0m\n" "${mirror_name} gopass mount seeded."
 {{ end -}}

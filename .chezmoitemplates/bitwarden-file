@@ -1,0 +1,13 @@
+{{- $encoded := "" -}}
+{{- $source := "" -}}
+{{- if hasKey . "note" -}}
+{{-   $source = printf "secure note %q" .note -}}
+{{-   $encoded = (rbw .note).notes | default "" -}}
+{{- else -}}
+{{-   $source = printf "%q field on item %s" .field .item -}}
+{{-   with index (rbwFields .item) .field }}{{ $encoded = .value }}{{ end -}}
+{{- end -}}
+{{- if not $encoded -}}
+{{-   fail (printf "Bitwarden has no %s: store the file there with base64 -w0, then rbw sync" $source) -}}
+{{- end -}}
+{{- $encoded | b64dec -}}

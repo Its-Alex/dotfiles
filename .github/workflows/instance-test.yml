@@ -147,12 +147,12 @@ jobs:
           as_alex 'opencode --version; zsh --version; tmux -V'
 
           printf '\n== secret parts skipped ==\n'
-          bw_status=$(as_alex 'bw status' | jq -r .status)
-          [[ $bw_status == unauthenticated ]] || fail "bw status is '$bw_status'"
+          as_alex 'command -v rbw' || fail 'rbw is not installed'
+          as_alex '! ls $HOME/.cache/rbw/*.json > /dev/null 2>&1' || fail 'rbw has a local database'
           as_alex "test ! -e $store" || fail 'a gopass store exists'
           sudo incus exec "$name" -- grep -qF 'No Bitwarden session; skipping gopass setup' \
               /var/log/cloud-init-output.log ||
-              fail "the bootstrap log lacks the 'bw login && chezmoi apply' hint"
+              fail "the bootstrap log lacks the 'rbw login && chezmoi apply' hint"
 
           printf '\n== no GUI payload ==\n'
           as_alex "test ! -e $home/.config/ghostty" || fail 'the ghostty config is deployed'

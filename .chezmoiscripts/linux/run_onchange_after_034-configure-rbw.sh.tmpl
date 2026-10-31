@@ -1,0 +1,24 @@
+{{ if and (eq .chezmoi.os "linux") (get . "bitwardenEmail") -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+if ! command -v rbw > /dev/null; then
+    printf "\e[1;33m%s\e[1;0m\n" "rbw not found; skipping its configuration."
+    exit 0
+fi
+
+# `rbw config set` stops the agent, which locks the vault: only call it on a change.
+email={{ .bitwardenEmail | quote }}
+if [ "$(rbw config show 2> /dev/null | jq -r '.email // empty')" != "$email" ]; then
+    printf "\e[1;34m%s\e[1;0m\n" "Configure rbw for ${email}..."
+    rbw config set email "$email"
+fi
+
+# 72 h between master-password prompts, instead of the default hour. The timer
+# only lives as long as the agent: a reboot or logout still locks immediately.
+lock_timeout=259200
+if [ "$(rbw config show 2> /dev/null | jq -r '.lock_timeout // empty')" != "$lock_timeout" ]; then
+    printf "\e[1;34m%s\e[1;0m\n" "Set the rbw lock timeout to 72h..."
+    rbw config set lock_timeout "$lock_timeout"
+fi
+{{ end -}}

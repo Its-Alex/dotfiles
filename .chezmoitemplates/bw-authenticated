@@ -1,4 +1,0 @@
-{{- if lookPath "bw" -}}
-{{-   $status := output "sh" "-c" "bw status 2>/dev/null || true" -}}
-{{-   if and $status (ne ($status | fromJson).status "unauthenticated") -}}true{{- end -}}
-{{- end -}}

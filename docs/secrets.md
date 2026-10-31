@@ -5,8 +5,9 @@ through gopass, instead of reading a file-based password manager directly.
 
 ## Decision
 
-- **Source of truth:** Bitwarden, read through chezmoi's `bitwarden` template
-  functions and seeded into gopass at `chezmoi apply` time.
+- **Source of truth:** Bitwarden, read through [rbw](https://github.com/doy/rbw)
+  with chezmoi's [`rbw` template functions](https://www.chezmoi.io/reference/templates/bitwarden-functions/rbw/)
+  and seeded into gopass at `chezmoi apply` time.
 - **Runtime delivery:** gopass, from a local `bitwarden` mount that is never
   pushed anywhere.
 - **Kept on libsecret:** the GPG passphrase (pinentry's own store) and whatever
@@ -96,10 +97,11 @@ only when `~/.config/gopass/config` does not exist
 - `.chezmoiscripts/linux/run_onchange_after_040-setup-gopass.sh.tmpl` installs the age identity, points
   `mounts.path` at the global store (cloning it from the private repository, or
   creating it on the first machine) and creates the local `bitwarden` mount. Its
-  Bitwarden-sourced body only renders with a live session
-  (`.chezmoitemplates/bw-authenticated`); without one it prints the
-  `bw login && chezmoi apply` hint, so `bw login` enables the whole secret path
-  and `bw logout` disables it again.
+  Bitwarden-sourced body only renders once rbw is logged in
+  (`.chezmoitemplates/rbw-authenticated`, which reads rbw's local database); without it it prints the
+  `rbw login && chezmoi apply` hint, so `rbw login` enables the whole secret path
+  and `rbw logout` disables it again. A logged-in but locked rbw asks for the
+  master password through pinentry during the apply.
 - `.chezmoiscripts/linux/run_onchange_after_041-seed-gopass.sh.tmpl` seeds the `bitwarden` mount. It skips
   an empty Bitwarden value and leaves an unchanged entry alone.
 - `.chezmoiscripts/linux/run_onchange_after_042-gopass-age-agent.sh.tmpl` (desktop only) enables and
@@ -118,6 +120,30 @@ only when `~/.config/gopass/config` does not exist
   gopass on demand and `exec` the server, so those tokens never enter the shell
   environment. `private_dot_config/opencode/opencode.json.tmpl` and the Claude
   Code MCP config point at those wrappers.
+- rbw, not the official `bw` CLI: every `bw` call costs ~3 s and chezmoi renders
+  every template on each apply, while rbw answers from its agent in milliseconds.
+  rbw cannot read attachments, so key files come base64-encoded from the vault
+  and are decoded by `.chezmoitemplates/bitwarden-file`: each private key in the
+  Notes of its own secure note (`SSH - private key`, `SSH - Old - private key`,
+  `Relex - SSH - private key`, `GPG - private key`, `GPG - Relex - private key`;
+  a field's 5000 encrypted characters cannot hold an RSA key in base64), public
+  keys in the `ssh-public-key` hidden field of their item. Store a new key with
+  `base64 -w0`, single-line; `b64dec` in the template restores the exact bytes,
+  which a multi-line field or note would not survive.
+- `.chezmoiscripts/linux/run_onchange_after_034-configure-rbw.sh.tmpl` sets rbw's account email,
+  from the `bitwardenEmail` data value: `BW_EMAIL` in the environment, or asked once per machine
+  by `.chezmoi.toml.tmpl` — never committed, since the vault login is the phishing-relevant half
+  of the account identity and this repository is public. It also sets `lock_timeout`
+  to 72 h: the agent holds the keys in memory only, so the master password is
+  still asked after a reboot or logout, and any process of the user can read
+  secrets while unlocked — the same exposure window the gopass age agent already
+  accepts, just longer than rbw's one-hour default.
+  The headless instance logs in unattended at first boot when
+  `scripts/create-opencode-instance.sh --with-secrets` is given the credentials:
+  a scripted pinentry (`incus/cloud-init/user-data.yaml`) answers rbw's prompts
+  from the files cloud-init writes, then is removed. An account with two-step
+  login cannot be answered that way; `rbw login && chezmoi apply` on first
+  connection is then the path.
 - `.chezmoiscripts/linux/run_onchange_after_035-setup-gpg.sh.tmpl` still uses `secret-tool`: the GPG
   passphrase belongs to pinentry, not to gopass. It runs before the gopass setup because git signs
   commits (`gpgsign = true`) and the store's first commit happens during `gopass init`.

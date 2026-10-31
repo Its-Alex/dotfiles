@@ -1,6 +1,6 @@
 #!/bin/sh
 
-type bw >/dev/null 2>&1 && exit 0
+type rbw >/dev/null 2>&1 && exit 0
 
 case "$(uname -s)" in
 Linux)
@@ -11,7 +11,7 @@ Linux)
         _os_id="$(. /usr/lib/os-release && echo "$ID")"
     fi
     if [ "$_os_id" = "arch" ]; then
-        sudo pacman -S --noconfirm --needed bitwarden-cli
+        sudo pacman -S --noconfirm --needed rbw
         # Never log in from here: this hook runs before every apply, and an
         # unattended one would hang on the master password prompt.
     else
