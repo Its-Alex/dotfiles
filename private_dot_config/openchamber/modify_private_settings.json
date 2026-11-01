@@ -12,6 +12,11 @@ managed_settings=$(cat <<'JSON'
 {
   "openInAppId": "ghostty",
   "agentNotifyToolEnabled": true,
+  "autoDeleteEnabled": true,
+  "sessionRetentionAction": "delete",
+  "sessionRetentionOnlyArchived": true,
+  "mergedWorktreeCleanupEnabled": true,
+  "worktreeArchiveOnDoneEnabled": true,
   "privateRelay": {
     "enabled": true
   }

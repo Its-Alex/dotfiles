@@ -35,6 +35,15 @@ managed_preferences=$(cat <<'JSON'
     "defaultModel": {
       "value": "opencode-go/deepseek-v4.1-flash"
     },
+    "smallModelUseDefault": {
+      "value": false
+    },
+    "smallModelOverride": {
+      "value": "anthropic/claude-haiku-5-5"
+    },
+    "smallModelVariant": {
+      "value": "low"
+    },
     "sidebarWorktreeSortOrder": {
       "value": "recent"
     },
@@ -43,6 +52,9 @@ managed_preferences=$(cat <<'JSON'
     },
     "toolJsonViewMode": {
       "value": "raw"
+    },
+    "showDeletionDialog": {
+      "value": false
     },
     "lightThemeId": {
       "surfaces": {
