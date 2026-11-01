@@ -37,12 +37,14 @@ if ! snapper list-configs | awk 'NR>2 {print $1}' | grep -qx root; then
     snapper -c root create-config /
 fi
 
-sed -i '/^TIMELINE_LIMIT_HOURLY/c\TIMELINE_LIMIT_HOURLY="1"' /etc/snapper/configs/root
-sed -i '/^TIMELINE_LIMIT_DAILY/c\TIMELINE_LIMIT_DAILY="2"' /etc/snapper/configs/root
-sed -i '/^TIMELINE_LIMIT_WEEKLY/c\TIMELINE_LIMIT_WEEKLY="1"' /etc/snapper/configs/root
-sed -i '/^TIMELINE_LIMIT_MONTHLY/c\TIMELINE_LIMIT_MONTHLY="1"' /etc/snapper/configs/root
-sed -i '/^TIMELINE_LIMIT_QUARTERLY/c\TIMELINE_LIMIT_QUARTERLY="0"' /etc/snapper/configs/root
-sed -i '/^TIMELINE_LIMIT_YEARLY/c\TIMELINE_LIMIT_YEARLY="0"' /etc/snapper/configs/root
+sed -i \
+    -e '/^TIMELINE_LIMIT_HOURLY/c\TIMELINE_LIMIT_HOURLY="1"' \
+    -e '/^TIMELINE_LIMIT_DAILY/c\TIMELINE_LIMIT_DAILY="2"' \
+    -e '/^TIMELINE_LIMIT_WEEKLY/c\TIMELINE_LIMIT_WEEKLY="1"' \
+    -e '/^TIMELINE_LIMIT_MONTHLY/c\TIMELINE_LIMIT_MONTHLY="1"' \
+    -e '/^TIMELINE_LIMIT_QUARTERLY/c\TIMELINE_LIMIT_QUARTERLY="0"' \
+    -e '/^TIMELINE_LIMIT_YEARLY/c\TIMELINE_LIMIT_YEARLY="0"' \
+    /etc/snapper/configs/root
 
 systemctl enable --now snapper-timeline.timer
 systemctl enable --now snapper-cleanup.timer
