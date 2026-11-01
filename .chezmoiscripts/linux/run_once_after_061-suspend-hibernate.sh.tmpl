@@ -75,26 +75,16 @@ fi
 
 printf "\e[1;34m%s\e[1;0m\n" "Setup systemd logind and sleepd configuration for suspend then hibernated..."
 mkdir -p /etc/systemd/logind.conf.d /etc/systemd/sleep.conf.d
-if ! cmp -s <(echo '[Login]
-HandleLidSwitch=suspend-then-hibernate
-HandleLidSwitchExternalPower=suspend-then-hibernate
-HandleLidSwitchDocked=ignore
-') /etc/systemd/logind.conf.d/10-lid.conf 2>/dev/null; then
-    cat > /etc/systemd/logind.conf.d/10-lid.conf <<EOF
+cat > /etc/systemd/logind.conf.d/10-lid.conf <<EOF
 [Login]
 HandleLidSwitch=suspend-then-hibernate
 HandleLidSwitchExternalPower=suspend-then-hibernate
 HandleLidSwitchDocked=ignore
 EOF
-fi
-if ! cmp -s <(echo '[Sleep]
-HibernateDelaySec=600
-') /etc/systemd/sleep.conf.d/10-hibernate-delay.conf 2>/dev/null; then
-    cat > /etc/systemd/sleep.conf.d/10-hibernate-delay.conf <<EOF
+cat > /etc/systemd/sleep.conf.d/10-hibernate-delay.conf <<EOF
 [Sleep]
 HibernateDelaySec=600
 EOF
-fi
 
 printf "\e[1;34m%s\e[1;0m\n" "Reload systemd to apply configuration at next boot..."
 systemctl daemon-reload
