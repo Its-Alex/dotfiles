@@ -3,9 +3,6 @@ set-option -g default-shell /usr/bin/zsh
 set -as terminal-overrides ",xterm-ghostty*:Tc,xterm-256color:Tc"
 set-option -g default-terminal "tmux-256color"
 
-set-option -g destroy-unattached off
-set-option -g detach-on-destroy on
-
 set-option -g mouse on
 # Wheel-up dispatch: mouse mode, then alternate screen, then copy mode, else enter
 # copy mode. Nested if-shells because tmux has no else-if.
@@ -14,7 +11,6 @@ bind -n WheelDownPane if-shell -Ft= "#{alternate_on}" "send-keys -t= down" "sele
 bind -T copy-mode-vi WheelUpPane   select-pane \; send-keys -X -N 2 scroll-up
 bind -T copy-mode-vi WheelDownPane select-pane \; send-keys -X -N 2 scroll-down
 
-set-option -g prefix C-b
 set-option -g status-keys vi
 set-option -g mode-keys vi
 
