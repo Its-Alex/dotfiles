@@ -47,8 +47,7 @@ source "${ZSH}/oh-my-zsh.sh"
 # Disable url-quote-magic (oh-my-zsh escapes special chars like ?, =, & on paste)
 zle -A .self-insert self-insert
 
-export PATH=/usr/local/bin:$PATH
-export PATH=/usr/local/sbin:$PATH
+export PATH=/usr/local/sbin:/usr/local/bin:$PATH
 export LANG=en_US.UTF-8
 export EDITOR='nvim'
 export FZF_DEFAULT_OPTS="--tmux"
@@ -71,7 +70,7 @@ fi
 
 export PATH=$PATH:$HOME/.cargo/bin
 export GOPATH=$HOME/go
-export PATH=$PATH:$HOME/go/bin
+export PATH=$PATH:$GOPATH/bin
 export CC_SAFETY_NET_PARANOID_RM=1
 export CC_SAFETY_NET_WORKTREE=1
 {{ if eq .chezmoi.os "darwin" -}}
@@ -83,8 +82,7 @@ export HOMEBREW_INSTALL_CLEANUP=1
 export PATH=$PATH:$HOME/.local/bin
 {{- if eq .role "desktop" }}
 export ANDROID_SDK_ROOT=/opt/android-sdk
-export PATH="${ANDROID_SDK_ROOT}/platform-tools:$PATH"
-export PATH="${ANDROID_SDK_ROOT}/tools:$PATH"
+export PATH="${ANDROID_SDK_ROOT}/tools:${ANDROID_SDK_ROOT}/platform-tools:$PATH"
 {{- end }}
 {{- end }}
 
