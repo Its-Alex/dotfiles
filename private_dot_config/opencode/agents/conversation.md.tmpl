@@ -1,0 +1,17 @@
+---
+description: General-purpose conversation agent — questions, research, writing, reflection
+mode: primary
+model: openrouter/google/gemini-2.5-flash
+color: '#22C55E'
+permission:
+  webfetch: allow
+  read: allow
+  glob: allow
+  grep: allow
+  task: deny
+  edit: deny
+  write: deny
+  bash: deny
+---
+
+{{ includeTemplate "agents/conversation.md" . -}}
