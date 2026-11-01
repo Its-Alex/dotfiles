@@ -53,10 +53,10 @@ export EDITOR='nvim'
 export FZF_DEFAULT_OPTS="--tmux"
 GPG_TTY=$(tty)
 export GPG_TTY
-{{ if (and (eq .chezmoi.osRelease.id "arch") (ne .chezmoi.os "darwin") (eq .role "desktop")) -}}
+{{ if and (eq .chezmoi.osRelease.id "arch") (eq .role "desktop") -}}
 export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/gcr/ssh
 {{- end }}
-{{- if (and (eq .chezmoi.osRelease.id "arch") (ne .chezmoi.os "darwin") (eq .role "headless")) -}}
+{{- if and (eq .chezmoi.osRelease.id "arch") (eq .role "headless") -}}
 export SSH_AUTH_SOCK="{{ includeTemplate "pitchfork-ssh-agent-socket" . }}"
 {{- end }}
 if [ -S "${XDG_RUNTIME_DIR:-/run/user/$UID}/podman/podman.sock" ]; then
