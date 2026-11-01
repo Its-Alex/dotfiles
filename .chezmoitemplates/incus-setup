@@ -1,0 +1,8 @@
+printf "\e[1;34m%s\e[1;0m\n" "Setup Incus..."
+# incus.service is socket-activated (it Wants incus.socket), so the socket is
+# the unit to enable: incusd then starts on the first client connection.
+sudo systemctl enable --now incus.socket
+if ! id -nG "$USER" | grep -qw incus-admin; then
+    sudo usermod -aG incus-admin "$USER"
+    printf "\e[1;33m%s\e[1;0m\n" "Added $USER to incus-admin: log out and back in before running incus without sudo."
+fi
