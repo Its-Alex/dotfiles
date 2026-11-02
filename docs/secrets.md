@@ -64,7 +64,7 @@ the first line and extra fields are `key: value` lines:
 | `bitwarden/terraform/api-token` | password |
 | `bitwarden/atlassian/confluence` | password, `url`, `username` |
 | `bitwarden/atlassian/jira` | password, `url`, `username` |
-| `bitwarden/slack/xoxc-xoxd` | password (xoxc token), `xoxd` |
+| `bitwarden/slack/xoxp` | password (xoxp token) |
 
 Read the password with `gopass show --password <entry>` and a field with
 `gopass show <entry> <key>`.

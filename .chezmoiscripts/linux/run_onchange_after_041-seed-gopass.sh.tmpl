@@ -64,8 +64,7 @@ seed_mirror_entry atlassian/confluence "{{ (rbw "Confluence - API Token").data.p
 seed_mirror_entry atlassian/jira "{{ (rbw "Jira - API Token").data.password }}" \
     url "{{ (rbwFields "Jira - API Token").space_url.value }}" \
     username "{{ (rbw "Jira - API Token").data.username }}"
-seed_mirror_entry slack/xoxc-xoxd "{{ (rbwFields "Slack - XOXC/XOXD").SLACK_MCP_XOXC_TOKEN.value }}" \
-    xoxd "{{ (rbwFields "Slack - XOXC/XOXD").SLACK_MCP_XOXD_TOKEN.value }}"
+seed_mirror_entry slack/xoxp "{{ (rbwFields "Slack MCP").SLACK_MCP_XOXP_TOKEN.value }}"
 
 printf "\e[1;32m%s\e[1;0m\n" "${mirror_name} gopass mount seeded."
 {{ end -}}
