@@ -8,5 +8,5 @@ if [[ -z "${LINEAR_API_KEY}" ]]; then
 fi
 export LINEAR_API_KEY
 
-exec mise exec -- mcp-remote https://mcp.linear.app/mcp \
+exec mise exec -C "$HOME" -- mcp-remote https://mcp.linear.app/mcp \
     --header "Authorization:Bearer ${LINEAR_API_KEY}" "$@"

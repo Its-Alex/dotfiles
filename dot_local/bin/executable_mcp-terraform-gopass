@@ -8,4 +8,4 @@ if [[ -z "${TFE_TOKEN}" ]]; then
 fi
 export TFE_TOKEN
 
-exec mise exec -- terraform-mcp-server stdio "$@"
+exec mise exec -C "$HOME" -- terraform-mcp-server stdio "$@"

@@ -24,4 +24,4 @@ JIRA_API_TOKEN="$(gopass_get bitwarden/atlassian/jira)"
 export CONFLUENCE_URL CONFLUENCE_USERNAME CONFLUENCE_API_TOKEN
 export JIRA_URL JIRA_USERNAME JIRA_API_TOKEN
 
-exec mise exec -- mcp-atlassian "$@"
+exec mise exec -C "$HOME" -- mcp-atlassian "$@"

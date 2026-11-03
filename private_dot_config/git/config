@@ -23,7 +23,7 @@
     path = ~/.config/git/config-relex
 [credential "https://github.com"]
 	helper = 
-	helper = !mise exec -- gh auth git-credential
+	helper = !mise exec -C "$HOME" -- gh auth git-credential
 [credential "https://gist.github.com"]
 	helper = 
-	helper = !mise exec -- gh auth git-credential
+	helper = !mise exec -C "$HOME" -- gh auth git-credential

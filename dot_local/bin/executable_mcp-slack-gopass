@@ -12,4 +12,4 @@ export SLACK_MCP_ADD_MESSAGE_TOOL=true
 export SLACK_MCP_CACHE_TTL=168h
 export SLACK_MCP_MIN_REFRESH_INTERVAL=900s
 
-exec mise exec -- slack-mcp-server --transport stdio "$@"
+exec mise exec -C "$HOME" -- slack-mcp-server --transport stdio "$@"
