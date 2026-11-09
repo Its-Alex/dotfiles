@@ -36,6 +36,19 @@ claude mcp add --scope user \
     --transport stdio \
     terraform -- mcp-terraform-gopass
 
+# Exa serves its keyless free tier only from the hosted endpoint; the stdio
+# server calls api.exa.ai directly and 401s without EXA_API_KEY.
+claude mcp remove exa --scope user 2>/dev/null || true
+if [ -f "$store_path/exa/api-key.age" ]; then
+    claude mcp add --scope user \
+        --transport stdio \
+        exa -- mcp-exa-gopass
+else
+    claude mcp add --scope user \
+        --transport http \
+        exa https://mcp.exa.ai/mcp
+fi
+
 # Remote MCP server: authenticates through its own OAuth flow, so no wrapper.
 claude mcp remove granola --scope user 2>/dev/null || true
 claude mcp add --scope user \

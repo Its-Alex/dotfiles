@@ -1,6 +1,16 @@
 # Global AGENTS.md
 
 {{ includeTemplate "global-instructions.md" . }}
+## Web search
+
+Fallback chain, in order, for any web search or page fetch:
+
+1. `exa` (`tools.exa.web_search_exa` / `tools.exa.web_fetch_exa`).
+2. `websearch` (hosted Exa MCP, `tools.websearch.*`) — use it when `exa` is absent from the tool list, fails to start, or returns an auth, rate-limit or transport error.
+3. `webfetch` on a known URL, when neither MCP is available.
+
+When you fall back, say so in one line. Never retry a failing `exa` call more than once.
+
 ## Delegation to subagents
 
 - Before grepping/reading more than 2-3 files to answer "where is X?", "which file does Y?", or "how is Z structured?", delegate to the `explore` subagent instead of searching inline. Fire several `explore` tasks in parallel for independent questions.

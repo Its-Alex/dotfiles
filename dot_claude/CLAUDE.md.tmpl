@@ -1,4 +1,14 @@
 # Global CLAUDE.md
 
 {{ includeTemplate "global-instructions.md" . }}
+## Web search
+
+Fallback chain, in order, for any web search or page fetch:
+
+1. `mcp__exa__*` (`web_search_exa`, `web_fetch_exa`).
+2. `WebSearch`, when the Exa tools are absent from the tool list or return an auth, rate-limit or transport error.
+3. `WebFetch` on a known URL, when `WebSearch` cannot answer.
+
+When you fall back, say so in one line. Never retry a failing Exa call more than once.
+
 @RTK.md
