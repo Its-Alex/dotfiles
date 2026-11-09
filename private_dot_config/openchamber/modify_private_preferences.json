@@ -56,6 +56,42 @@ managed_preferences=$(cat <<'JSON'
     "showDeletionDialog": {
       "value": false
     },
+    "defaultAgent": {
+      "value": "dev"
+    },
+    "walkthroughModelOverride": {
+      "value": "openrouter/anthropic/claude-haiku-4.5"
+    },
+    "showReasoningTraces": {
+      "value": true
+    },
+    "userMessageRenderingMode": {
+      "value": "markdown"
+    },
+    "sidebarProjectDisplayMode": {
+      "value": "all"
+    },
+    "workStatusPanelEnabled": {
+      "value": true
+    },
+    "gitmojiEnabled": {
+      "value": true
+    },
+    "gitChangesViewMode": {
+      "value": "flat"
+    },
+    "usageDisplayMode": {
+      "value": "usage"
+    },
+    "notifyOnPullRequests": {
+      "value": true
+    },
+    "nativeNotificationsEnabled": {
+      "value": true
+    },
+    "notificationMode": {
+      "value": "hidden-only"
+    },
     "lightThemeId": {
       "surfaces": {
         "desktop": {
@@ -67,6 +103,13 @@ managed_preferences=$(cat <<'JSON'
       "surfaces": {
         "desktop": {
           "value": "dracula-dark"
+        }
+      }
+    },
+    "wideChatLayoutEnabled": {
+      "surfaces": {
+        "desktop": {
+          "value": true
         }
       }
     }

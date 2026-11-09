@@ -11,6 +11,7 @@ removed_keys='["sidebarSessionGroupingMode"]'
 managed_settings=$(cat <<'JSON'
 {
   "openInAppId": "ghostty",
+  "desktopKeepAwakeEnabled": true,
   "agentNotifyToolEnabled": true,
   "autoDeleteEnabled": true,
   "sessionRetentionAction": "delete",
