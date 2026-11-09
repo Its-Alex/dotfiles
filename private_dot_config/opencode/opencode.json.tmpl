@@ -25,6 +25,17 @@
         "type": "remote",
         "url": "https://mcp.grep.app"
       },
+      "opencode_history": {
+        "type": "local",
+        "command": [
+          "mise",
+          "exec",
+          "-C",
+          "{{ .chezmoi.homeDir }}",
+          "--",
+          "opencode-history-mcp"
+        ]
+      },
       "exa": {
 {{- if stat (joinPath $dataHome "gopass/stores/bitwarden/exa/api-key.age") }}
         "type": "local",
