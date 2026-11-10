@@ -39,7 +39,7 @@ managed_preferences=$(cat <<'JSON'
       "value": false
     },
     "smallModelOverride": {
-      "value": "anthropic/claude-haiku-5-5"
+      "value": "openrouter/anthropic/claude-haiku-5.5"
     },
     "smallModelVariant": {
       "value": "low"
@@ -60,7 +60,7 @@ managed_preferences=$(cat <<'JSON'
       "value": "dev"
     },
     "walkthroughModelOverride": {
-      "value": "openrouter/anthropic/claude-haiku-4.5"
+      "value": "openrouter/anthropic/claude-haiku-5.5"
     },
     "showReasoningTraces": {
       "value": true
