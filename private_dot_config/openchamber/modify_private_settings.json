@@ -12,6 +12,7 @@ managed_settings=$(cat <<'JSON'
 {
   "openInAppId": "ghostty",
   "desktopKeepAwakeEnabled": true,
+  "agentMemoryToolEnabled": false,
   "agentNotifyToolEnabled": true,
   "autoDeleteEnabled": true,
   "sessionRetentionAction": "delete",
