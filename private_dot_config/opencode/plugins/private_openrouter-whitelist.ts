@@ -5,42 +5,15 @@
 //
 // V2-only (the V1 loader finds no `server()` export and skips it), and a plain
 // object export because `Plugin.define` needs `@opencode/plugin` at runtime.
+//
+// Whole vendor prefixes cover Claude and Gemini, including their `:batch`/`:free`
+// variants and `~…-latest` aliases, so new releases need no edit here.
+
+const ALLOWED_OPENROUTER_PREFIXES = ["anthropic/", "google/gemini"]
 
 const ALLOWED_OPENROUTER_MODELS = new Set([
-  "anthropic/claude-3-haiku",
-  "anthropic/claude-3.5-haiku",
-  "anthropic/claude-haiku-4.5",
-  "anthropic/claude-opus-4",
-  "anthropic/claude-opus-4.1",
-  "anthropic/claude-opus-4.5",
-  "anthropic/claude-opus-4.6",
-  "anthropic/claude-opus-4.7",
-  "anthropic/claude-opus-4.8",
-  "anthropic/claude-opus-5",
-  "anthropic/claude-opus-5.5",
-  "anthropic/claude-sonnet-4",
-  "anthropic/claude-sonnet-4.5",
-  "anthropic/claude-sonnet-4.6",
-  "anthropic/claude-sonnet-5",
-  "anthropic/claude-sonnet-5.5",
-  "anthropic/claude-fable-5",
   "deepseek/deepseek-v3.1-terminus",
   "deepseek/deepseek-v3.2",
-  "google/gemini-2.5-flash",
-  "google/gemini-2.5-flash-image",
-  "google/gemini-2.5-flash-lite",
-  "google/gemini-2.5-flash-lite-preview-09-2025",
-  "google/gemini-2.5-pro",
-  "google/gemini-2.5-pro-preview",
-  "google/gemini-2.5-pro-preview-05-06",
-  "google/gemini-3-flash-preview",
-  "google/gemini-3-pro-image-preview",
-  "google/gemini-3.1-flash-image-preview",
-  "google/gemini-3.1-flash-lite",
-  "google/gemini-3.1-flash-lite-preview",
-  "google/gemini-3.1-pro-preview",
-  "google/gemini-3.1-pro-preview-customtools",
-  "google/gemini-3.5-flash",
   "google/gemma-4-26b-a4b-it",
   "google/gemma-4-26b-a4b-it:free",
   "google/gemma-4-31b-it:free",
@@ -65,10 +38,16 @@ const ALLOWED_OPENROUTER_MODELS = new Set([
   "z-ai/glm-5",
 ])
 
+function isAllowed(modelID: string): boolean {
+  if (ALLOWED_OPENROUTER_MODELS.has(modelID)) return true
+  const bare = modelID.replace(/^~/, "")
+  return ALLOWED_OPENROUTER_PREFIXES.some((prefix) => bare.startsWith(prefix))
+}
+
 async function setup(ctx: any) {
   await ctx.model.transform((editor: any) => {
     editor.list("openrouter").forEach((model: any) => {
-      if (!ALLOWED_OPENROUTER_MODELS.has(model.id)) {
+      if (!isAllowed(model.id)) {
         editor.remove(model.providerID, model.id)
       }
     })
