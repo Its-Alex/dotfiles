@@ -3,7 +3,8 @@
   "$schema": "https://opencode.ai/config.json",
   "plugins": [
     "cc-safety-net@2.6.0",
-    "@jonathanmorley/opencode-claude-compat@0.3.0"
+    "@jonathanmorley/opencode-claude-compat@0.3.0",
+    "{{ .chezmoi.homeDir }}/.hindsight/coding-agents"
   ],
   "update": "notify",
   "model": "openrouter/anthropic/claude-sonnet-5.5",

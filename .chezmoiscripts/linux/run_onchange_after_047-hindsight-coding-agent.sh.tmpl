@@ -1,0 +1,42 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+if ! command -v opencode > /dev/null; then
+    exit 0
+fi
+
+infra_dir="{{ .chezmoi.homeDir }}/Documents/personal-infra-as-code"
+if [ ! -d "$infra_dir" ]; then
+    printf "\e[1;33m%s\e[1;0m\n" "Hindsight: $infra_dir missing, so the API key has no source; skipping."
+    exit 0
+fi
+
+printf "\e[1;34m%s\e[1;0m\n" "Configure Hindsight coding-agent memory..."
+
+config_dir="{{ .chezmoi.homeDir }}/.hindsight"
+config="$config_dir/coding-agent.json"
+
+# The key only resolves through the infra repository's mise environment.
+api_token="$(cd "$infra_dir" && mise exec -- gopass show -o hindsight.int.itsalex.fr/api/api_key)"
+
+umask 077
+mkdir -p "$config_dir"
+tmp="$(mktemp "$config.XXXXXX")"
+
+jq -n --arg apiToken "$api_token" '{
+  apiUrl: "https://hindsight-api.int.itsalex.fr",
+  apiToken: $apiToken,
+  optInOnly: false,
+  retainExtractionMode: "concise",
+  gitIngest: "message"
+}' > "$tmp"
+
+mv "$tmp" "$config"
+chmod 600 "$config"
+
+# `update` re-stages the runtime in place and, unlike `install`, leaves
+# opencode.json alone, which chezmoi owns.
+mise exec -- npx -y @vectorize-io/hindsight-coding-agents@latest update
+
+{{ end -}}
