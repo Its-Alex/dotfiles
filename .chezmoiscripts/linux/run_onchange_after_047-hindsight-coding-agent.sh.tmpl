@@ -32,7 +32,11 @@ tmp="$(mktemp "$config.XXXXXX")"
 jq -n --arg apiToken "$api_token" '{
   apiUrl: "https://hindsight-api.int.itsalex.fr",
   apiToken: $apiToken,
-  optInOnly: false,
+  optInOnly: true,
+  optInPaths: [
+    "~/Documents/personal-infra-as-code",
+    "~/.local/share/chezmoi"
+  ],
   retainExtractionMode: "concise",
   gitIngest: "message"
 }' > "$tmp"
