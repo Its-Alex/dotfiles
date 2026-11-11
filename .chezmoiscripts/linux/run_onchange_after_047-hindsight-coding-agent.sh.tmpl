@@ -29,16 +29,20 @@ umask 077
 mkdir -p "$config_dir"
 tmp="$(mktemp "$config.XXXXXX")"
 
-# defaultBankConfig is written only while a bank has no missions: once user::alex
-# exists, rewording it here has no effect, edit the bank in the control plane.
+# This file tells the plugin where to read and write, nothing else: the bank's
+# own configuration (missions, extraction strategies, knowledge pages) is owned by
+# the deployment that runs the server, and is applied from there.
+#
+# autoSeed stays off so no session ever spawns the deepening engine; gitIngest and
+# codebaseSurvey stay pinned anyway, as the guards that keep a stray deepen run on
+# this machine from importing its history into the shared bank.
 jq -n --arg apiToken "$api_token" '{
   apiUrl: "https://hindsight-api.int.itsalex.fr",
   apiToken: $apiToken,
   bankId: "user::alex",
-  retainExtractionMode: "concise",
-  gitIngest: "none",
   autoSeed: false,
   codebaseSurvey: false,
+  gitIngest: "none",
   retainTags: ["repo:{gitProject}"],
   retainContext: (
     "conversation between the user and you (the coding agent), held in the repository {gitProject}: "
@@ -53,42 +57,7 @@ jq -n --arg apiToken "$api_token" '{
     + "\"Preferences and standing decisions\" holds how the user wants work done: read it with "
     + "hindsight_read_page before making a choice it could cover. A preference stated in the "
     + "current conversation is newer than the page and wins."
-  ),
-  pages: {
-    "Component map": false,
-    "Core concepts": false
-  },
-  customPages: {
-    "Preferences and standing decisions": {
-      source_query: (
-        "What are the durable preferences, conventions and standing decisions of this user about "
-        + "how work should be done, and the reason for each? Quote exact rules and values verbatim. A choice "
-        + "of tool, library or service is a preference of the user and belongs here. When statements "
-        + "conflict, keep the latest and leave out what it replaced. Name the project when a "
-        + "preference applies to one project only."
-      )
-    }
-  },
-  defaultBankConfig: {
-    observations_mission: (
-      "Consolidate durable knowledge about the USER across all their projects: first their "
-      + "preferences, corrections, conventions and standing decisions, each with its reason; then "
-      + "the decisions and conventions of each project, attributed to that project. Favor what will "
-      + "still hold in future sessions over one-off details. When a new fact contradicts or "
-      + "supersedes an existing observation, UPDATE that observation to reflect the current state "
-      + "rather than creating a sibling alongside it; note that the rule was revised and when, so "
-      + "the superseded version is visible as history rather than as a competing claim."
-    ),
-    reflect_mission: (
-      "You hold the memory of one user across all their projects: their preferences, conventions and "
-      + "standing decisions with the reasons behind them, and the history of their work. Answer "
-      + "with the EXACT rule and the LITERAL values that were decided, quoted VERBATIM, and name "
-      + "the project a rule applies to when it is not general. If memories CONFLICT on the same "
-      + "rule, the LATEST decision wins: state the superseded rule as no longer in effect and never "
-      + "present it as current. If NOTHING in memory genuinely bears on the question, say exactly "
-      + "that in one short sentence; never stretch an unrelated decision to fit."
-    )
-  }
+  )
 }' > "$tmp"
 
 mv "$tmp" "$config"
