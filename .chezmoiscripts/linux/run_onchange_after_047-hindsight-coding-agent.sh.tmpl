@@ -29,16 +29,66 @@ umask 077
 mkdir -p "$config_dir"
 tmp="$(mktemp "$config.XXXXXX")"
 
+# defaultBankConfig is written only while a bank has no missions: once user::alex
+# exists, rewording it here has no effect, edit the bank in the control plane.
 jq -n --arg apiToken "$api_token" '{
   apiUrl: "https://hindsight-api.int.itsalex.fr",
   apiToken: $apiToken,
-  optInOnly: true,
-  optInPaths: [
-    "~/Documents/personal-infra-as-code",
-    "~/.local/share/chezmoi"
-  ],
+  bankId: "user::alex",
   retainExtractionMode: "concise",
-  gitIngest: "message"
+  gitIngest: "none",
+  autoSeed: false,
+  codebaseSurvey: false,
+  retainTags: ["repo:{gitProject}"],
+  retainContext: (
+    "conversation between the user and you (the coding agent), held in the repository {gitProject}: "
+    + "user turns are the words and decisions of the user, assistant turns are yours. When an assistant "
+    + "turn says something is fixed, passes or works, record it as a claim made by the agent (\"the agent "
+    + "reported X fixed\"), not as an established fact. Record every preference, correction and "
+    + "standing instruction the user gives about how they want work done as a durable fact of its "
+    + "own, with exact values verbatim, and name {gitProject} when it applies to that repository only."
+  ),
+  toolGuideExtra: (
+    "This bank is the personal memory of the user, shared by every repository and machine. The page "
+    + "\"Preferences and standing decisions\" holds how the user wants work done: read it with "
+    + "hindsight_read_page before making a choice it could cover. A preference stated in the "
+    + "current conversation is newer than the page and wins."
+  ),
+  pages: {
+    "Component map": false,
+    "Core concepts": false
+  },
+  customPages: {
+    "Preferences and standing decisions": {
+      source_query: (
+        "What are the durable preferences, conventions and standing decisions of this user about "
+        + "how work should be done, and the reason for each? Quote exact rules and values verbatim. A choice "
+        + "of tool, library or service is a preference of the user and belongs here. When statements "
+        + "conflict, keep the latest and leave out what it replaced. Name the project when a "
+        + "preference applies to one project only."
+      )
+    }
+  },
+  defaultBankConfig: {
+    observations_mission: (
+      "Consolidate durable knowledge about the USER across all their projects: first their "
+      + "preferences, corrections, conventions and standing decisions, each with its reason; then "
+      + "the decisions and conventions of each project, attributed to that project. Favor what will "
+      + "still hold in future sessions over one-off details. When a new fact contradicts or "
+      + "supersedes an existing observation, UPDATE that observation to reflect the current state "
+      + "rather than creating a sibling alongside it; note that the rule was revised and when, so "
+      + "the superseded version is visible as history rather than as a competing claim."
+    ),
+    reflect_mission: (
+      "You hold the memory of one user across all their projects: their preferences, conventions and "
+      + "standing decisions with the reasons behind them, and the history of their work. Answer "
+      + "with the EXACT rule and the LITERAL values that were decided, quoted VERBATIM, and name "
+      + "the project a rule applies to when it is not general. If memories CONFLICT on the same "
+      + "rule, the LATEST decision wins: state the superseded rule as no longer in effect and never "
+      + "present it as current. If NOTHING in memory genuinely bears on the question, say exactly "
+      + "that in one short sentence; never stretch an unrelated decision to fit."
+    )
+  }
 }' > "$tmp"
 
 mv "$tmp" "$config"
