@@ -12,7 +12,8 @@
     "servers": {
       "artifact": {
         "type": "remote",
-        "url": "https://artifact.itsalex.fr/mcp"
+        "url": "https://artifact.itsalex.fr/mcp",
+        "disabled": true
       },
       "context7": {
         "type": "remote",
@@ -73,7 +74,8 @@
         "type": "local",
         "command": [
           "{{ .chezmoi.homeDir }}/.local/bin/mcp-terraform-gopass"
-        ]
+        ],
+        "disabled": true
       },
       "slack": {
         "type": "local",
