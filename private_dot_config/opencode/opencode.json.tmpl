@@ -16,7 +16,8 @@
       },
       "context7": {
         "type": "remote",
-        "url": "https://mcp.context7.com/mcp"
+        "url": "https://mcp.context7.com/mcp",
+        "pool": true
       },
       "websearch": {
         "type": "remote",
@@ -39,7 +40,9 @@
           "{{ .chezmoi.homeDir }}",
           "--",
           "opencode-history-mcp"
-        ]
+        ],
+        "cwd": "~",
+        "pool": true
       },
       "exa": {
 {{- if stat (joinPath $dataHome "gopass/stores/bitwarden/exa/api-key.age") }}
@@ -62,7 +65,9 @@
         "type": "local",
         "command": [
           "{{ .chezmoi.homeDir }}/.local/bin/mcp-remote-linear-gopass"
-        ]
+        ],
+        "cwd": "~",
+        "pool": true
       },
       "terraform": {
         "type": "local",
