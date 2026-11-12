@@ -50,7 +50,8 @@
         "type": "local",
         "command": [
           "{{ .chezmoi.homeDir }}/.local/bin/mcp-exa-gopass"
-        ]
+        ],
+        "cwd": "~"
 {{- else }}
         "type": "remote",
         "url": "https://mcp.exa.ai/mcp"
@@ -60,7 +61,8 @@
         "type": "local",
         "command": [
           "{{ .chezmoi.homeDir }}/.local/bin/mcp-atlassian-gopass"
-        ]
+        ],
+        "cwd": "~"
       },
       "linear": {
         "type": "local",
@@ -75,13 +77,15 @@
         "command": [
           "{{ .chezmoi.homeDir }}/.local/bin/mcp-terraform-gopass"
         ],
+        "cwd": "~",
         "disabled": true
       },
       "slack": {
         "type": "local",
         "command": [
           "{{ .chezmoi.homeDir }}/.local/bin/mcp-slack-gopass"
-        ]
+        ],
+        "cwd": "~"
       }
 {{- end }}
     }
