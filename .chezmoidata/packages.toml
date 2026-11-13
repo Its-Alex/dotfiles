@@ -12,7 +12,7 @@ core = [
   "claude-code", "rtk-bin", "jujutsu",
 ]
 desktop = [
-  "flatpak", "os-prober", "fwupd", "netbird", "xkb-qwerty-fr",
+  "flatpak", "os-prober", "fwupd", "netbird-bin", "xkb-qwerty-fr", # netbird-bin: AUR prebuilt, conflicts with netbird and provides it
   "ttf-fira-code", "ttf-firacode-nerd",
   "numix-square-icon-theme-git", "flat-remix-gnome", "numix-frost-themes", # Gnome icons and theme
   "ghostty", "visual-studio-code-bin", "claude-desktop",
