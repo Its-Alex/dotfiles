@@ -5,6 +5,11 @@ set -euo pipefail
 # Enable pacman color
 sudo sed -i '/^#Color/c\Color' /etc/pacman.conf
 
+# Debug symbol packages double the size of every local AUR build for no gain.
+if grep -qE '^OPTIONS=.*[ (]debug[ )]' /etc/makepkg.conf; then
+    sudo sed -i -E '/^OPTIONS=/s/([ (])debug([ )])/\1!debug\2/' /etc/makepkg.conf
+fi
+
 printf "\e[1;34m%s\e[1;0m\n" "Install Git..."
 sudo pacman -S --noconfirm --needed git git-lfs base-devel
 
