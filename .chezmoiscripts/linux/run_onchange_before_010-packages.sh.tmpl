@@ -8,14 +8,17 @@ sudo sed -i '/^#Color/c\Color' /etc/pacman.conf
 printf "\e[1;34m%s\e[1;0m\n" "Install Git..."
 sudo pacman -S --noconfirm --needed git git-lfs base-devel
 
-if ! command -v yay > /dev/null; then
+if ! pacman -Qq yay-bin > /dev/null 2>&1; then
     printf "\e[1;34m%s\e[1;0m\n" "Install Yay..."
-    git clone https://aur.archlinux.org/yay.git /tmp/yay
+    git clone --depth=1 https://aur.archlinux.org/yay-bin.git /tmp/yay-bin
+    # yay-bin conflicts with source-built yay, and --noconfirm answers the
+    # "Remove yay? [y/N]" prompt with its default, which is no.
+    sudo pacman -R --noconfirm yay > /dev/null 2>&1 || true
     (
-        cd /tmp/yay || exit 1
+        cd /tmp/yay-bin || exit 1
         makepkg -si --noconfirm --needed
     )
-    rm -rf /tmp/yay
+    rm -rf /tmp/yay-bin
 fi
 
 printf "\e[1;34m%s\e[1;0m\n" "Install system programs.."
