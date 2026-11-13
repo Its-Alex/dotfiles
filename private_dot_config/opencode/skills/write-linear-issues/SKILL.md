@@ -72,7 +72,7 @@ it sits, so the position carries the meaning:
 
 ## 3. Writing register
 
-- **Issues are written in French.** Titles are English and use **plain natural
+- **Issues are written in English.** Titles are English and use **plain natural
   language** — never Conventional Commits (`feat:`, `fix(scope):`).
 - Keep **English technical terms** rather than translating them. `workspace`,
   `state`, `plan`, `backend` stay as they are.
