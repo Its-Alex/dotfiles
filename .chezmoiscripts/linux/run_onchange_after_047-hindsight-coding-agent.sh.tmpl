@@ -16,13 +16,24 @@ if ! command -v rbw > /dev/null; then
     exit 0
 fi
 
+# Renders "yes" only once Bitwarden is logged in, and changes the script hash when
+# that flips, so a skip recorded before `rbw login` is retried after it.
+bitwarden_logged_in={{ if includeTemplate "rbw-authenticated" . }}yes{{ else }}no{{ end }}
+if [ "$bitwarden_logged_in" != yes ]; then
+    printf "\e[1;33m%s\e[1;0m\n" "Hindsight: Bitwarden not logged in; retried after rbw login."
+    exit 0
+fi
+
 # Bitwarden holds the key; chezmoi reaches it through rbw, as the other
 # Bitwarden-sourced secrets do. Addressed by item id: the vault already holds
 # duplicate names, and an id survives a rename.
-api_token="$(rbw get 0ccb98b6-8be4-43e9-87e6-b4ff00e77072 2> /dev/null || true)"
-if [ -z "$api_token" ]; then
-    printf "\e[1;33m%s\e[1;0m\n" "Hindsight: rbw cannot read Bitwarden item 0ccb98b6-8be4-43e9-87e6-b4ff00e77072 (deleted or recreated? run rbw sync); leaving the stored config untouched."
-    exit 0
+#
+# A failed read exits non-zero on purpose: chezmoi only records a script as run
+# when it exits 0, so a locked vault or an unsynced item stays unrecorded and the
+# next apply retries instead of skipping Hindsight for good.
+if ! api_token="$(rbw get 0ccb98b6-8be4-43e9-87e6-b4ff00e77072 2> /dev/null)" || [ -z "$api_token" ]; then
+    printf "\e[1;31m%s\e[1;0m\n" "Hindsight: cannot read Bitwarden item 0ccb98b6-8be4-43e9-87e6-b4ff00e77072 (locked vault? run rbw unlock; item gone? run rbw sync)." >&2
+    exit 1
 fi
 
 umask 077
