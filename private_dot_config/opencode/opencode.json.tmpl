@@ -32,6 +32,39 @@
         "type": "remote",
         "url": "https://mcp.grep.app"
       },
+      "playwright": {
+        "type": "local",
+        "command": [
+          "mise",
+          "exec",
+          "-C",
+          "{{ .chezmoi.homeDir }}",
+          "--",
+          "playwright-mcp",
+          "--executable-path",
+          "/usr/bin/chromium",
+          "--isolated"
+        ],
+        "cwd": "~",
+        "disabled": true
+      },
+      "playwright-headless": {
+        "type": "local",
+        "command": [
+          "mise",
+          "exec",
+          "-C",
+          "{{ .chezmoi.homeDir }}",
+          "--",
+          "playwright-mcp",
+          "--executable-path",
+          "/usr/bin/chromium",
+          "--isolated",
+          "--headless"
+        ],
+        "cwd": "~",
+        "disabled": true
+      },
       "opencode_history": {
         "type": "local",
         "command": [
