@@ -16,3 +16,13 @@ When you fall back, say so in one line. Never retry a failing `exa` call more th
 - Before grepping/reading more than 2-3 files to answer "where is X?", "which file does Y?", or "how is Z structured?", delegate to the `explore` subagent instead of searching inline. Fire several `explore` tasks in parallel for independent questions.
 - Before using a library/framework API you are not certain about (syntax, options, version differences), delegate to the `librarian` subagent instead of answering from memory.
 - Skip delegation for trivial lookups (a single known file, a symbol you just saw).
+
+## Worktrees: OpenChamber only
+
+The moment the OpenChamber tools are loaded in the session (`tools.openchamber`, or any `openchamber*` tool), creating a worktree has exactly one route, and it is mandatory:
+
+- `tools.openchamber` → `session.moveToWorktree` to move this session onto a new branch in a new worktree, or `session.create` with `worktree` to start a session in one. Those two are the only permitted ways.
+- Never `git worktree add`; never `git clone` or a copied tree as a stand-in; never switch branches in place and call it isolation. `~/.config/opencode/plugins/openchamber-worktree-guard.ts` rejects the shell command and the permission request, so an attempt only fails.
+- Never set `worktree.directory` in any `opencode.json(c)`. OpenChamber's default is what puts a worktree in `~/.local/share/opencode/worktree/<project-id>/<name>`, `<project-id>` being the hash OpenCode assigns to that checkout (`64da607e5a4c9b6f2d5716e8bd3fa941ec0144d2` for the RELEX checkout); setting the key moves every new worktree out of that folder.
+
+Without the OpenChamber tools (plain `opencode` CLI, CI, a scripted run), a hand-made worktree is allowed, and still goes under `~/.local/share/opencode/worktree/`.
