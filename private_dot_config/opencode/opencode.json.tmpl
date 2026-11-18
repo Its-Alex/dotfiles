@@ -78,6 +78,12 @@
         "cwd": "~",
         "pool": true
       },
+      "sentry": {
+        "type": "remote",
+        "url": "https://mcp.sentry.dev/mcp",
+        "pool": true,
+        "disabled": true
+      },
       "exa": {
 {{- if stat (joinPath $dataHome "gopass/stores/bitwarden/exa/api-key.age") }}
         "type": "local",
