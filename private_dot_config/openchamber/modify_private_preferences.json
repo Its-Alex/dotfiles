@@ -11,20 +11,28 @@ managed_preferences=$(cat <<'JSON'
     "favoriteModels": {
       "value": [
         {
+          "providerID": "openai",
+          "modelID": "gpt-6.1-terra"
+        },
+        {
+          "providerID": "openai",
+          "modelID": "gpt-6.2-sol"
+        },
+        {
+          "providerID": "openai",
+          "modelID": "gpt-6.2-astra"
+        },
+        {
+          "providerID": "openrouter",
+          "modelID": "anthropic/claude-fable-5.2"
+        },
+        {
           "providerID": "openrouter",
           "modelID": "anthropic/claude-sonnet-5.5"
         },
         {
           "providerID": "openrouter",
           "modelID": "anthropic/claude-opus-5.5"
-        },
-        {
-          "providerID": "openrouter",
-          "modelID": "anthropic/claude-fable-5"
-        },
-        {
-          "providerID": "openrouter",
-          "modelID": "anthropic/claude-sonnet-5"
         },
         {
           "providerID": "opencode-go",
@@ -44,8 +52,11 @@ managed_preferences=$(cat <<'JSON'
     "smallModelVariant": {
       "value": "low"
     },
-    "sidebarWorktreeSortOrder": {
-      "value": "recent"
+    "sidebarSessionBatchSize": {
+      "value": 7
+    },
+    "agentBrowserSharesLogins": {
+      "value": false
     },
     "expandReasoningWhileStreaming": {
       "value": true
@@ -106,10 +117,31 @@ managed_preferences=$(cat <<'JSON'
         }
       }
     },
-    "wideChatLayoutEnabled": {
+    "fontSize": {
+      "surfaces": {
+        "desktop": {
+          "value": 110
+        }
+      }
+    },
+    "sidebarShowPinnedSection": {
+      "surfaces": {
+        "desktop": {
+          "value": false
+        }
+      }
+    },
+    "useSystemTheme": {
       "surfaces": {
         "desktop": {
           "value": true
+        }
+      }
+    },
+    "chatWidth": {
+      "surfaces": {
+        "desktop": {
+          "value": "full"
         }
       }
     }
@@ -123,4 +155,5 @@ current_preferences=$(cat)
 
 # -j: the app writes these files with no trailing newline, and a jq-added one
 # would show up in every chezmoi diff.
-jq -j --argjson managed "$managed_preferences" '. * $managed' <<<"$current_preferences"
+jq -j --argjson managed "$managed_preferences" \
+  '(. * $managed) | del(.fields.wideChatLayoutEnabled)' <<<"$current_preferences"
