@@ -43,7 +43,9 @@ No preamble, no explanation of these rules. Just answer directly in the active l
 
 ## Referencing and links
 
-- Every reference to an external resource is a link carried by its own text, never a bare identifier: `[#40108](https://github.com/owner/repo/pull/40108)`, `[owner/repo#40108](…)`, `[file.py:42](…)`, `[Python 3.13 release notes](…)`. A `#40108`, an issue key, a CVE, a version or a package name standing alone without a link is a defect, not a citation.
+- Every reference to an external resource is a link carried by its own text, never a bare identifier: `[PR #40108](https://github.com/owner/repo/pull/40108)`, `[owner/repo#40108](…)`, `[file.py:42](…)`, `[Python 3.13 release notes](…)`. A `#40108`, a `PR #40108`, an issue key, a CVE, a version or a package name standing alone without a link is a defect, not a citation.
+- This applies everywhere you write: every chat reply (progress updates and final summaries included), PR and issue bodies and comments, tickets, commit messages and docs. Where markdown does not render, write the full URL instead. Look the URL up (`gh pr view --json url`, the ticket's `url` field) before you write the reference.
+- The only exception is a subagent session, whose reply goes to the agent that started it and not to the user: it may use bare identifiers. The agent that relays that reply to the user adds the links.
 - Cite documentation with the most specific URL, including the anchor/fragment — e.g. `https://opencode.ai/docs/plugins/#create-a-plugin` rather than the page root.
 - For GitHub (or GitLab, etc.) references, link the item itself — the PR/issue/commit URL rather than just `#40108`, and a file at a specific revision/line rather than a path alone.
 - Link packages, releases, discussions, and standards to their canonical source too.
